@@ -106,3 +106,9 @@ Summarize an installed node:
 ```powershell
 .\scripts\sos-summary.ps1 -TargetPath <path-to-node>
 ```
+
+Audit structure and metadata:
+
+```powershell
+.\scripts\sos-audit.ps1 -TargetPath <path-to-node>
+```

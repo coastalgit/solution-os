@@ -16,7 +16,7 @@ Keep command names concept-down so autocomplete groups related commands.
 |---|---|---|
 | `/sos:init` | Install or refresh SOS in the current node. | Propose changes first. Apply only with approval. |
 | `/sos:summary` | Summarize SOS/node health and current state. | Read-mostly. Do not apply changes. |
-| `/sos:audit` | Inspect deeply for drift, missing files, stale adapters, and repair opportunities. | May propose/apply approved changes. |
+| `/sos:audit` | Inspect deeply for drift, missing files, missing metadata, stale adapters, and repair opportunities. | May propose/apply approved changes. |
 | `/sos:vault-process` | Process `vault/triage` items into wiki/archive/outbox. | Human-gated triage. |
 | `/sos:vault-summary` | Summarize vault state and pending triage. | Read-only. |
 | `/sos:context-export` | Create source-backed context export for another node/tool/agent. | Uses export rules. |
@@ -29,4 +29,3 @@ Keep command names concept-down so autocomplete groups related commands.
 No separate upgrade command is required for v0.1.
 
 `/sos:init`, `/sos:summary`, and `/sos:audit` may detect remote template/version drift and suggest updates.
-

@@ -1,3 +1,9 @@
+---
+type: source-ledger
+scope: system
+status: active
+---
+
 # Source Ledger
 
 This is the source-backed ledger for the initial SolutionOS design.
@@ -41,3 +47,4 @@ It captures user statements and decisions from the originating discussion. Deriv
 | SRC-031 | Initial SOS must remain simple but useful immediately. | Provide templates plus a preview-first local init helper; avoid a full CLI/runtime for v0.1. |
 | SRC-032 | `sos:summary` should reveal version, setup, vault state, tool/context structure, and drift without making changes. | Provide a read-only local summary helper before a full command runtime exists. |
 | SRC-033 | Canonical SolutionOS repo is `https://github.com/coastalgit/solution-os.git`. | Configure repository and manifest URLs in `manifest.json` and SOS metadata. |
+| SRC-034 | File metadata/frontmatter should be part of the baseline and applied consistently to SOS-owned context and KB notes. | Make YAML frontmatter mandatory for SOS-owned Markdown context and KB files. |

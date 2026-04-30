@@ -29,3 +29,13 @@ Read the SOS shape of a folder without changing files:
 ```
 
 The script reports node metadata, vault counts, and missing required SOS files.
+
+## `sos-audit.ps1`
+
+Inspect SOS structure and mandatory metadata without changing files:
+
+```powershell
+.\scripts\sos-audit.ps1 -TargetPath <path-to-node>
+```
+
+The script reports missing required files/directories and SOS-owned Markdown files missing YAML frontmatter.

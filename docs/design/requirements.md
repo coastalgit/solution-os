@@ -1,3 +1,9 @@
+---
+type: requirements
+scope: system
+status: active
+---
+
 # Requirements
 
 Requirements extracted from `source-ledger.md`.
@@ -30,6 +36,7 @@ Requirements extracted from `source-ledger.md`.
 | REQ-022 | v0.1 must include a preview-first local init helper that skips existing files unless explicitly forced. | SRC-031 | active |
 | REQ-023 | v0.1 must include a read-only summary helper that reports node metadata, vault counts, and missing SOS files. | SRC-032 | active |
 | REQ-024 | SOS metadata must record the canonical repository and raw manifest URL for future update checks. | SRC-033 | active |
+| REQ-025 | SOS-owned Markdown context and KB files must always include YAML frontmatter metadata. | SRC-034 | active |
 
 ## Non-Requirements For v0.1
 

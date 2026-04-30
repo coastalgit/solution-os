@@ -1,3 +1,9 @@
+---
+type: decisions
+scope: system
+status: active
+---
+
 # Decisions
 
 ## Active Decisions
@@ -19,3 +25,4 @@
 | DEC-013 | Provide `scripts/sos-init.ps1` as a preview-first local helper, not the final command runtime. | SRC-031 | Makes v0.1 usable immediately while preserving the file-first direction. |
 | DEC-014 | Provide `scripts/sos-summary.ps1` as a read-only helper, not the final command runtime. | SRC-032 | Gives immediate project orientation without creating another source of truth. |
 | DEC-015 | Use `https://github.com/coastalgit/solution-os.git` as the canonical SolutionOS repository. | SRC-033 | Enables installed nodes to know where update checks should originate. |
+| DEC-016 | Require YAML frontmatter on SOS-owned Markdown context and KB files. | SRC-034 | Makes routing, audit, indexing, Obsidian use, and AI context loading predictable. |

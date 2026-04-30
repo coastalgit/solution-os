@@ -1,3 +1,9 @@
+---
+type: open-questions
+scope: system
+status: active
+---
+
 # Open Questions
 
 | ID | Question | Status | Notes |

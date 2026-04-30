@@ -1,3 +1,9 @@
+---
+type: architecture
+scope: system
+status: active
+---
+
 # Architecture
 
 ## Definition

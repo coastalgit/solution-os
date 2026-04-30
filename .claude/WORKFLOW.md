@@ -28,6 +28,12 @@ Read routers first. Load detail only when needed.
 
 Avoid preloading whole directories or large documents unless the task requires it.
 
+## Metadata Rule
+
+New SOS-owned Markdown context and KB files must include YAML frontmatter.
+
+Use `.claude/sos/SCHEMA.md` for the exact rule and minimum fields.
+
 ## Human Gates
 
 Ask before:
@@ -56,4 +62,3 @@ At the end of substantial work:
 - update wiki where durable knowledge changed
 - archive processed source material where relevant
 - list open questions and next action
-

@@ -1,3 +1,10 @@
+---
+type: adapter
+scope: node
+status: active
+tool: claude-code
+---
+
 # CLAUDE.md
 
 This file is the Claude Code adapter for an SOS node.
@@ -39,4 +46,3 @@ Do not read or follow `.claude/sos/**` during normal project work unless the use
 ## Privacy / Visibility Rule
 
 Avoid surfacing private personal labels or sensitive context in filenames, headings, casual chat, generated docs, or screen-share-visible outputs unless the user explicitly asks.
-

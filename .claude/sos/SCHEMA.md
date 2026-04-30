@@ -52,9 +52,32 @@ This is the human-readable schema for an SOS node.
 - remote manifest URL if configured
 - default remote branch if configured
 
+## Metadata Rule
+
+SOS-owned Markdown context and KB files must include YAML frontmatter.
+
+This applies to:
+
+- `.claude/*.md`
+- `.claude/sos/*.md`
+- `.claude/sos/export/*.md`
+- `.claude/sos/template/*.md`
+- curated `vault/wiki/*.md` notes
+- vault lifecycle README files under `vault/triage`, `vault/wiki`, `vault/archive`, and `vault/outbox`
+
+This does not apply to:
+
+- source code
+- scripts
+- JSON/config files
+- generated files
+- vendor files
+- copied external docs
+- ordinary public-facing README files unless they are acting as SOS context files
+
 ## Frontmatter Minimum
 
-Spine-owned Markdown notes should include minimal frontmatter:
+Required minimum:
 
 ```yaml
 ---
@@ -65,3 +88,14 @@ status:
 ```
 
 Use more fields only when they help routing, authority, privacy, or automation.
+
+## Common Optional Fields
+
+| Field | Use |
+|---|---|
+| `authority` | When one file should outrank ordinary notes. |
+| `privacy` | When visibility or sharing risk matters. |
+| `created` | For durable wiki notes. |
+| `updated` | For durable wiki notes. |
+| `tags` | For Obsidian/search/indexing. |
+| `aliases` | For alternate names. |

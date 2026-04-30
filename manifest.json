@@ -11,7 +11,8 @@
   },
   "scripts": {
     "sos-init.ps1": "0.1.0",
-    "sos-summary.ps1": "0.1.0"
+    "sos-summary.ps1": "0.1.0",
+    "sos-audit.ps1": "0.1.0"
   },
   "profiles": {},
   "notes": [

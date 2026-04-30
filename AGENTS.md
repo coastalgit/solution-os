@@ -1,3 +1,10 @@
+---
+type: adapter
+scope: node
+status: active
+tool: codex
+---
+
 # AGENTS.md
 
 This file is the Codex adapter for an SOS node.
@@ -28,4 +35,3 @@ The node knowledge base lives in `vault/`:
 - Follow `.claude/STONE.md` as highest-authority project context.
 - Follow `.claude/WORKFLOW.md` for lifecycle and human gates.
 - Do not use SOS system files as ordinary project context.
-
