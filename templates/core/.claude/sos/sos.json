@@ -1,0 +1,28 @@
+{
+  "sos_version": "0.1.0",
+  "template_version": "0.1.0",
+  "node": {
+    "name": "",
+    "kind": "solution",
+    "visibility": "private"
+  },
+  "parent": {
+    "has_parent": false,
+    "name": "",
+    "path": "",
+    "read_upward": false,
+    "publish_upward": "none"
+  },
+  "vault": {
+    "enabled": true,
+    "triage_path": "vault/triage",
+    "wiki_path": "vault/wiki",
+    "archive_path": "vault/archive",
+    "outbox_path": "vault/outbox"
+  },
+  "remote": {
+    "repository_url": "https://github.com/coastalgit/solution-os.git",
+    "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
+    "default_branch": "main"
+  }
+}
