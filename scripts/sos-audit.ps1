@@ -66,12 +66,31 @@ foreach ($relativePath in @('AGENTS.md', 'CLAUDE.md')) {
     }
 }
 
-foreach ($relativeDir in @('.claude', 'docs\design', 'vault\wiki', 'templates\core')) {
+foreach ($relativeDir in @('docs\design', 'vault\wiki', 'templates\core')) {
     $dir = Join-Path $targetFullPath $relativeDir
     if (Test-Path -LiteralPath $dir) {
         Get-ChildItem -LiteralPath $dir -Recurse -Force -File -Filter '*.md' |
             ForEach-Object { $metadataFiles.Add($_.FullName) }
     }
+}
+
+foreach ($relativePath in @(
+    '.claude\PM.md',
+    '.claude\STONE.md',
+    '.claude\ACTORS.md',
+    '.claude\TOOLS.md',
+    '.claude\WORKFLOW.md'
+)) {
+    $path = Join-Path $targetFullPath $relativePath
+    if (Test-Path -LiteralPath $path) {
+        $metadataFiles.Add($path)
+    }
+}
+
+$sosDir = Join-Path $targetFullPath '.claude\sos'
+if (Test-Path -LiteralPath $sosDir) {
+    Get-ChildItem -LiteralPath $sosDir -Recurse -Force -File -Filter '*.md' |
+        ForEach-Object { $metadataFiles.Add($_.FullName) }
 }
 
 foreach ($relativePath in @(
