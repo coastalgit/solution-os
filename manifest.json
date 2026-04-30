@@ -1,18 +1,18 @@
 {
-  "sos_version": "0.1.0",
-  "template_version": "0.1.0",
-  "builder_version": "0.1.0",
-  "released": "2026-04-29",
+  "sos_version": "0.1.1",
+  "template_version": "0.1.1",
+  "builder_version": "0.1.1",
+  "released": "2026-04-30",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.0"
+    "core": "0.1.1"
   },
   "scripts": {
-    "sos-init.ps1": "0.1.0",
-    "sos-summary.ps1": "0.1.0",
-    "sos-audit.ps1": "0.1.0"
+    "sos-init.ps1": "0.1.1",
+    "sos-summary.ps1": "0.1.1",
+    "sos-audit.ps1": "0.1.1"
   },
   "profiles": {},
   "notes": [

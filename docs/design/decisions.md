@@ -26,3 +26,4 @@ status: active
 | DEC-014 | Provide `scripts/sos-summary.ps1` as a read-only helper, not the final command runtime. | SRC-032 | Gives immediate project orientation without creating another source of truth. |
 | DEC-015 | Use `https://github.com/coastalgit/solution-os.git` as the canonical SolutionOS repository. | SRC-033 | Enables installed nodes to know where update checks should originate. |
 | DEC-016 | Require YAML frontmatter on SOS-owned Markdown context and KB files. | SRC-034 | Makes routing, audit, indexing, Obsidian use, and AI context loading predictable. |
+| DEC-017 | Start release stamping at `0.1.0` and move the current installable baseline to `0.1.1`. | SRC-035 | Allows legacy projects to record exactly which SOS baseline was applied. |

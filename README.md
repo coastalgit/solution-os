@@ -74,6 +74,12 @@ vault/
 manifest.json
 ```
 
+Current version:
+
+```text
+0.1.1
+```
+
 ## First Principles
 
 - The project memory must be source-backed.

@@ -31,6 +31,7 @@ This is the human-readable schema for an SOS node.
 |---|---|
 | `.claude/sos/sos.json` | Machine-readable node/install metadata. |
 | `.claude/sos/README.md` | Explains SOS system directory. |
+| `.claude/sos/VERSION.md` | Human-readable installed SOS/template version stamp. |
 | `.claude/sos/COMMANDS.md` | Official command vocabulary. |
 | `.claude/sos/SCHEMA.md` | This schema. |
 | `.claude/sos/TOOLKITS.md` | SOS toolset preferences and adoption rules. |

@@ -15,9 +15,9 @@ Do not read or follow files here during ordinary project work unless the user in
 ## Contents
 
 - `sos.json` - machine-readable SOS install/node metadata.
+- `VERSION.md` - human-readable SOS/template version stamp.
 - `COMMANDS.md` - official SOS command vocabulary.
 - `SCHEMA.md` - human-readable schema for node files and metadata.
 - `TOOLKITS.md` - SOS-wide toolset preferences and adoption rules.
 - `template/` - local template support material.
 - `export/` - portable single-file assets intended to be copied out.
-

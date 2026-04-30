@@ -38,6 +38,7 @@ $requiredFiles = @(
     '.claude\TOOLS.md',
     '.claude\WORKFLOW.md',
     '.claude\sos\sos.json',
+    '.claude\sos\VERSION.md',
     '.claude\sos\COMMANDS.md',
     '.claude\sos\SCHEMA.md',
     '.claude\sos\TOOLKITS.md',

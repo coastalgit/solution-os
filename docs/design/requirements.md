@@ -37,6 +37,7 @@ Requirements extracted from `source-ledger.md`.
 | REQ-023 | v0.1 must include a read-only summary helper that reports node metadata, vault counts, and missing SOS files. | SRC-032 | active |
 | REQ-024 | SOS metadata must record the canonical repository and raw manifest URL for future update checks. | SRC-033 | active |
 | REQ-025 | SOS-owned Markdown context and KB files must always include YAML frontmatter metadata. | SRC-034 | active |
+| REQ-026 | SOS releases must be version-stamped from the beginning in manifest, installed metadata, human-readable version notes, changelog, and git tags. | SRC-035 | active |
 
 ## Non-Requirements For v0.1
 
