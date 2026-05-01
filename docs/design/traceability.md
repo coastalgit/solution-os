@@ -47,3 +47,4 @@ Traceability from source statements to requirements, decisions, and template fil
 | SRC-035 | REQ-026 | DEC-017 | manifest.json, `.claude/sos/VERSION.md`, CHANGELOG.md, git tags |
 | SRC-036 | REQ-027, REQ-028 | DEC-018, DEC-019 | `scripts/sos-migrate-assess.ps1`, COMMANDS.md, SCHEMA.md, vault manifests |
 | SRC-037 | REQ-029 | DEC-020 | `vault/triage/README.md`, `templates/core/vault/triage/README.md` |
+| SRC-038 | REQ-030 | DEC-021 | `.claude/skills/sos/SKILL.md`, `templates/core/.claude/skills/sos/SKILL.md`, scripts/audit required files |

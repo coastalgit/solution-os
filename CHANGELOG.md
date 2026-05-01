@@ -6,6 +6,15 @@ status: active
 
 # Changelog
 
+## 0.1.4 - 2026-05-01
+
+Native Claude Code `/sos` router.
+
+- Added `.claude/skills/sos/SKILL.md` so typing `/so` in Claude Code exposes `/sos`.
+- Mapped `/sos <subcommand>` to the canonical `/sos:<subcommand>` vocabulary.
+- Updated schema and audit/summary required files to include the SOS router skill.
+- Documented that true `/sos:*` autocomplete requires a plugin or MCP command layer.
+
 ## 0.1.3 - 2026-05-01
 
 Triage README made operational.

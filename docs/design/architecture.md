@@ -65,6 +65,9 @@ node-root/
     outbox/
       _manifest.md
   .claude/
+    skills/
+      sos/
+        SKILL.md
     PM.md
     STONE.md
     ACTORS.md

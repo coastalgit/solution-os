@@ -10,6 +10,18 @@ All SolutionOS operations use the `/sos:*` namespace.
 
 Keep command names concept-down so autocomplete groups related commands.
 
+## Claude Code Invocation
+
+Project-level Claude Code skills expose `/sos`, with the subcommand as the first argument.
+
+Examples:
+
+- `/sos summary` means `/sos:summary`.
+- `/sos vault-process` means `/sos:vault-process`.
+- `/sos migrate` means `/sos:migrate`.
+
+True `/sos:*` autocomplete requires a plugin or MCP command layer. Until that exists, `/sos <subcommand>` is the native Claude Code entry point.
+
 ## v0.1 Commands
 
 | Command | Purpose | Default Behavior |

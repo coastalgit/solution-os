@@ -51,3 +51,4 @@ It captures user statements and decisions from the originating discussion. Deriv
 | SRC-035 | SOS should be version-stamped from the beginning before being applied to further legacy projects. | Maintain manifest version, installed node version, `VERSION.md`, changelog, and git tags. |
 | SRC-036 | Existing Workspacer/KG/vault-like projects need a migration path into SOS with questions, opt-ins, opt-outs, and no assumptions about Backlog.md. | Add read-only migration assessment, vault manifests, and a human-gated `/sos:migrate` command path. |
 | SRC-037 | Folder README files must tell an agent how to operate the folder, not merely describe what the folder is. | Make `vault/triage/README.md` include the concrete `/sos:vault-process` protocol, decision key, routes, and follow-up rules. |
+| SRC-038 | Typing `/so` in a new Claude Code terminal should reveal the SOS entry point. | Add a native project-level Claude Code skill router at `.claude/skills/sos/SKILL.md`. |

@@ -41,6 +41,7 @@ Requirements extracted from `source-ledger.md`.
 | REQ-027 | SOS must support migration assessment for existing messy project-memory/KB setups before applying changes. | SRC-036 | active |
 | REQ-028 | Vault lifecycle folders must include manifests so migration, processing, and audit have explicit control files. | SRC-036 | active |
 | REQ-029 | Vault lifecycle README files must include enough operational instructions for an agent to act safely from that folder. | SRC-037 | active |
+| REQ-030 | Installed SOS nodes must expose a native Claude Code `/sos` entry point. | SRC-038 | active |
 
 ## Non-Requirements For v0.1
 

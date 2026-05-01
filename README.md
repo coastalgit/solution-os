@@ -65,6 +65,8 @@ vault/
   archive/
   outbox/
 .claude/
+  skills/
+    sos/
   PM.md
   STONE.md
   ACTORS.md
@@ -77,7 +79,7 @@ manifest.json
 Current version:
 
 ```text
-0.1.3
+0.1.4
 ```
 
 ## First Principles

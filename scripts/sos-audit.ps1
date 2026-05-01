@@ -37,6 +37,7 @@ $requiredFiles = @(
     '.claude\ACTORS.md',
     '.claude\TOOLS.md',
     '.claude\WORKFLOW.md',
+    '.claude\skills\sos\SKILL.md',
     '.claude\sos\sos.json',
     '.claude\sos\VERSION.md',
     '.claude\sos\COMMANDS.md',
@@ -84,7 +85,8 @@ foreach ($relativePath in @(
     '.claude\STONE.md',
     '.claude\ACTORS.md',
     '.claude\TOOLS.md',
-    '.claude\WORKFLOW.md'
+    '.claude\WORKFLOW.md',
+    '.claude\skills\sos\SKILL.md'
 )) {
     $path = Join-Path $targetFullPath $relativePath
     if (Test-Path -LiteralPath $path) {

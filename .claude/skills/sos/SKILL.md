@@ -1,0 +1,70 @@
+---
+name: sos
+description: SolutionOS command router for this node. Use when Brendan invokes /sos to run SOS init, summary, audit, migration, vault, context, session, or toolkit workflows.
+argument-hint: "[init|summary|audit|migrate|vault-process|vault-summary|context-export|context-import|session-close|toolkits-summary]"
+disable-model-invocation: true
+---
+
+# SOS Router
+
+This skill is the native Claude Code entry point for SolutionOS in this project.
+
+Claude Code exposes this as:
+
+```text
+/sos <subcommand>
+```
+
+Treat that as equivalent to the canonical SOS vocabulary:
+
+```text
+/sos:<subcommand>
+```
+
+## First Step
+
+Read these before acting:
+
+1. `.claude/sos/COMMANDS.md`
+2. `.claude/PM.md`
+3. `.claude/STONE.md`
+4. `.claude/WORKFLOW.md`
+
+Do not load all of `.claude/sos/` unless the selected subcommand needs it.
+
+## Subcommands
+
+| Invocation | Canonical Meaning |
+|---|---|
+| `/sos` | Show the available SOS subcommands and current safe next action. |
+| `/sos init` | `/sos:init` - install or refresh SOS. Proposal first. |
+| `/sos summary` | `/sos:summary` - summarize SOS/node health. Read-only. |
+| `/sos audit` | `/sos:audit` - inspect drift, missing files, metadata, stale adapters, repair opportunities. |
+| `/sos migrate` | `/sos:migrate` - assess older project memory/KB structures before migration. Read-only first. |
+| `/sos vault-process` | `/sos:vault-process` - process `vault/triage` items through human-gated decisions. |
+| `/sos vault-summary` | `/sos:vault-summary` - summarize vault state and pending triage. |
+| `/sos context-export` | `/sos:context-export` - create a source-backed export package. |
+| `/sos context-import` | `/sos:context-import` - import source-backed context. Proposal first. |
+| `/sos session-close` | `/sos:session-close` - close a substantial session and update state. |
+| `/sos toolkits-summary` | `/sos:toolkits-summary` - summarize preferred, parked, and allowed toolsets. |
+
+## Safety Rules
+
+- Default to read-only for `summary`, `vault-summary`, `migrate`, and `toolkits-summary`.
+- For `init`, `audit`, `context-import`, and `vault-process`, propose changes before editing.
+- Never process `vault/triage/README.md` or `vault/triage/_manifest.md` as triage items.
+- Do not initialize Backlog.md unless the user explicitly approves that tool adoption.
+- If the user expected `/sos:*` autocomplete, explain that project skills expose `/sos`; true colon-prefixed plugin commands require a plugin/MCP layer.
+
+## Script Hints
+
+If the SolutionOS repo scripts are available, use them for checks:
+
+```powershell
+.\scripts\sos-summary.ps1 -TargetPath .
+.\scripts\sos-audit.ps1 -TargetPath .
+.\scripts\sos-migrate-assess.ps1 -TargetPath .
+```
+
+If scripts are not available, perform the file-based protocol from `.claude/sos/COMMANDS.md` and `.claude/sos/SCHEMA.md`.
+

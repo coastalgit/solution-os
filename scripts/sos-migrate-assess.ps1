@@ -45,6 +45,30 @@ function Add-DetectedPath {
     }
 }
 
+function Add-ProjectSkillsDetection {
+    $skillsPath = Join-Path $targetFullPath '.claude\skills'
+    if (!(Test-Path -LiteralPath $skillsPath)) {
+        return
+    }
+
+    $projectSkillFiles = @(
+        Get-ChildItem -LiteralPath $skillsPath -Recurse -Force -File -Filter 'SKILL.md' |
+            Where-Object {
+                $relativePath = $_.FullName.Substring($targetFullPath.Length).TrimStart('\', '/')
+                $relativePath -ne '.claude\skills\sos\SKILL.md'
+            }
+    )
+
+    if ($projectSkillFiles.Count -gt 0) {
+        return [pscustomobject]@{
+            Path = '.claude\skills'
+            Kind = 'project-skills'
+            FileCount = $projectSkillFiles.Count
+            SuggestedAction = 'Review, test, and adopt/park/delete through a capability-pack decision.'
+        }
+    }
+}
+
 $detected = @()
 
 $detected += @(Add-DetectedPath 'vault\inbox' 'legacy-vault-intake' 'Assess, then migrate useful items to vault/triage or archive processed evidence.')
@@ -55,7 +79,7 @@ $detected += @(Add-DetectedPath '.spine' 'legacy-spine' 'Compare against SOS nod
 $detected += @(Add-DetectedPath 'docs\spine' 'legacy-spine' 'Compare against SOS node files; migrate decisions/facts with source traceability.')
 $detected += @(Add-DetectedPath '.claude\seshmem' 'session-memory' 'Summarize only durable facts into current-state or archive; do not bulk-load.')
 $detected += @(Add-DetectedPath '.claude\commands' 'legacy-commands' 'Prefer project skills or SOS command vocabulary; keep only proven commands.')
-$detected += @(Add-DetectedPath '.claude\skills' 'project-skills' 'Review, test, and adopt/park/delete through a capability-pack decision.')
+$detected += @(Add-ProjectSkillsDetection)
 $detected += @(Add-DetectedPath 'backlog' 'task-system' 'Do not assume adoption; ask whether Backlog.md should be used.')
 $detected += @(Add-DetectedPath '.backlog' 'task-system' 'Do not assume adoption; ask whether Backlog.md should be used.')
 

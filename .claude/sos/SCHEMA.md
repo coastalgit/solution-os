@@ -27,6 +27,7 @@ This is the human-readable schema for an SOS node.
 | `.claude/ACTORS.md` | People, systems, teams, services, roles. |
 | `.claude/TOOLS.md` | Local tools/environment facts. |
 | `.claude/WORKFLOW.md` | Lifecycle and human gates. |
+| `.claude/skills/sos/SKILL.md` | Native Claude Code `/sos` skill router. |
 | `.claude/sos/` | SOS system material. |
 
 ## Required SOS System Files

@@ -30,3 +30,4 @@ status: active
 | DEC-018 | Add `/sos:migrate` as a human-gated migration assessment path. | SRC-036 | Existing project setups need discovery and choices before applying SOS changes. |
 | DEC-019 | Add `_manifest.md` files to each vault lifecycle folder. | SRC-036 | Manifests make triage/wiki/archive/outbox state explicit and auditable. |
 | DEC-020 | Treat triage README as an operational protocol file. | SRC-037 | Agents opening the folder need to know exactly how to process items without hunting elsewhere. |
+| DEC-021 | Add `.claude/skills/sos/SKILL.md` as the Claude Code-native router. | SRC-038 | Claude Code project skills expose `/sos`; colon-prefixed `/sos:*` remains canonical vocabulary until plugin/MCP support exists. |

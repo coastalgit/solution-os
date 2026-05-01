@@ -23,3 +23,5 @@ Do not read or follow files here during ordinary project work unless the user in
 - `export/` - portable single-file assets intended to be copied out.
 
 Migration assessment is part of SOS operations. Use `/sos:migrate` before moving older Workspacer, KB, spine, command, skill, or inbox-style material into the active SOS structure.
+
+Native Claude Code invocation is provided by `.claude/skills/sos/SKILL.md`.
