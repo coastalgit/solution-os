@@ -1,7 +1,7 @@
 ---
 name: sos
-description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS init, summary, audit, migration, vault, context, session, or toolkit workflows.
-argument-hint: "[init|summary|audit|migrate|vault-process|vault-summary|context-export|context-import|session-close|toolkits-summary]"
+description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS init, summary, audit, tools, ingest, migration, vault, context, or session workflows.
+argument-hint: "[init|summary|audit|tools|ingest|migrate|vault-process|vault-summary|context-export|context-import|session-close]"
 disable-model-invocation: true
 ---
 
@@ -42,18 +42,19 @@ Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 | `/sos init` | `/sos:init` - install or refresh SOS. Proposal first. |
 | `/sos summary` | `/sos:summary` - summarize SOS/node health. Read-only. |
 | `/sos audit` | `/sos:audit` - inspect drift, missing files, metadata, stale adapters, repair opportunities. |
+| `/sos tools` | `/sos:tools` - explain current tools, preferences, parked options, gaps, and possible additions. |
+| `/sos ingest <source> <intent>` | `/sos:ingest` - ingest an external source into the vault using the user's intent. |
 | `/sos migrate` | `/sos:migrate` - assess older project memory/KB structures before migration. Read-only first. |
 | `/sos vault-process` | `/sos:vault-process` - process `vault/triage` items through human-gated decisions. |
 | `/sos vault-summary` | `/sos:vault-summary` - summarize vault state and pending triage. |
 | `/sos context-export` | `/sos:context-export` - create a source-backed export package. |
 | `/sos context-import` | `/sos:context-import` - import source-backed context. Proposal first. |
 | `/sos session-close` | `/sos:session-close` - close a substantial session and update state. |
-| `/sos toolkits-summary` | `/sos:toolkits-summary` - summarize preferred, parked, and allowed toolsets. |
 
 ## Safety Rules
 
-- Default to read-only for `summary`, `vault-summary`, `migrate`, and `toolkits-summary`.
-- For `init`, `audit`, `context-import`, and `vault-process`, propose changes before editing.
+- Default to read-only for `summary`, `tools`, `vault-summary`, and `migrate`.
+- For `init`, `audit`, `ingest`, `context-import`, and `vault-process`, propose changes before editing unless the user gave a clear direct-write instruction.
 - Never process `vault/triage/README.md` or `vault/triage/_manifest.md` as triage items.
 - Do not initialize Backlog.md unless the user explicitly approves that tool adoption.
 - If `/sos:*` entries do not appear in the slash menu, explain that Claude Code may need to reload/restart after new project command files are added. Use `/sos <subcommand>` as the fallback.

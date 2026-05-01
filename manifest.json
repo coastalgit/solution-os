@@ -1,18 +1,18 @@
 {
-  "sos_version": "0.1.5",
-  "template_version": "0.1.5",
-  "builder_version": "0.1.5",
+  "sos_version": "0.1.6",
+  "template_version": "0.1.6",
+  "builder_version": "0.1.6",
   "released": "2026-05-01",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.5"
+    "core": "0.1.6"
   },
   "scripts": {
-    "sos-init.ps1": "0.1.5",
-    "sos-summary.ps1": "0.1.5",
-    "sos-audit.ps1": "0.1.5",
+    "sos-init.ps1": "0.1.6",
+    "sos-summary.ps1": "0.1.6",
+    "sos-audit.ps1": "0.1.6",
     "sos-migrate-assess.ps1": "0.1.4"
   },
   "profiles": {},
@@ -22,6 +22,7 @@
     "0.1.2 adds vault manifests and read-only migration assessment for existing projects.",
     "0.1.3 makes the triage README operational instead of merely descriptive.",
     "0.1.4 adds the native Claude Code /sos skill router.",
-    "0.1.5 adds visible Claude Code SOS branch commands and removes personal names from command-facing metadata."
+    "0.1.5 adds visible Claude Code SOS branch commands and removes personal names from command-facing metadata.",
+    "0.1.6 corrects help back to the concrete SOS baseline, adds /sos:tools and /sos:ingest, and removes /sos:toolkits-summary."
   ]
 }

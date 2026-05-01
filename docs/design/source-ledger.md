@@ -33,7 +33,7 @@ It captures user statements and decisions from the originating discussion. Deriv
 | SRC-017 | `sos:summary` should inspect and report project state without applying changes by default. | Define summary as read-mostly status/health command. |
 | SRC-018 | `sos:audit` should inspect deeply and apply approved changes if allowed. | Define audit as deeper repair-capable command with human approval. |
 | SRC-019 | Commands should be namespaced as `/sos:*`; loose skills/commands are avoided when the assigned agent is unclear. | All SOS command vocabulary uses `sos:` prefix. |
-| SRC-020 | Concept-down command names are preferred for autocomplete, e.g. `sos:inbox-process` style. | Use domain-first command names such as `sos:vault-process`, `sos:context-export`, `sos:toolkits-summary`. |
+| SRC-020 | Concept-down command names are preferred for autocomplete, e.g. `sos:inbox-process` style. | Use domain-first command names such as `sos:vault-process`, `sos:context-export`, and `sos:ingest`. |
 | SRC-021 | Keep it simple early; no separate upgrade command unless infrastructure warrants it. | Update checks can be part of `sos:init`, `sos:summary`, and `sos:audit`. |
 | SRC-022 | Initial install should support drop-in file and/or GitHub grab. | Provide `SOS-INSTALL.md` as portable file plus manifest-based remote update model. |
 | SRC-023 | Drop-in file can mostly point to the repo but should have a small fallback. | `SOS-INSTALL.md` should explain SOS, point to remote templates, and include minimal offline layout. |
@@ -52,3 +52,6 @@ It captures user statements and decisions from the originating discussion. Deriv
 | SRC-036 | Existing Workspacer/KG/vault-like projects need a migration path into SOS with questions, opt-ins, opt-outs, and no assumptions about Backlog.md. | Add read-only migration assessment, vault manifests, and a human-gated `/sos:migrate` command path. |
 | SRC-037 | Folder README files must tell an agent how to operate the folder, not merely describe what the folder is. | Make `vault/triage/README.md` include the concrete `/sos:vault-process` protocol, decision key, routes, and follow-up rules. |
 | SRC-038 | Typing `/so` in a new Claude Code terminal should reveal the SOS entry point. | Add a native project-level Claude Code skill router at `.claude/skills/sos/SKILL.md`. |
+| SRC-039 | `/sos:help` must explain the original concrete baseline rather than inventing abstract equal-weight categories. | Help starts from solution/project spine, `.claude` context, vault KB, triage/wiki/archive/outbox, metadata, tools, and automation. |
+| SRC-040 | Tool discussion should be entered with `/sos:tools`, not a summary sub-mode or `toolkits-summary`. | Add `/sos:tools` and keep `TOOLKITS.md` as system policy behind that conversational command. |
+| SRC-041 | External knowledge capture should be one command with natural-language intent, not multiple ingest command variants. | Add `/sos:ingest <source> <intent>` and let the command choose fetch/extract/routing/fallback behavior. |

@@ -12,16 +12,20 @@ This is system policy, not local environment inventory.
 
 Use `.claude/TOOLS.md` for local available tools, commands, services, and environment facts.
 
-## Tool Layers
+## What SOS Records About Tools
 
-| Layer | Purpose | Examples |
+SOS does not make tools the source of truth. Tools are capabilities that may read, write, or act on the solution/project spine and vault.
+
+Record tools by practical use:
+
+| Area | Meaning | Examples |
 |---|---|---|
-| Solution spine | Durable context and memory | SOS/Workspacer files |
-| Project memory | Local maps, current state, decisions | `.claude/*.md`, vault wiki |
-| Work management | Tasks/specs/status | Backlog, GitHub Issues, Jira |
-| Agent instructions | Tool adapters | CLAUDE.md, AGENTS.md, GEMINI.md |
-| Tooling layer | AI workers | Claude Code, Codex, Cursor |
-| Automation layer | Repeated/async workflows | hooks, GitHub Actions, n8n |
+| AI harnesses | Tools that operate on the folder. | Claude Code, Codex, Cursor |
+| Knowledge ingestion | Tools that fetch, clip, scrape, extract, or transcribe sources. | Firecrawl, browser clipper, Medium script, PDF/OCR tools |
+| Knowledge view | Tools that display or navigate the vault. | Obsidian |
+| Task/planning adapters | Optional systems for tasks, issues, tickets, or delivery tracking. | Backlog.md, GitHub Issues, Jira, Linear |
+| Source control/release | Tools for checkpoints, branches, PRs, CI, and deployment. | Git, GitHub, GitHub Actions |
+| Automation | Tools that repeat flows or connect systems. | hooks, scheduled jobs, n8n, scripts, APIs |
 
 ## Adoption Rule
 
@@ -47,7 +51,7 @@ Before adopting a new tool, record:
 
 ## Current Defaults
 
-These are placeholders for the installed node to fill or override:
+These are placeholders for the installed solution/project to fill or override:
 
 | Tool Category | Default |
 |---|---|
@@ -55,4 +59,3 @@ These are placeholders for the installed node to fill or override:
 | Knowledge base | `vault/` |
 | Work management | Project-specific |
 | Automation | Manual first, hooks/actions later |
-

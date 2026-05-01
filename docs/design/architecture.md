@@ -65,6 +65,14 @@ node-root/
     outbox/
       _manifest.md
   .claude/
+    commands/
+      sos/
+        help.md
+        init.md
+        summary.md
+        audit.md
+        tools.md
+        ingest.md
     skills/
       sos/
         SKILL.md
@@ -124,7 +132,8 @@ sos:vault-process
 sos:vault-summary
 sos:context-export
 sos:context-import
-sos:toolkits-summary
+sos:tools
+sos:ingest <source> <intent>
 ```
 
 Keep v0.1 command set small.
@@ -144,6 +153,8 @@ Phase 2:
 - `sos:summary`
 - `sos:audit`
 - `sos:migrate`
+- `sos:tools`
+- `sos:ingest`
 - safe patch plans
 - update checks against manifest
 

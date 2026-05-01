@@ -6,6 +6,16 @@ status: active
 
 # Changelog
 
+## 0.1.6 - 2026-05-01
+
+Corrected the command/help model back to the concrete SOS baseline.
+
+- Updated `/sos:help` to start from solution/project spine, `.claude` context, vault KB, metadata, tools, and automation.
+- Added `/sos:tools` as the conversational tool-layer entry point.
+- Added single natural-language `/sos:ingest <source> <intent>` command.
+- Removed `/sos:toolkits-summary` from the visible command surface.
+- Reworked `TOOLKITS.md` away from abstract layers and toward practical tool use.
+
 ## 0.1.5 - 2026-05-01
 
 Visible SOS branch commands and safer command-facing metadata.
