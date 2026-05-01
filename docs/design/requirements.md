@@ -43,7 +43,7 @@ Requirements extracted from `source-ledger.md`.
 | REQ-029 | Vault lifecycle README files must include enough operational instructions for an agent to act safely from that folder. | SRC-037 | active |
 | REQ-030 | Installed SOS nodes must expose a native Claude Code `/sos` entry point. | SRC-038 | active |
 | REQ-031 | Installed SOS nodes must include node-local read-only helper scripts for summary, audit, and migration assessment. | SRC-044 | active |
-| REQ-032 | SOS must provide a normal CLI package surface so users install the tool globally and run `sos install` inside target projects. | SRC-047 | active |
+| REQ-032 | SOS must provide a normal GitHub-backed CLI package surface so users can run the tool with `npx --package github:coastalgit/solution-os#main sos ...` or install it locally from GitHub, without npm registry publishing. | SRC-047 | active |
 | REQ-033 | Triage processing prompts must use self-describing human gate choices, not unexplained single-letter responses. | SRC-048 | active |
 | REQ-034 | SOS audit must include conservative semantic health reporting for actor and named-concept registration drift. | SRC-049 | active |
 | REQ-035 | SOS must keep `.claude/ACTORS.md` as the only canonical actor registry and prevent parallel actor registries in vault content. | SRC-050 | active |

@@ -6,25 +6,32 @@ It installs, summarizes, audits, and exports a consistent project/endeavour memo
 
 ## Use SOS
 
-Install the `sos` tool once in the machine or agent environment:
+Run the `sos` tool from the canonical GitHub repo:
 
 ```bash
-npm install -g @coastalgit/solution-os
+npx --yes --package github:coastalgit/solution-os#main sos install
 ```
 
-Then apply SOS inside any repository:
+Then verify the SOS node:
 
 ```bash
-cd path/to/project
-sos install
-sos audit
+npx --yes --package github:coastalgit/solution-os#main sos audit
 ```
 
 That is the primary model:
 
-- install the **tool** globally;
-- run `sos install` to apply missing **project-local SOS node files**;
-- run `sos audit` to verify the node.
+- use GitHub as the distribution source;
+- do not require npm registry publishing;
+- run `install` to apply missing **project-local SOS node files**;
+- run `audit` to verify the node.
+
+Optional local/global install from GitHub, still without npm registry publishing:
+
+```bash
+npm install -g github:coastalgit/solution-os#main
+sos install
+sos audit
+```
 
 The project-local SOS state records its own installed baseline in `.claude/sos/sos.json`.
 
@@ -57,7 +64,7 @@ When run over an existing SOS node, the CLI checks `.claude/sos/sos.json` before
 - newer project version than the running CLI: write commands are blocked
 - unreadable or missing project version metadata: write commands are blocked
 
-When the CLI is launched through a one-shot cloud/package command, the running CLI version is treated as the package/cloud version for this safety check.
+When the CLI is launched through a one-shot GitHub command, the running CLI version is treated as the GitHub-sourced tool version for this safety check.
 
 ## Repository
 
@@ -92,7 +99,7 @@ That is deliberate dogfooding, but the layers are different.
 
 These files are the product source used to install or update SOS elsewhere:
 
-- `package.json` and `bin/sos.js` - the global CLI package.
+- `package.json` and `bin/sos.js` - the GitHub-backed CLI package surface.
 - `templates/core/` - the installable baseline copied into other nodes.
 - `manifest.json` - published version and update metadata.
 - `docs/design/` - source-backed design ledger, requirements, decisions, architecture, and open questions.

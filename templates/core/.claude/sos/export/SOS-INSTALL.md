@@ -16,14 +16,24 @@ This file is installed inside SOS nodes as a reference. It is not the primary pr
 
 ## Primary Install Model
 
-Install the `sos` tool once, then run it from the project that should receive SOS:
+Run the `sos` tool from the canonical GitHub repo inside the project that should receive SOS:
 
 ```text
+npx --yes --package github:coastalgit/solution-os#main sos install
+npx --yes --package github:coastalgit/solution-os#main sos audit
+```
+
+That is the normal path. It uses GitHub as the distribution source and does not require npm registry publishing.
+
+Optional local/global install from GitHub:
+
+```text
+npm install -g github:coastalgit/solution-os#main
 sos install
 sos audit
 ```
 
-That is the normal path. The source repository's root `.claude/` and `vault/` are the SolutionOS project's own working memory. They are not copied into target projects.
+The source repository's root `.claude/` and `vault/` are the SolutionOS project's own working memory. They are not copied into target projects.
 
 ## What `sos install` Does
 
