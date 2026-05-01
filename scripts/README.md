@@ -20,6 +20,10 @@ The script does not overwrite existing files unless `-Force` is supplied.
 
 This is a temporary local helper, not the final SOS command runtime.
 
+The read-only helpers are also shipped inside installed SOS nodes under
+`.claude/sos/scripts/` so `/sos:summary`, `/sos:audit`, and `/sos:migrate`
+do not depend on the source repository being present.
+
 ## `sos-summary.ps1`
 
 Read the SOS shape of a folder without changing files:
@@ -39,3 +43,11 @@ Inspect SOS structure and mandatory metadata without changing files:
 ```
 
 The script reports missing required files/directories and SOS-owned Markdown files missing YAML frontmatter.
+
+## `sos-migrate-assess.ps1`
+
+Inspect older project-memory and KB structures without changing files:
+
+```powershell
+.\scripts\sos-migrate-assess.ps1 -TargetPath <path-to-node>
+```

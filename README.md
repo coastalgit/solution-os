@@ -75,13 +75,14 @@ vault/
   TOOLS.md
   WORKFLOW.md
   sos/
+    scripts/
 manifest.json
 ```
 
 Current version:
 
 ```text
-0.1.8
+0.1.9
 ```
 
 ## First Principles
@@ -127,4 +128,12 @@ Assess migration sources in an existing project:
 
 ```powershell
 .\scripts\sos-migrate-assess.ps1 -TargetPath <path-to-node>
+```
+
+Installed nodes also carry the read-only helpers locally:
+
+```powershell
+.\.claude\sos\scripts\sos-summary.ps1 -TargetPath .
+.\.claude\sos\scripts\sos-audit.ps1 -TargetPath .
+.\.claude\sos\scripts\sos-migrate-assess.ps1 -TargetPath .
 ```

@@ -19,9 +19,10 @@ Do not read or follow files here during ordinary project work unless the user in
 - `COMMANDS.md` - official SOS command vocabulary.
 - `SCHEMA.md` - human-readable schema for node files and metadata.
 - `TOOLKITS.md` - SOS-wide toolset preferences and adoption rules.
+- `scripts/` - node-local read-only helpers for summary, audit, and migration assessment.
 - `template/` - local template support material.
 - `export/` - portable single-file assets intended to be copied out.
 
-Migration assessment is part of SOS operations. Use `/sos:migrate` before moving older Workspacer, KB, spine, command, skill, or inbox-style material into the active SOS structure.
+Migration assessment is part of SOS operations. Use `/sos:migrate` or `.claude/sos/scripts/sos-migrate-assess.ps1` before moving older Workspacer, KB, spine, command, skill, or inbox-style material into the active SOS structure.
 
 Native Claude Code invocation is provided by `.claude/skills/sos/SKILL.md`.

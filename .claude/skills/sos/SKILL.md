@@ -63,12 +63,12 @@ Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 
 ## Script Hints
 
-If the SolutionOS repo scripts are available, use them for checks:
+Installed SOS nodes include read-only helper scripts:
 
 ```powershell
-.\scripts\sos-summary.ps1 -TargetPath .
-.\scripts\sos-audit.ps1 -TargetPath .
-.\scripts\sos-migrate-assess.ps1 -TargetPath .
+.\.claude\sos\scripts\sos-summary.ps1 -TargetPath .
+.\.claude\sos\scripts\sos-audit.ps1 -TargetPath .
+.\.claude\sos\scripts\sos-migrate-assess.ps1 -TargetPath .
 ```
 
-If scripts are not available, perform the file-based protocol from `.claude/sos/COMMANDS.md` and `.claude/sos/SCHEMA.md`.
+If scripts are missing, report SOS drift and then perform the file-based protocol from `.claude/sos/COMMANDS.md` and `.claude/sos/SCHEMA.md`.

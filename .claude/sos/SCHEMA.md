@@ -41,6 +41,10 @@ This is the human-readable schema for an SOS node.
 | `.claude/sos/COMMANDS.md` | Official command vocabulary. |
 | `.claude/sos/SCHEMA.md` | This schema. |
 | `.claude/sos/TOOLKITS.md` | SOS toolset preferences and adoption rules. |
+| `.claude/sos/scripts/README.md` | Node-local helper script notes. |
+| `.claude/sos/scripts/sos-summary.ps1` | Read-only node summary helper. |
+| `.claude/sos/scripts/sos-audit.ps1` | Read-only structure and metadata audit helper. |
+| `.claude/sos/scripts/sos-migrate-assess.ps1` | Read-only legacy memory/KB migration assessment helper. |
 | `.claude/sos/export/SOS-BUILDER.md` | Portable export builder file. |
 | `.claude/sos/export/SOS-INSTALL.md` | Portable install/init file. |
 

@@ -48,3 +48,4 @@ Traceability from source statements to requirements, decisions, and template fil
 | SRC-036 | REQ-027, REQ-028 | DEC-018, DEC-019 | `scripts/sos-migrate-assess.ps1`, COMMANDS.md, SCHEMA.md, vault manifests |
 | SRC-037 | REQ-029 | DEC-020 | `vault/triage/README.md`, `templates/core/vault/triage/README.md` |
 | SRC-038 | REQ-030 | DEC-021 | `.claude/skills/sos/SKILL.md`, `templates/core/.claude/skills/sos/SKILL.md`, scripts/audit required files |
+| SRC-044 | REQ-031 | DEC-022 | `.claude/sos/scripts/`, `templates/core/.claude/sos/scripts/`, summary/audit required files |

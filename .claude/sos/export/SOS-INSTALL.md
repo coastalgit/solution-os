@@ -3,7 +3,7 @@ type: sos-install
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.8
+sos_version: 0.1.9
 ---
 
 # SOS-INSTALL
@@ -49,7 +49,7 @@ Apply only after review:
 For an existing project with older memory or KB structures, assess migration first:
 
 ```powershell
-.\scripts\sos-migrate-assess.ps1 -TargetPath <node-root>
+.\.claude\sos\scripts\sos-migrate-assess.ps1 -TargetPath <node-root>
 ```
 
 If no repository URL is configured, ask the user for the official template source or use the fallback minimal layout below.
@@ -96,6 +96,11 @@ node-root/
       TOOLKITS.md
       COMMANDS.md
       SCHEMA.md
+      scripts/
+        README.md
+        sos-summary.ps1
+        sos-audit.ps1
+        sos-migrate-assess.ps1
       template/
       export/
         SOS-BUILDER.md

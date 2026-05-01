@@ -6,6 +6,15 @@ status: active
 
 # Changelog
 
+## 0.1.9 - 2026-05-01
+
+Shipped node-local SOS helper scripts.
+
+- Added read-only helper scripts to the install template under `.claude/sos/scripts/`.
+- Updated script hints to point at installed node-local scripts instead of a missing project-root `scripts/` folder.
+- Updated summary/audit required-file checks so missing node-local helper scripts are reported as SOS drift.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.9.
+
 ## 0.1.8 - 2026-05-01
 
 Trimmed `/sos:about`.

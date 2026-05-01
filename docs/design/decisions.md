@@ -31,3 +31,4 @@ status: active
 | DEC-019 | Add `_manifest.md` files to each vault lifecycle folder. | SRC-036 | Manifests make triage/wiki/archive/outbox state explicit and auditable. |
 | DEC-020 | Treat triage README as an operational protocol file. | SRC-037 | Agents opening the folder need to know exactly how to process items without hunting elsewhere. |
 | DEC-021 | Add `.claude/skills/sos/SKILL.md` as the Claude Code-native router. | SRC-038 | Claude Code project skills expose `/sos`; colon-prefixed `/sos:*` remains canonical vocabulary until plugin/MCP support exists. |
+| DEC-022 | Ship read-only helper scripts inside each installed node under `.claude/sos/scripts/`. | SRC-044 | A baseline SOS install should be self-contained for normal summary, audit, and migration assessment checks. |
