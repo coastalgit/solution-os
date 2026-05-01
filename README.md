@@ -20,6 +20,8 @@ https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json
 
 ## Read This First: Product Repo and SOS Node
 
+To install SOS into another repository, start with [`INSTALL.md`](INSTALL.md).
+
 This repository is doing two jobs:
 
 1. It is the **SolutionOS product/source repository**.
@@ -32,6 +34,7 @@ That is deliberate dogfooding, but it can look recursive until the layers are se
 These files are the product source used to install or update SOS elsewhere:
 
 - `templates/core/` - the installable baseline copied into other nodes.
+- `INSTALL.md` - public source-repo install entry point for agents and humans.
 - `scripts/` - source-repo helper scripts, including preview/apply init.
 - `manifest.json` - published version and update metadata.
 - `docs/design/` - source-backed design ledger, requirements, decisions, architecture, and open questions.
@@ -40,11 +43,13 @@ These files are the product source used to install or update SOS elsewhere:
 
 When applying SOS to another repository, treat `templates/core/` and the exported install instructions as the product payload. Do not treat this repo root's own `.claude/` and `vault/` as files to copy by hand.
 
-For cloud-agent installation into another repository, start here:
+For cloud-agent installation into another repository, the root entry point is:
 
 ```text
-https://raw.githubusercontent.com/coastalgit/solution-os/main/.claude/sos/export/SOS-INSTALL.md
+https://raw.githubusercontent.com/coastalgit/solution-os/main/INSTALL.md
 ```
+
+The portable installed-node protocol remains at `.claude/sos/export/SOS-INSTALL.md`.
 
 ### This Repo's Own SOS Node
 
@@ -94,6 +99,7 @@ Do not build a full CLI, marketplace, cloud service, dashboard, or autonomous ag
 ```text
 docs/
   design/
+INSTALL.md
 templates/
   core/
 scripts/
@@ -121,7 +127,7 @@ manifest.json
 Current version:
 
 ```text
-0.1.11
+0.1.12
 ```
 
 ## First Principles

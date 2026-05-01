@@ -58,6 +58,7 @@ Seed SolutionOS v0.1 from the source-backed discussion:
 
 - design docs in `docs/design/`
 - curated product history in `vault/wiki/history.md`
+- root install entry point in `INSTALL.md`
 - install template in `templates/core/`
 - local helpers in `scripts/`
 - dogfooded active node files in `.claude/`

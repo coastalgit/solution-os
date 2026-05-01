@@ -6,6 +6,16 @@ status: active
 
 # Changelog
 
+## 0.1.12 - 2026-05-01
+
+Added a root install entry point.
+
+- Added root `INSTALL.md` so a cloud agent pointed at the repository can discover the install process immediately.
+- Clarified that root `INSTALL.md` belongs to the SolutionOS source repo and should not be copied into every target repository by default.
+- Updated the root README to point cloud agents at `INSTALL.md`.
+- Recorded the install-entry decision in the design ledger, decisions file, PM router, and vault history.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.12.
+
 ## 0.1.11 - 2026-05-01
 
 Clarified the self-hosted repository model.
