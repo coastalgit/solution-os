@@ -21,3 +21,5 @@ Do not read or follow files here during ordinary project work unless the user in
 - `TOOLKITS.md` - SOS-wide toolset preferences and adoption rules.
 - `template/` - local template support material.
 - `export/` - portable single-file assets intended to be copied out.
+
+Migration assessment is part of SOS operations. Use `/sos:migrate` or `scripts/sos-migrate-assess.ps1` before moving older Workspacer, KB, spine, command, skill, or inbox-style material into the active SOS structure.

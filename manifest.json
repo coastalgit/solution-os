@@ -1,22 +1,24 @@
 {
-  "sos_version": "0.1.1",
-  "template_version": "0.1.1",
-  "builder_version": "0.1.1",
-  "released": "2026-04-30",
+  "sos_version": "0.1.2",
+  "template_version": "0.1.2",
+  "builder_version": "0.1.2",
+  "released": "2026-05-01",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.1"
+    "core": "0.1.2"
   },
   "scripts": {
     "sos-init.ps1": "0.1.1",
-    "sos-summary.ps1": "0.1.1",
-    "sos-audit.ps1": "0.1.1"
+    "sos-summary.ps1": "0.1.2",
+    "sos-audit.ps1": "0.1.2",
+    "sos-migrate-assess.ps1": "0.1.2"
   },
   "profiles": {},
   "notes": [
     "Initial public seed for SolutionOS.",
-    "Canonical repository configured as https://github.com/coastalgit/solution-os.git."
+    "Canonical repository configured as https://github.com/coastalgit/solution-os.git.",
+    "0.1.2 adds vault manifests and read-only migration assessment for existing projects."
   ]
 }

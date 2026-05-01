@@ -3,7 +3,7 @@ type: sos-install
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.0
+sos_version: 0.1.2
 ---
 
 # SOS-INSTALL
@@ -22,6 +22,7 @@ Use it when a project does not already have SOS and you want an AI agent to prop
 - Do not overwrite existing `CLAUDE.md`, `AGENTS.md`, `.claude/`, or `vault/` content without showing the diff/merge plan.
 - Do not delete or move existing project files.
 - If a legacy inbox-named KB capture folder exists, propose migration to `vault/triage/` but do not perform it without approval.
+- If old Workspacer, KB, spine, command, skill, or session-memory material exists, run migration assessment before proposing file moves.
 - Keep the install minimal.
 - Preserve existing project instructions and route them into SOS rather than replacing them blindly.
 
@@ -43,6 +44,12 @@ Apply only after review:
 
 ```powershell
 .\scripts\sos-init.ps1 -TargetPath <node-root> -NodeKind project -Apply
+```
+
+For an existing project with older memory or KB structures, assess migration first:
+
+```powershell
+.\scripts\sos-migrate-assess.ps1 -TargetPath <node-root>
 ```
 
 If no repository URL is configured, ask the user for the official template source or use the fallback minimal layout below.
@@ -70,9 +77,13 @@ node-root/
   AGENTS.md
   vault/
     triage/
+      _manifest.md
     wiki/
+      _manifest.md
     archive/
+      _manifest.md
     outbox/
+      _manifest.md
   .claude/
     PM.md
     STONE.md

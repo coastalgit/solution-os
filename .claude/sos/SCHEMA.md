@@ -15,9 +15,13 @@ This is the human-readable schema for an SOS node.
 | `CLAUDE.md` | Claude adapter/router into SOS. |
 | `AGENTS.md` | Codex adapter/router into SOS. |
 | `vault/triage/` | Raw KB processing lane. |
+| `vault/triage/_manifest.md` | Triage item manifest. |
 | `vault/wiki/` | Curated KB. |
+| `vault/wiki/_manifest.md` | Wiki lifecycle manifest. |
 | `vault/archive/` | Processed source evidence. |
+| `vault/archive/_manifest.md` | Archive traceability manifest. |
 | `vault/outbox/` | Generated deliverables/exports. |
+| `vault/outbox/_manifest.md` | Outbox deliverables manifest. |
 | `.claude/PM.md` | Active context router / filing cabinet. |
 | `.claude/STONE.md` | Carved-in-stone facts and non-negotiables. |
 | `.claude/ACTORS.md` | People, systems, teams, services, roles. |
@@ -64,7 +68,7 @@ This applies to:
 - `.claude/sos/export/*.md`
 - `.claude/sos/template/*.md`
 - curated `vault/wiki/*.md` notes
-- vault lifecycle README files under `vault/triage`, `vault/wiki`, `vault/archive`, and `vault/outbox`
+- vault lifecycle README and manifest files under `vault/triage`, `vault/wiki`, `vault/archive`, and `vault/outbox`
 
 This does not apply to:
 

@@ -27,3 +27,5 @@ status: active
 | DEC-015 | Use `https://github.com/coastalgit/solution-os.git` as the canonical SolutionOS repository. | SRC-033 | Enables installed nodes to know where update checks should originate. |
 | DEC-016 | Require YAML frontmatter on SOS-owned Markdown context and KB files. | SRC-034 | Makes routing, audit, indexing, Obsidian use, and AI context loading predictable. |
 | DEC-017 | Start release stamping at `0.1.0` and move the current installable baseline to `0.1.1`. | SRC-035 | Allows legacy projects to record exactly which SOS baseline was applied. |
+| DEC-018 | Add `/sos:migrate` as a human-gated migration assessment path. | SRC-036 | Existing project setups need discovery and choices before applying SOS changes. |
+| DEC-019 | Add `_manifest.md` files to each vault lifecycle folder. | SRC-036 | Manifests make triage/wiki/archive/outbox state explicit and auditable. |

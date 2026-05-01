@@ -57,9 +57,13 @@ node-root/
   AGENTS.md
   vault/
     triage/
+      _manifest.md
     wiki/
+      _manifest.md
     archive/
+      _manifest.md
     outbox/
+      _manifest.md
   .claude/
     PM.md
     STONE.md
@@ -136,6 +140,7 @@ Phase 2:
 
 - `sos:summary`
 - `sos:audit`
+- `sos:migrate`
 - safe patch plans
 - update checks against manifest
 

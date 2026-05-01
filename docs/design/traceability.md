@@ -45,3 +45,4 @@ Traceability from source statements to requirements, decisions, and template fil
 | SRC-033 | REQ-024 | DEC-015 | manifest.json, `.claude/sos/sos.json`, templates/core/.claude/sos/sos.json |
 | SRC-034 | REQ-025 | DEC-016 | `.claude/sos/SCHEMA.md`, `.claude/WORKFLOW.md`, templates/core |
 | SRC-035 | REQ-026 | DEC-017 | manifest.json, `.claude/sos/VERSION.md`, CHANGELOG.md, git tags |
+| SRC-036 | REQ-027, REQ-028 | DEC-018, DEC-019 | `scripts/sos-migrate-assess.ps1`, COMMANDS.md, SCHEMA.md, vault manifests |

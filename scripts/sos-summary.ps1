@@ -25,7 +25,10 @@ function Count-NodeFiles {
         return 0
     }
 
-    return @(Get-ChildItem -LiteralPath $path -File -Force | Where-Object { $_.Name -ne 'README.md' }).Count
+    return @(
+        Get-ChildItem -LiteralPath $path -File -Force |
+            Where-Object { $_.Name -ne 'README.md' -and $_.Name -ne '_manifest.md' }
+    ).Count
 }
 
 function Get-PropertyValue {
@@ -61,7 +64,11 @@ $requiredFiles = @(
     '.claude\sos\SCHEMA.md',
     '.claude\sos\TOOLKITS.md',
     '.claude\sos\export\SOS-BUILDER.md',
-    '.claude\sos\export\SOS-INSTALL.md'
+    '.claude\sos\export\SOS-INSTALL.md',
+    'vault\triage\_manifest.md',
+    'vault\wiki\_manifest.md',
+    'vault\archive\_manifest.md',
+    'vault\outbox\_manifest.md'
 )
 
 $requiredDirs = @(

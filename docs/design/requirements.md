@@ -38,6 +38,8 @@ Requirements extracted from `source-ledger.md`.
 | REQ-024 | SOS metadata must record the canonical repository and raw manifest URL for future update checks. | SRC-033 | active |
 | REQ-025 | SOS-owned Markdown context and KB files must always include YAML frontmatter metadata. | SRC-034 | active |
 | REQ-026 | SOS releases must be version-stamped from the beginning in manifest, installed metadata, human-readable version notes, changelog, and git tags. | SRC-035 | active |
+| REQ-027 | SOS must support migration assessment for existing messy project-memory/KB setups before applying changes. | SRC-036 | active |
+| REQ-028 | Vault lifecycle folders must include manifests so migration, processing, and audit have explicit control files. | SRC-036 | active |
 
 ## Non-Requirements For v0.1
 
@@ -48,3 +50,4 @@ Requirements extracted from `source-ledger.md`.
 | NREQ-003 | Dashboard UI | Workspacer/SOS may later oversee visually, but v0.1 is file-first. |
 | NREQ-004 | Autonomous agent swarm | The foundation must be stable before orchestration. |
 | NREQ-005 | Separate `sos:upgrade` command | Update behavior can be included in init/summary/audit for now. |
+| NREQ-006 | Automatic migration without questions | Existing projects need opt-in/opt-out choices before moving or rewriting material. |

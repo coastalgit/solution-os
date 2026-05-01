@@ -3,7 +3,7 @@ type: sos-builder
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.0
+sos_version: 0.1.2
 ---
 
 # SOS-BUILDER
@@ -96,4 +96,3 @@ Suggested import target
 - Do not create or overwrite an SOS installation unless the user asks.
 - Do not include secrets, private credentials, or unnecessary personal details.
 - Avoid sensitive personal labels in filenames, headings, or generated outputs unless explicitly requested.
-

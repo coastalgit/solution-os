@@ -6,11 +6,11 @@ status: active
 
 # SOS Version
 
-Current SOS version: `0.1.1`
+Current SOS version: `0.1.2`
 
-Current template version: `0.1.1`
+Current template version: `0.1.2`
 
-Released: `2026-04-30`
+Released: `2026-05-01`
 
 Canonical manifest:
 

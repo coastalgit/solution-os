@@ -6,6 +6,16 @@ status: active
 
 # Changelog
 
+## 0.1.2 - 2026-05-01
+
+Migration-aware baseline for existing projects.
+
+- Added vault lifecycle manifests to the core template.
+- Added `scripts/sos-migrate-assess.ps1` for read-only migration discovery.
+- Added `/sos:migrate` to the command vocabulary.
+- Updated summary/audit helpers to require vault manifests.
+- Updated summary counts so manifests are not counted as triage/wiki/outbox items.
+
 ## 0.1.1 - 2026-04-30
 
 Version-stamped baseline for applying SOS to existing projects.

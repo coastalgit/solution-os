@@ -49,3 +49,4 @@ It captures user statements and decisions from the originating discussion. Deriv
 | SRC-033 | Canonical SolutionOS repo is `https://github.com/coastalgit/solution-os.git`. | Configure repository and manifest URLs in `manifest.json` and SOS metadata. |
 | SRC-034 | File metadata/frontmatter should be part of the baseline and applied consistently to SOS-owned context and KB notes. | Make YAML frontmatter mandatory for SOS-owned Markdown context and KB files. |
 | SRC-035 | SOS should be version-stamped from the beginning before being applied to further legacy projects. | Maintain manifest version, installed node version, `VERSION.md`, changelog, and git tags. |
+| SRC-036 | Existing Workspacer/KG/vault-like projects need a migration path into SOS with questions, opt-ins, opt-outs, and no assumptions about Backlog.md. | Add read-only migration assessment, vault manifests, and a human-gated `/sos:migrate` command path. |

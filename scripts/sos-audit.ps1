@@ -43,7 +43,11 @@ $requiredFiles = @(
     '.claude\sos\SCHEMA.md',
     '.claude\sos\TOOLKITS.md',
     '.claude\sos\export\SOS-BUILDER.md',
-    '.claude\sos\export\SOS-INSTALL.md'
+    '.claude\sos\export\SOS-INSTALL.md',
+    'vault\triage\_manifest.md',
+    'vault\wiki\_manifest.md',
+    'vault\archive\_manifest.md',
+    'vault\outbox\_manifest.md'
 )
 
 $requiredDirs = @(
@@ -96,8 +100,12 @@ if (Test-Path -LiteralPath $sosDir) {
 
 foreach ($relativePath in @(
     'vault\triage\README.md',
+    'vault\triage\_manifest.md',
+    'vault\wiki\_manifest.md',
     'vault\archive\README.md',
-    'vault\outbox\README.md'
+    'vault\archive\_manifest.md',
+    'vault\outbox\README.md',
+    'vault\outbox\_manifest.md'
 )) {
     $path = Join-Path $targetFullPath $relativePath
     if (Test-Path -LiteralPath $path) {

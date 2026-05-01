@@ -77,7 +77,7 @@ manifest.json
 Current version:
 
 ```text
-0.1.1
+0.1.2
 ```
 
 ## First Principles
@@ -117,4 +117,10 @@ Audit structure and metadata:
 
 ```powershell
 .\scripts\sos-audit.ps1 -TargetPath <path-to-node>
+```
+
+Assess migration sources in an existing project:
+
+```powershell
+.\scripts\sos-migrate-assess.ps1 -TargetPath <path-to-node>
 ```
