@@ -27,6 +27,8 @@ If `/sos:*` entries do not appear immediately after install/update, restart or r
 
 | Command | Purpose | Default Behavior |
 |---|---|---|
+| `/sos:help` | Show a quick SOS command reference, including installed version. | Read-only. |
+| `/sos:about` | Explain the intent and structure of SOS, including solution/project spine, vault, metadata, and optional tools. | Read-only. |
 | `/sos:init` | Install or refresh SOS in the current node. | Propose changes first. Apply only with approval. |
 | `/sos:summary` | Summarize SOS/node health and current state. | Read-mostly. Do not apply changes. |
 | `/sos:audit` | Inspect deeply for drift, missing files, missing metadata, stale adapters, and repair opportunities. | May propose/apply approved changes. |

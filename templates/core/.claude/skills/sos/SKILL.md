@@ -1,7 +1,7 @@
 ---
 name: sos
-description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS init, summary, audit, tools, ingest, migration, vault, context, or session workflows.
-argument-hint: "[init|summary|audit|tools|ingest|migrate|vault-process|vault-summary|context-export|context-import|session-close]"
+description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS help, about, init, summary, audit, tools, ingest, migration, vault, context, or session workflows.
+argument-hint: "[help|about|init|summary|audit|tools|ingest|migrate|vault-process|vault-summary|context-export|context-import|session-close]"
 disable-model-invocation: true
 ---
 
@@ -39,6 +39,8 @@ Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 | Invocation | Canonical Meaning |
 |---|---|
 | `/sos` | Show the available SOS subcommands and current safe next action. |
+| `/sos help` | `/sos:help` - quick command reference, including installed version. |
+| `/sos about` | `/sos:about` - explain SOS intent and structure. |
 | `/sos init` | `/sos:init` - install or refresh SOS. Proposal first. |
 | `/sos summary` | `/sos:summary` - summarize SOS/node health. Read-only. |
 | `/sos audit` | `/sos:audit` - inspect drift, missing files, metadata, stale adapters, repair opportunities. |

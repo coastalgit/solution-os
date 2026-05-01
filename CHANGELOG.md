@@ -6,6 +6,15 @@ status: active
 
 # Changelog
 
+## 0.1.7 - 2026-05-01
+
+Split quick help from explanatory about.
+
+- Added `/sos:about` for the longer SOS intent and structure explanation.
+- Reduced `/sos:help` to a compact command reference.
+- Required help, about, and summary to mention installed SOS/template version.
+- Added `about.md` to summary/audit required command files.
+
 ## 0.1.6 - 2026-05-01
 
 Corrected the command/help model back to the concrete SOS baseline.

@@ -3,7 +3,7 @@ type: sos-install
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.6
+sos_version: 0.1.7
 ---
 
 # SOS-INSTALL

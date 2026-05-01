@@ -60,6 +60,7 @@ $requiredFiles = @(
     '.claude\WORKFLOW.md',
     '.claude\skills\sos\SKILL.md',
     '.claude\commands\sos\help.md',
+    '.claude\commands\sos\about.md',
     '.claude\commands\sos\init.md',
     '.claude\commands\sos\summary.md',
     '.claude\commands\sos\audit.md',
