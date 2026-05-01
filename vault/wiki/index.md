@@ -18,6 +18,7 @@ This is the curated knowledge entry point for this SOS node.
 
 ## Notes
 
+- History and dogfooding model: `vault/wiki/history.md`
 - Design source: `docs/design/source-ledger.md`
 - Requirements: `docs/design/requirements.md`
 - Decisions: `docs/design/decisions.md`

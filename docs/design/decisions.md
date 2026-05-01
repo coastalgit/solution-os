@@ -32,3 +32,4 @@ status: active
 | DEC-020 | Treat triage README as an operational protocol file. | SRC-037 | Agents opening the folder need to know exactly how to process items without hunting elsewhere. |
 | DEC-021 | Add `.claude/skills/sos/SKILL.md` as the Claude Code-native router. | SRC-038 | Claude Code project skills expose `/sos`; colon-prefixed `/sos:*` remains canonical vocabulary until plugin/MCP support exists. |
 | DEC-022 | Ship read-only helper scripts inside each installed node under `.claude/sos/scripts/`. | SRC-044 | A baseline SOS install should be self-contained for normal summary, audit, and migration assessment checks. |
+| DEC-023 | Treat the SolutionOS repo as both product source and a dogfooded SOS node, and document that split at the root. | SRC-045 | Self-hosting is useful, but public readers must not confuse root `.claude/` and root `vault/` with the install payload for other repositories. |

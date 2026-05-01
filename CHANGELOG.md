@@ -6,6 +6,16 @@ status: active
 
 # Changelog
 
+## 0.1.11 - 2026-05-01
+
+Clarified the self-hosted repository model.
+
+- Updated the root README to explain that this repository is both the SolutionOS product/source repository and a dogfooded SOS node.
+- Distinguished the product/distribution layer (`templates/`, `scripts/`, `manifest.json`, `docs/design/`, portable exports) from this repo's own `.claude/` and `vault/` memory.
+- Added `vault/wiki/history.md` as the curated product history entry point.
+- Linked the history note from the vault index and PM router.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.11.
+
 ## 0.1.10 - 2026-05-01
 
 Defined and audited the SOS routing surface.
