@@ -1,53 +1,32 @@
 # Scripts
 
-Small local helpers for early SolutionOS development.
+PowerShell helpers retained for compatibility, development, and installed-node self-checks.
 
-## `sos-init.ps1`
+The primary user-facing interface is the `sos` CLI:
 
-Preview a core SOS install into another folder:
-
-```powershell
-.\scripts\sos-init.ps1 -TargetPath <path-to-node> -NodeKind project
+```bash
+sos install
+sos audit
+sos status
+sos migrate
 ```
 
-Apply the install:
+## Compatibility Helpers
 
-```powershell
-.\scripts\sos-init.ps1 -TargetPath <path-to-node> -NodeKind project -Apply
-```
+### `sos-init.ps1`
 
-The script does not overwrite existing files unless `-Force` is supplied.
+Legacy preview/apply helper for copying `templates/core/` into a target folder. Prefer `sos install`.
 
-This is a temporary local helper, not the final SOS command runtime.
+### `sos-summary.ps1`
 
-The read-only helpers are also shipped inside installed SOS nodes under
-`.claude/sos/scripts/` so `/sos:summary`, `/sos:audit`, and `/sos:migrate`
-do not depend on the source repository being present.
+Read-only summary helper. Mirrors `sos status`.
 
-## `sos-summary.ps1`
+### `sos-audit.ps1`
 
-Read the SOS shape of a folder without changing files:
+Read-only structure and routing-surface audit helper. Mirrors `sos audit`.
 
-```powershell
-.\scripts\sos-summary.ps1 -TargetPath <path-to-node>
-```
+### `sos-migrate-assess.ps1`
 
-The script reports node metadata, vault counts, missing required SOS files, and routing-surface reachability counts.
+Read-only migration discovery helper. Mirrors the early `sos migrate` assessment behaviour.
 
-## `sos-audit.ps1`
-
-Inspect SOS structure and mandatory metadata without changing files:
-
-```powershell
-.\scripts\sos-audit.ps1 -TargetPath <path-to-node>
-```
-
-The script reports missing required files/directories, SOS-owned Markdown files missing YAML frontmatter, missing PM references, missing adapter delegation, and unreachable SOS surface paths.
-
-## `sos-migrate-assess.ps1`
-
-Inspect older project-memory and KB structures without changing files:
-
-```powershell
-.\scripts\sos-migrate-assess.ps1 -TargetPath <path-to-node>
-```
+Installed nodes also carry these read-only helpers under `.claude/sos/scripts/` so a node remains auditable even where the global CLI is unavailable.

@@ -1,13 +1,18 @@
 {
-  "sos_version": "0.1.12",
-  "template_version": "0.1.12",
-  "builder_version": "0.1.12",
+  "sos_version": "0.1.13",
+  "template_version": "0.1.13",
+  "builder_version": "0.1.13",
   "released": "2026-05-01",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.12"
+    "core": "0.1.13"
+  },
+  "cli": {
+    "package": "@coastalgit/solution-os",
+    "binary": "sos",
+    "version": "0.1.13"
   },
   "scripts": {
     "sos-init.ps1": "0.1.7",
@@ -29,6 +34,7 @@
     "0.1.9 ships read-only helper scripts inside installed nodes under .claude/sos/scripts.",
     "0.1.10 defines the SOS surface routing contract and audits PM/adapters for reachability.",
     "0.1.11 clarifies the self-hosted repository model and adds curated product history to the vault.",
-    "0.1.12 adds root INSTALL.md as the obvious cloud-agent install entry point."
+    "0.1.12 clarified source-repository boundaries.",
+    "0.1.13 makes the sos CLI package the primary install/update interface and expands triage gate choices."
   ]
 }

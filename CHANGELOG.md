@@ -6,6 +6,17 @@ status: active
 
 # Changelog
 
+## 0.1.13 - 2026-05-01
+
+Added the real `sos` CLI package model.
+
+- Added `package.json` and `bin/sos.js` with `sos install`, `sos audit`, `sos status`, `sos migrate`, and `sos version`.
+- Removed root `INSTALL.md` to avoid presenting installation as a markdown-file ritual.
+- Reworked the root README around the clean model: install the `sos` tool globally, then run `sos install` inside a target project.
+- Reframed PowerShell scripts as compatibility helpers rather than the primary product surface.
+- Replaced bare triage gate letters with readable `(Y)ES`, `(N)O`, `(D)ISCUSS`, and `(C)ANCEL` choices.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.13.
+
 ## 0.1.12 - 2026-05-01
 
 Added a root install entry point.

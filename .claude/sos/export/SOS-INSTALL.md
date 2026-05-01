@@ -3,73 +3,33 @@ type: sos-install
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.12
+sos_version: 0.1.13
 ---
 
-# SOS-INSTALL
+# SOS Install Reference
 
 SOS means **SolutionOS**.
 
 SolutionOS is a portable, AI-readable workspace operating layer. It helps agents and humans initialize, summarize, audit, maintain, export, and upgrade durable context for software projects, workshops, research, and other bounded work.
 
-This file is a portable installer/bootstrap instruction file.
+This file is installed inside SOS nodes as a reference. It is not the primary product entry point.
 
-Use it when a project does not already have SOS and you want an AI agent to propose a safe SOS initialization plan.
+## Primary Install Model
 
-## Important Safety Rules
-
-- Do not edit anything until the user approves the install plan.
-- Do not overwrite existing `CLAUDE.md`, `AGENTS.md`, `.claude/`, or `vault/` content without showing the diff/merge plan.
-- Do not delete or move existing project files.
-- If a legacy inbox-named KB capture folder exists, propose migration to `vault/triage/` but do not perform it without approval.
-- If old Workspacer, KB, spine, command, skill, or session-memory material exists, run migration assessment before proposing file moves.
-- Keep the install minimal.
-- Preserve existing project instructions and route them into SOS rather than replacing them blindly.
-
-## Preferred Install Source
-
-If remote access is available, fetch the latest SOS template from the configured SolutionOS repository:
+Install the `sos` tool once, then run it from the project that should receive SOS:
 
 ```text
-https://github.com/coastalgit/solution-os.git
+sos install
+sos audit
 ```
 
-If a full SolutionOS repo is available locally, preview installation first:
+That is the normal path. The source repository's root `.claude/` and `vault/` are the SolutionOS project's own working memory. They are not copied into target projects.
 
-```powershell
-.\scripts\sos-init.ps1 -TargetPath <node-root> -NodeKind project
-```
+## What `sos install` Does
 
-Apply only after review:
+`sos install` applies the baseline from `templates/core/` into the current project.
 
-```powershell
-.\scripts\sos-init.ps1 -TargetPath <node-root> -NodeKind project -Apply
-```
-
-For an existing project with older memory or KB structures, assess migration first:
-
-```powershell
-.\.claude\sos\scripts\sos-migrate-assess.ps1 -TargetPath <node-root>
-```
-
-If no repository URL is configured, ask the user for the official template source or use the fallback minimal layout below.
-
-## Detection Steps
-
-Before proposing changes, inspect:
-
-1. Does `.claude/PM.md` exist?
-2. Does `.claude/sos/sos.json` exist?
-3. Does `vault/` exist?
-4. Does `vault/triage/` exist, or is there a legacy inbox-named KB capture folder to migrate?
-5. Do `CLAUDE.md` and `AGENTS.md` exist?
-6. Are there existing tool-specific instruction files such as `GEMINI.md`, Cursor rules, or old Workspacer files?
-7. Is this a git repo?
-8. Does this folder appear to be a solution, project, module, workshop, research effort, or unknown node?
-
-## Minimal SOS Layout
-
-If approved, create or merge toward:
+It creates the standard SOS surface:
 
 ```text
 node-root/
@@ -77,13 +37,9 @@ node-root/
   AGENTS.md
   vault/
     triage/
-      _manifest.md
     wiki/
-      _manifest.md
     archive/
-      _manifest.md
     outbox/
-      _manifest.md
   .claude/
     PM.md
     STONE.md
@@ -91,41 +47,31 @@ node-root/
     TOOLS.md
     WORKFLOW.md
     sos/
-      sos.json
-      README.md
-      TOOLKITS.md
-      COMMANDS.md
-      SCHEMA.md
-      scripts/
-        README.md
-        sos-summary.ps1
-        sos-audit.ps1
-        sos-migrate-assess.ps1
-      template/
-      export/
-        SOS-BUILDER.md
-        SOS-INSTALL.md
 ```
 
-## Required Install Output
+Existing files are skipped by default. Use force only when the user has explicitly accepted replacement of existing SOS files.
 
-Before changing files, output:
+## Safety Rules
 
-```text
-SOS detection summary
-Existing files that must be preserved
-Proposed node kind
-Proposed parent relationship
-Proposed files to create
-Proposed files to merge/update
-Risks
-Questions for user
-Approval request
-```
+- Preserve existing project instructions.
+- Do not delete or move existing project files during install.
+- Do not replace existing `CLAUDE.md`, `AGENTS.md`, `.claude/`, or `vault/` files unless the user explicitly requests replacement.
+- If older Workspacer, knowledge-base, command, skill, or session-memory material exists, run `sos migrate` first and review the assessment.
+- Route project-specific guidance into `.claude/PM.md` instead of burying it in installer notes.
 
-## Node Metadata Questions
+## Existing Project Flow
 
-Ask or infer cautiously:
+For an existing project:
+
+1. Run `sos status`.
+2. Run `sos migrate` if old knowledge or memory folders exist.
+3. Run `sos install`.
+4. Run `sos audit`.
+5. Fill in `.claude/PM.md` with project-specific context.
+
+## Node Metadata
+
+The installer may infer these, but the user can override them:
 
 - node name
 - node kind: solution, project, module, workshop, research, learning, other
@@ -134,11 +80,6 @@ Ask or infer cautiously:
 - whether this node may publish upward
 - visibility: private, shared, public, summary-only
 
-## After Install
+## Fallback
 
-After approved installation:
-
-1. Create/update the SOS files.
-2. Summarize what changed.
-3. Run a basic SOS summary.
-4. Record open questions in `.claude/PM.md` or `vault/wiki/index.md`.
+If the `sos` command is not available, use the official SolutionOS repository as the source of truth and copy `templates/core/` into the target project without overwriting existing files. After that, run the closest available audit command and record any manual follow-up in `.claude/PM.md`.

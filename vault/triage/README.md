@@ -49,7 +49,7 @@ Default behaviour is proposal-first. The agent must not move, rewrite, archive, 
 2. Group obviously related files.
 3. For each item/group, identify what it appears to be.
 4. Propose one route.
-5. Ask for `Y`, `N`, `D`, or `C`.
+5. Ask for `(Y)ES`, `(N)O`, `(D)ISCUSS`, or `(C)ANCEL`.
 6. Apply only approved items.
 7. Update the relevant manifests and indexes.
 8. Leave rejected or deferred items untouched unless the user asks otherwise.
@@ -58,10 +58,10 @@ Default behaviour is proposal-first. The agent must not move, rewrite, archive, 
 
 | Choice | Meaning |
 |---|---|
-| `Y` | Apply the proposed route for this item. |
-| `N` | No action. Leave untouched. |
-| `D` | Discuss this item before deciding. |
-| `C` | Cancel the whole process run. |
+| `(Y)ES` | Apply the proposed route for this item. |
+| `(N)O` | No action. Leave untouched. |
+| `(D)ISCUSS` | Discuss this item before deciding. |
+| `(C)ANCEL` | Cancel the whole process run. |
 
 ## Route Rules
 
@@ -93,4 +93,3 @@ vault/triage
   -> vault/wiki, vault/archive, vault/outbox, or adopted task system
   -> manifest/index updates
 ```
-

@@ -1,6 +1,6 @@
 {
-  "sos_version": "0.1.12",
-  "template_version": "0.1.12",
+  "sos_version": "0.1.13",
+  "template_version": "0.1.13",
   "node": {
     "name": "",
     "kind": "solution",

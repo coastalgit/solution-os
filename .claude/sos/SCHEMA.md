@@ -70,7 +70,7 @@ Adapters and routers must satisfy this contract:
 | `.claude/sos/scripts/sos-audit.ps1` | Read-only structure and metadata audit helper. |
 | `.claude/sos/scripts/sos-migrate-assess.ps1` | Read-only legacy memory/KB migration assessment helper. |
 | `.claude/sos/export/SOS-BUILDER.md` | Portable export builder file. |
-| `.claude/sos/export/SOS-INSTALL.md` | Portable install/init file. |
+| `.claude/sos/export/SOS-INSTALL.md` | Installed-node install reference and fallback. |
 
 ## Node Metadata
 

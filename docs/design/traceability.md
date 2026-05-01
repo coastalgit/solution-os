@@ -49,3 +49,7 @@ Traceability from source statements to requirements, decisions, and template fil
 | SRC-037 | REQ-029 | DEC-020 | `vault/triage/README.md`, `templates/core/vault/triage/README.md` |
 | SRC-038 | REQ-030 | DEC-021 | `.claude/skills/sos/SKILL.md`, `templates/core/.claude/skills/sos/SKILL.md`, scripts/audit required files |
 | SRC-044 | REQ-031 | DEC-022 | `.claude/sos/scripts/`, `templates/core/.claude/sos/scripts/`, summary/audit required files |
+| SRC-045 |  | DEC-023 | README, `vault/wiki/history.md` |
+| SRC-046 |  | DEC-024 | Superseded root `INSTALL.md` experiment; historical only |
+| SRC-047 | REQ-032 | DEC-025 | `package.json`, `bin/sos.js`, README |
+| SRC-048 | REQ-033 |  | `/sos:vault-process`, `vault/triage/README.md`, `templates/core/vault/triage/README.md` |

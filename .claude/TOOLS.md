@@ -16,17 +16,18 @@ For SOS-wide toolset preferences and adoption rules, read `.claude/sos/TOOLKITS.
 
 | Tool | Status | Purpose | Notes |
 |---|---|---|---|
-| PowerShell | available | Local SOS helper execution | Used for preview/apply init and read-only summary scripts. |
+| Node.js | available | Primary SOS CLI runtime | `bin/sos.js` exposes `sos install`, `sos audit`, `sos status`, and `sos migrate`. |
+| PowerShell | available | Compatibility helper execution | Legacy/source helpers remain in `scripts/` and installed nodes keep read-only scripts under `.claude/sos/scripts/`. |
 
 ## Build / Run / Test Commands
 
 | Command | Purpose | Notes |
 |---|---|---|
-| `.\scripts\sos-init.ps1 -TargetPath <path>` | Preview SOS template install. | Add `-Apply` to write files; existing files are skipped unless `-Force` is used. |
-| `.\scripts\sos-summary.ps1 -TargetPath <path>` | Read-only SOS health summary. | Reports metadata, vault counts, missing required files/dirs, and routing-surface counts. |
-| `.\scripts\sos-audit.ps1 -TargetPath <path>` | Read-only SOS structure audit. | Reports missing files/dirs, missing SOS frontmatter, and unreachable routing-surface paths. |
-| `.\scripts\sos-migrate-assess.ps1 -TargetPath <path>` | Read-only migration assessment. | Finds older project-memory and KB structures before a migration plan. |
-| `.\.claude\sos\scripts\sos-summary.ps1 -TargetPath .` | Installed-node summary helper. | Mirrors the source helper path inside an applied SOS node. |
+| `node .\bin\sos.js install --target <path>` | Apply SOS baseline to a repository. | Creates missing files and skips existing files unless `--force` is supplied. |
+| `node .\bin\sos.js audit --target <path>` | Read-only SOS structure audit. | Reports missing files/dirs, missing SOS frontmatter, and unreachable routing-surface paths. |
+| `node .\bin\sos.js status --target <path>` | Read-only SOS health summary. | Reports metadata, vault counts, and audit counts. |
+| `node .\bin\sos.js migrate --target <path>` | Read-only migration assessment. | Finds older project-memory and KB structures before migration work. |
+| `npm test` | CLI and audit smoke test. | Checks CLI syntax and audits this repo plus `templates/core`. |
 
 ## Environments
 

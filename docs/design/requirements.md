@@ -43,12 +43,14 @@ Requirements extracted from `source-ledger.md`.
 | REQ-029 | Vault lifecycle README files must include enough operational instructions for an agent to act safely from that folder. | SRC-037 | active |
 | REQ-030 | Installed SOS nodes must expose a native Claude Code `/sos` entry point. | SRC-038 | active |
 | REQ-031 | Installed SOS nodes must include node-local read-only helper scripts for summary, audit, and migration assessment. | SRC-044 | active |
+| REQ-032 | SOS must provide a normal CLI package surface so users install the tool globally and run `sos install` inside target projects. | SRC-047 | active |
+| REQ-033 | Triage processing prompts must use self-describing human gate choices, not unexplained single-letter responses. | SRC-048 | active |
 
 ## Non-Requirements For v0.1
 
 | ID | Non-Requirement | Reason |
 |---|---|---|
-| NREQ-001 | Full CLI implementation | Templates and agent-readable instructions are enough to start. |
+| NREQ-001 | Hosted/cloud write service | Repo mutation should be local-first; hosted services may provide read-only catalog/version metadata later. |
 | NREQ-002 | Marketplace | Too early; use templates/profiles first. |
 | NREQ-003 | Dashboard UI | Workspacer/SOS may later oversee visually, but v0.1 is file-first. |
 | NREQ-004 | Autonomous agent swarm | The foundation must be stable before orchestration. |

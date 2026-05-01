@@ -3,7 +3,7 @@ type: sos-builder
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.12
+sos_version: 0.1.13
 ---
 
 # SOS-BUILDER
@@ -16,7 +16,7 @@ This file is a portable export builder.
 
 Use it when a non-SOS project, chat, folder, or external context needs to produce an SOS-compatible context export.
 
-It is not the SOS installer. For installation, use `SOS-INSTALL.md`.
+It is not the SOS install path. For applying SOS to a project, use the `sos` CLI. `SOS-INSTALL.md` is an installed-node reference and fallback only.
 
 ## Core Rule
 

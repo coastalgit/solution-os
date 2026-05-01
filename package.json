@@ -1,0 +1,24 @@
+{
+  "name": "@coastalgit/solution-os",
+  "version": "0.1.13",
+  "description": "SolutionOS CLI for installing and auditing AI-operable workspace memory.",
+  "type": "module",
+  "bin": {
+    "sos": "./bin/sos.js"
+  },
+  "files": [
+    "bin/",
+    "templates/",
+    "scripts/",
+    "manifest.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --check ./bin/sos.js && node ./bin/sos.js audit --target . && node ./bin/sos.js audit --target ./templates/core"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

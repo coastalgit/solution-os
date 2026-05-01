@@ -47,7 +47,9 @@ Add the node hierarchy and important folders here.
 node-root/
   .claude/
   vault/
+  bin/sos.js
   docs/design/
+  package.json
   scripts/
   templates/core/
 ```
@@ -58,9 +60,10 @@ Seed SolutionOS v0.1 from the source-backed discussion:
 
 - design docs in `docs/design/`
 - curated product history in `vault/wiki/history.md`
-- root install entry point in `INSTALL.md`
+- primary CLI entry point in `bin/sos.js`
+- package metadata in `package.json`
 - install template in `templates/core/`
-- local helpers in `scripts/`
+- compatibility helpers in `scripts/`
 - dogfooded active node files in `.claude/`
 - node KB in `vault/`
 
