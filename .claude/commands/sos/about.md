@@ -6,20 +6,24 @@ disable-model-invocation: true
 
 Run `/sos:about` for this node.
 
-Read `.claude/sos/sos.json`, `.claude/sos/SCHEMA.md`, `.claude/PM.md`, `.claude/STONE.md`, and `.claude/sos/TOOLKITS.md`.
+Read `.claude/sos/sos.json` and `.claude/sos/SCHEMA.md`.
 
-Include the installed SOS version and template version.
+Give a short explanation only. Include the installed SOS version and template version.
 
-Explain SOS as a portable baseline for making a folder understandable, resumable, and AI-operable.
+Required shape:
 
-Cover:
+```text
+SOS is a portable baseline for making a folder understandable, resumable, and AI-operable.
 
-- solution/project hierarchy: a root folder can represent the wider solution or endeavour, with subfolders/projects beneath it
-- node contents: each solution/project can carry its own `.claude` context, vault, metadata, tools, commands, skills, and parent/child relationship
-- spine: context flows through the folder path and node metadata, including what a level owns, inherits, reads upward, or publishes upward
-- vault: every SOS solution/project has a vault as the KB, with `triage`, `wiki`, `archive`, `outbox`, and manifests
-- metadata: SOS-owned Markdown context and curated wiki files use YAML frontmatter for routing, search, authority, privacy, and automation
-- optional views/adapters: Obsidian can sit over the vault, Backlog or other tools can handle work management, and AI tools such as Claude/Codex use their adapters
-- automation: repeatable flows such as init, summary, audit, ingest, migration, export/import, and human-gated processing
+Root folders can be solutions or wider endeavours.
+Subfolders can be projects or parts.
+The spine is the path and metadata that explain how those levels relate.
 
-Keep this explanatory but not long.
+Each level can carry:
+- `.claude` context for AI tools
+- `vault` as the KB: triage, wiki, archive, outbox
+- Markdown metadata/frontmatter for routing and automation
+- optional adapters such as Obsidian, Backlog, Claude, Codex, Firecrawl, or local scripts
+```
+
+End by pointing to `/sos:help` for commands.

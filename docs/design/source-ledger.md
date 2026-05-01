@@ -56,3 +56,4 @@ It captures user statements and decisions from the originating discussion. Deriv
 | SRC-040 | Tool discussion should be entered with `/sos:tools`, not a summary sub-mode or `toolkits-summary`. | Add `/sos:tools` and keep `TOOLKITS.md` as system policy behind that conversational command. |
 | SRC-041 | External knowledge capture should be one command with natural-language intent, not multiple ingest command variants. | Add `/sos:ingest <source> <intent>` and let the command choose fetch/extract/routing/fallback behavior. |
 | SRC-042 | `/sos:help` should be a quick reference; the longer intent/structure explanation belongs in `/sos:about`. Help, about, and summary should mention the SOS version. | Add `/sos:about`, keep help concise, and require version visibility in help/about/summary. |
+| SRC-043 | `/sos:about` should still be short; it should not become a verbose whitepaper. | Keep about to a compact explanation and point to help for commands. |

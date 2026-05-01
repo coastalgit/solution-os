@@ -6,6 +6,12 @@ status: active
 
 # Changelog
 
+## 0.1.8 - 2026-05-01
+
+Trimmed `/sos:about`.
+
+- Reduced `/sos:about` to a short explanation of the solution/project spine, vault, metadata, and adapters.
+
 ## 0.1.7 - 2026-05-01
 
 Split quick help from explanatory about.
