@@ -38,6 +38,17 @@ $requiredFiles = @(
     '.claude\TOOLS.md',
     '.claude\WORKFLOW.md',
     '.claude\skills\sos\SKILL.md',
+    '.claude\commands\sos\help.md',
+    '.claude\commands\sos\init.md',
+    '.claude\commands\sos\summary.md',
+    '.claude\commands\sos\audit.md',
+    '.claude\commands\sos\migrate.md',
+    '.claude\commands\sos\vault-process.md',
+    '.claude\commands\sos\vault-summary.md',
+    '.claude\commands\sos\context-export.md',
+    '.claude\commands\sos\context-import.md',
+    '.claude\commands\sos\session-close.md',
+    '.claude\commands\sos\toolkits-summary.md',
     '.claude\sos\sos.json',
     '.claude\sos\VERSION.md',
     '.claude\sos\COMMANDS.md',
@@ -57,7 +68,8 @@ $requiredDirs = @(
     'vault\archive',
     'vault\outbox',
     '.claude\sos',
-    '.claude\sos\export'
+    '.claude\sos\export',
+    '.claude\commands\sos'
 )
 
 $missingFiles = @($requiredFiles | Where-Object { !(Test-RelativePath $_) })
@@ -97,6 +109,12 @@ foreach ($relativePath in @(
 $sosDir = Join-Path $targetFullPath '.claude\sos'
 if (Test-Path -LiteralPath $sosDir) {
     Get-ChildItem -LiteralPath $sosDir -Recurse -Force -File -Filter '*.md' |
+        ForEach-Object { $metadataFiles.Add($_.FullName) }
+}
+
+$sosCommandsDir = Join-Path $targetFullPath '.claude\commands\sos'
+if (Test-Path -LiteralPath $sosCommandsDir) {
+    Get-ChildItem -LiteralPath $sosCommandsDir -Recurse -Force -File -Filter '*.md' |
         ForEach-Object { $metadataFiles.Add($_.FullName) }
 }
 

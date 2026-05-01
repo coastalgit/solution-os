@@ -6,6 +6,15 @@ status: active
 
 # Changelog
 
+## 0.1.5 - 2026-05-01
+
+Visible SOS branch commands and safer command-facing metadata.
+
+- Added `.claude/commands/sos/*.md` command files for `/sos:*` branch discovery.
+- Kept `/sos <subcommand>` as the fallback router path.
+- Removed personal names from SOS slash-menu metadata.
+- Updated summary/audit helpers to require the SOS command files.
+
 ## 0.1.4 - 2026-05-01
 
 Native Claude Code `/sos` router.

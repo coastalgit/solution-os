@@ -67,6 +67,8 @@ vault/
 .claude/
   skills/
     sos/
+  commands/
+    sos/
   PM.md
   STONE.md
   ACTORS.md
@@ -79,7 +81,7 @@ manifest.json
 Current version:
 
 ```text
-0.1.4
+0.1.5
 ```
 
 ## First Principles

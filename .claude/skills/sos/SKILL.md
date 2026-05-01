@@ -1,6 +1,6 @@
 ---
 name: sos
-description: SolutionOS command router for this node. Use when Brendan invokes /sos to run SOS init, summary, audit, migration, vault, context, session, or toolkit workflows.
+description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS init, summary, audit, migration, vault, context, session, or toolkit workflows.
 argument-hint: "[init|summary|audit|migrate|vault-process|vault-summary|context-export|context-import|session-close|toolkits-summary]"
 disable-model-invocation: true
 ---
@@ -20,6 +20,8 @@ Treat that as equivalent to the canonical SOS vocabulary:
 ```text
 /sos:<subcommand>
 ```
+
+Visible branch commands are also installed under `.claude/commands/sos/` for Claude Code command discovery.
 
 ## First Step
 
@@ -54,7 +56,7 @@ Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 - For `init`, `audit`, `context-import`, and `vault-process`, propose changes before editing.
 - Never process `vault/triage/README.md` or `vault/triage/_manifest.md` as triage items.
 - Do not initialize Backlog.md unless the user explicitly approves that tool adoption.
-- If the user expected `/sos:*` autocomplete, explain that project skills expose `/sos`; true colon-prefixed plugin commands require a plugin/MCP layer.
+- If `/sos:*` entries do not appear in the slash menu, explain that Claude Code may need to reload/restart after new project command files are added. Use `/sos <subcommand>` as the fallback.
 
 ## Script Hints
 
@@ -67,4 +69,3 @@ If the SolutionOS repo scripts are available, use them for checks:
 ```
 
 If scripts are not available, perform the file-based protocol from `.claude/sos/COMMANDS.md` and `.claude/sos/SCHEMA.md`.
-

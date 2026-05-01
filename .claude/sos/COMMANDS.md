@@ -13,6 +13,7 @@ Keep command names concept-down so autocomplete groups related commands.
 ## Claude Code Invocation
 
 Project-level Claude Code skills expose `/sos`, with the subcommand as the first argument.
+Project-level Claude Code command files are also installed under `.claude/commands/sos/` so branch commands can appear as `/sos:*` entries where Claude Code supports named command discovery.
 
 Examples:
 
@@ -20,7 +21,7 @@ Examples:
 - `/sos vault-process` means `/sos:vault-process`.
 - `/sos migrate` means `/sos:migrate`.
 
-True `/sos:*` autocomplete requires a plugin or MCP command layer. Until that exists, `/sos <subcommand>` is the native Claude Code entry point.
+If `/sos:*` entries do not appear immediately after install/update, restart or reload Claude Code so it re-scans project commands. `/sos <subcommand>` remains the fallback.
 
 ## v0.1 Commands
 

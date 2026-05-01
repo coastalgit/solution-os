@@ -59,6 +59,17 @@ $requiredFiles = @(
     '.claude\TOOLS.md',
     '.claude\WORKFLOW.md',
     '.claude\skills\sos\SKILL.md',
+    '.claude\commands\sos\help.md',
+    '.claude\commands\sos\init.md',
+    '.claude\commands\sos\summary.md',
+    '.claude\commands\sos\audit.md',
+    '.claude\commands\sos\migrate.md',
+    '.claude\commands\sos\vault-process.md',
+    '.claude\commands\sos\vault-summary.md',
+    '.claude\commands\sos\context-export.md',
+    '.claude\commands\sos\context-import.md',
+    '.claude\commands\sos\session-close.md',
+    '.claude\commands\sos\toolkits-summary.md',
     '.claude\sos\sos.json',
     '.claude\sos\VERSION.md',
     '.claude\sos\COMMANDS.md',
@@ -78,7 +89,8 @@ $requiredDirs = @(
     'vault\archive',
     'vault\outbox',
     '.claude\sos',
-    '.claude\sos\export'
+    '.claude\sos\export',
+    '.claude\commands\sos'
 )
 
 $missingFiles = @($requiredFiles | Where-Object { !(Test-RelativePath $_) })
