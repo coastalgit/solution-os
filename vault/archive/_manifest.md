@@ -6,8 +6,7 @@ status: active
 
 # Archive Manifest
 
-`vault/archive/` stores processed source material kept as evidence/traceability.
+`vault/archive/` stores non-active retained material kept as evidence, traceability, or retrospective context.
 
-| Source | Type | Status | Processed Into | Notes |
-|---|---|---|---|---|
-
+| Path | Kind | Period | Status | Processed Into | Hash | Notes |
+|---|---|---|---|---|---|---|

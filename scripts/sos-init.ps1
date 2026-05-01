@@ -15,6 +15,38 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function Compare-SosVersion {
+    param(
+        [string]$Left,
+        [string]$Right
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Left) -or [string]::IsNullOrWhiteSpace($Right)) {
+        return $null
+    }
+
+    $leftCore = ($Left -split '[+-]', 2)[0]
+    $rightCore = ($Right -split '[+-]', 2)[0]
+    $leftParts = @($leftCore -split '\.' | ForEach-Object { [int]$_ })
+    $rightParts = @($rightCore -split '\.' | ForEach-Object { [int]$_ })
+    $max = [Math]::Max($leftParts.Count, $rightParts.Count)
+
+    for ($index = 0; $index -lt $max; $index++) {
+        $leftPart = if ($index -lt $leftParts.Count) { $leftParts[$index] } else { 0 }
+        $rightPart = if ($index -lt $rightParts.Count) { $rightParts[$index] } else { 0 }
+
+        if ($leftPart -gt $rightPart) {
+            return 1
+        }
+
+        if ($leftPart -lt $rightPart) {
+            return -1
+        }
+    }
+
+    return 0
+}
+
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $scriptRoot '..'))
 $templateRoot = [System.IO.Path]::GetFullPath((Join-Path $repoRoot 'templates\core'))
@@ -30,6 +62,55 @@ if ([string]::IsNullOrWhiteSpace($NodeName)) {
     if ([string]::IsNullOrWhiteSpace($NodeName)) {
         $NodeName = 'SOS Node'
     }
+}
+
+if ($Force) {
+    throw "sos-init never overwrites existing files. -Force is disabled; use a future explicit repair/update flow for replacements."
+}
+
+$runningVersion = '0.0.0'
+$manifestPath = Join-Path $repoRoot 'manifest.json'
+if (Test-Path -LiteralPath $manifestPath) {
+    $manifest = Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json
+    if ($manifest.sos_version) {
+        $runningVersion = $manifest.sos_version
+    }
+}
+
+$sosJsonRelative = '.claude\sos\sos.json'
+$sosJsonPath = Join-Path $targetFullPath $sosJsonRelative
+$existingSosInstalled = Test-Path -LiteralPath $sosJsonPath
+$projectSosVersion = ''
+$projectVersionRelation = if ($existingSosInstalled) { 'project-version-missing' } else { 'not-installed' }
+
+if ($existingSosInstalled) {
+    try {
+        $existingMetadata = Get-Content -Raw -LiteralPath $sosJsonPath | ConvertFrom-Json
+        if ($existingMetadata.sos_version) {
+            $projectSosVersion = $existingMetadata.sos_version
+            $comparison = Compare-SosVersion $projectSosVersion $runningVersion
+            if ($null -eq $comparison) {
+                $projectVersionRelation = 'unknown'
+            }
+            elseif ($comparison -eq 0) {
+                $projectVersionRelation = 'same'
+            }
+            elseif ($comparison -gt 0) {
+                $projectVersionRelation = 'project-newer-than-cli'
+            }
+            else {
+                $projectVersionRelation = 'project-older-than-cli'
+            }
+        }
+    }
+    catch {
+        $projectVersionRelation = 'metadata-unreadable'
+    }
+}
+
+$blockedRelations = @('project-newer-than-cli', 'metadata-unreadable', 'unknown', 'project-version-missing')
+if ($Apply -and $blockedRelations -contains $projectVersionRelation) {
+    throw "Refusing to apply: project version state is '$projectVersionRelation' (project: $projectSosVersion, running helper: $runningVersion). Run audit/status and update the CLI/helper if needed. No files were changed."
 }
 
 $created = New-Object System.Collections.Generic.List[string]
@@ -49,15 +130,7 @@ foreach ($source in $templateFiles) {
     $destinationDirectory = Split-Path -Parent $destination
 
     if (Test-Path -LiteralPath $destination) {
-        if ($Force) {
-            if ($Apply) {
-                Copy-Item -LiteralPath $source.FullName -Destination $destination -Force
-            }
-            $overwritten.Add($relativePath)
-        }
-        else {
-            $skipped.Add($relativePath)
-        }
+        $skipped.Add($relativePath)
         continue
     }
 
@@ -73,11 +146,9 @@ foreach ($source in $templateFiles) {
     }
 }
 
-$sosJsonRelative = '.claude\sos\sos.json'
-$sosJsonPath = Join-Path $targetFullPath $sosJsonRelative
 $metadataUpdated = $false
 
-if ($Apply -and (Test-Path -LiteralPath $sosJsonPath) -and ($created.Contains($sosJsonRelative) -or $Force)) {
+if ($Apply -and (Test-Path -LiteralPath $sosJsonPath) -and $created.Contains($sosJsonRelative)) {
     $metadata = Get-Content -Raw -LiteralPath $sosJsonPath | ConvertFrom-Json
     $metadata.node.name = $NodeName
     $metadata.node.kind = $NodeKind
@@ -89,9 +160,13 @@ $result = [pscustomobject]@{
     Mode = if ($Apply) { 'apply' } else { 'preview' }
     TargetPath = $targetFullPath
     TemplateRoot = $templateRoot
+    ExistingSosInstalled = $existingSosInstalled
+    ProjectSosVersion = $projectSosVersion
+    RunningHelperVersion = $runningVersion
+    ProjectVersionRelation = $projectVersionRelation
     NodeName = $NodeName
     NodeKind = $NodeKind
-    Force = [bool]$Force
+    OverwritePolicy = 'never-overwrite-existing-files'
     PlannedCreateCount = $planned.Count
     CreatedCount = $created.Count
     OverwrittenCount = $overwritten.Count

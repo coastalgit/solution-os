@@ -62,6 +62,7 @@ This clarification was added after confusion during a 2026-05-01 field test: the
 | 0.1.11 | 2026-05-01 | Clarified the self-hosted repository model in the root README and added this curated history note. |
 | 0.1.12 | 2026-05-01 | Added root `INSTALL.md` as the obvious cloud-agent install entry point and clarified that it is not target-repo payload. |
 | 0.1.13 | 2026-05-01 | Removed root `INSTALL.md` from the current product surface and added the real `sos` CLI package model. |
+| 0.1.14 | 2026-05-01 | Added actor registry protection, concept-binding, aliases, conservative semantic audit warnings, no-overwrite install guards, archive/unarchive lifecycle controls, a guided `/sos:assistant` front door, and a local SOS visual map. |
 
 ## Current Documentation Rule
 

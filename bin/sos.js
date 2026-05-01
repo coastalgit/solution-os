@@ -18,6 +18,7 @@ const requiredFiles = [
   '.claude/TOOLS.md',
   '.claude/WORKFLOW.md',
   '.claude/skills/sos/SKILL.md',
+  '.claude/commands/sos/assistant.md',
   '.claude/commands/sos/help.md',
   '.claude/commands/sos/about.md',
   '.claude/commands/sos/init.md',
@@ -28,14 +29,19 @@ const requiredFiles = [
   '.claude/commands/sos/migrate.md',
   '.claude/commands/sos/vault-process.md',
   '.claude/commands/sos/vault-summary.md',
+  '.claude/commands/sos/archive.md',
+  '.claude/commands/sos/unarchive.md',
   '.claude/commands/sos/context-export.md',
   '.claude/commands/sos/context-import.md',
   '.claude/commands/sos/session-close.md',
   '.claude/sos/sos.json',
   '.claude/sos/VERSION.md',
   '.claude/sos/COMMANDS.md',
+  '.claude/sos/ASSISTANT.md',
+  '.claude/sos/SOS-VISUAL.html',
   '.claude/sos/SCHEMA.md',
   '.claude/sos/TOOLKITS.md',
+  '.claude/sos/template/concept-binding.md',
   '.claude/sos/scripts/README.md',
   '.claude/sos/scripts/sos-summary.ps1',
   '.claude/sos/scripts/sos-audit.ps1',
@@ -77,6 +83,67 @@ const adapterRequiredReferences = {
   'CLAUDE.md': ['.claude/PM.md'],
   'AGENTS.md': ['.claude/PM.md', '.claude/sos/COMMANDS.md']
 };
+
+const reservedVaultRegistryNames = new Set([
+  'actor',
+  'actors',
+  'people',
+  'person',
+  'persons',
+  'roster',
+  'team',
+  'teams',
+  'stakeholder',
+  'stakeholders',
+  'stakeholder-register',
+  'stakeholder-registry'
+]);
+
+const semanticCandidateStoplist = new Set([
+  'ACTORS',
+  'AGENTS',
+  'API',
+  'CLI',
+  'CLAUDE',
+  'COMMANDS',
+  'Claude Code',
+  'Codex',
+  'Current SOS Version',
+  'Git',
+  'GitHub',
+  'JSON',
+  'KB',
+  'MCP',
+  'Node',
+  'PM',
+  'PowerShell',
+  'README',
+  'Read-only SOS',
+  'SCHEMA',
+  'SOS',
+  'SOS CLI',
+  'STONE',
+  'SolutionOS',
+  'TOOLS',
+  'WORKFLOW',
+  'YAML'
+].map((term) => term.toLowerCase()));
+
+const archiveManifestColumns = ['Path', 'Kind', 'Period', 'Status', 'Processed Into', 'Hash', 'Notes'];
+
+const archiveCandidateNamePattern = /(^|[-_. ])(?:19\d{2}|20\d{2}|q[1-4]|emails?|correspondence|meetings?|minutes|archive|archived|history|historical|temp|tmp|old|legacy)([-_. ]|$)/i;
+
+const archiveCandidateExcludedRoots = new Set([
+  '.git',
+  '.backlog',
+  '.claude',
+  'node_modules',
+  'templates',
+  'vault',
+  'coverage',
+  'dist',
+  'build'
+]);
 
 main().catch((error) => {
   console.error(`sos: ${error.message}`);
@@ -171,7 +238,7 @@ function printHelp() {
   console.log(`SolutionOS CLI
 
 Usage:
-  sos install [--target .] [--node-kind project] [--dry-run] [--force]
+  sos install [--target .] [--node-kind project] [--dry-run]
   sos audit [--target .] [--json]
   sos status [--target .] [--json]
   sos migrate [--target .] [--json]
@@ -190,6 +257,15 @@ function installCommand(options) {
     throw new Error(`template root not found: ${templateRoot}`);
   }
 
+  if (options.force) {
+    throw new Error('sos install never overwrites existing files. --force is disabled; use a future explicit repair/update flow for replacements.');
+  }
+
+  const versionInfo = getVersionInfo(options.target);
+  if (['project-newer-than-cli', 'metadata-unreadable', 'unknown', 'project-version-missing'].includes(versionInfo.ProjectVersionRelation)) {
+    throw new Error(`refusing to install: project version state is "${versionInfo.ProjectVersionRelation}" (project: ${versionInfo.ProjectSosVersion || 'unknown'}, running CLI: ${versionInfo.RunningCliVersion}). Run sos audit/status and update the CLI if needed. No files were changed.`);
+  }
+
   if (!options.dryRun) {
     fs.mkdirSync(options.target, { recursive: true });
   }
@@ -204,15 +280,7 @@ function installCommand(options) {
     const destination = path.join(options.target, relativePath);
 
     if (fs.existsSync(destination)) {
-      if (options.force) {
-        if (!options.dryRun) {
-          fs.mkdirSync(path.dirname(destination), { recursive: true });
-          fs.copyFileSync(sourcePath, destination);
-        }
-        overwritten.push(relativePath);
-      } else {
-        skipped.push(relativePath);
-      }
+      skipped.push(relativePath);
       continue;
     }
 
@@ -229,7 +297,7 @@ function installCommand(options) {
   const sosJsonPath = path.join(options.target, sosJsonRelative);
   let metadataUpdated = false;
 
-  if (!options.dryRun && fs.existsSync(sosJsonPath) && (created.includes(sosJsonRelative) || options.force)) {
+  if (!options.dryRun && fs.existsSync(sosJsonPath) && created.includes(sosJsonRelative)) {
     const metadata = JSON.parse(fs.readFileSync(sosJsonPath, 'utf8'));
     metadata.node = metadata.node || {};
     metadata.node.name = options.nodeName;
@@ -242,9 +310,14 @@ function installCommand(options) {
     Mode: options.dryRun ? 'preview' : 'apply',
     TargetPath: options.target,
     TemplateRoot: templateRoot,
+    ExistingSosInstalled: versionInfo.SosInstalled,
+    ProjectSosVersion: versionInfo.ProjectSosVersion,
+    RunningCliVersion: versionInfo.RunningCliVersion,
+    ProjectVersionRelation: versionInfo.ProjectVersionRelation,
+    ProjectAlreadyAtRunningVersion: versionInfo.ProjectVersionRelation === 'same',
     NodeName: options.nodeName,
     NodeKind: options.nodeKind,
-    Force: options.force,
+    OverwritePolicy: 'never-overwrite-existing-files',
     PlannedCreateCount: planned.length,
     CreatedCount: created.length,
     OverwrittenCount: overwritten.length,
@@ -266,12 +339,19 @@ function installCommand(options) {
 function auditCommand(options) {
   const result = auditTarget(options.target);
   printResult(result.summary, options.json);
+  printList('Version warnings', result.versionWarnings, options.json);
   printList('Missing files', result.missingFiles, options.json);
   printList('Missing directories', result.missingDirs, options.json);
   printList('Missing frontmatter', result.missingMetadata, options.json);
   printList('Missing PM references', result.missingPmReferences, options.json);
   printList('Missing adapter delegation', result.missingAdapterDelegation, options.json);
   printList('Unreachable SOS surface paths', result.unreachableSurfacePaths, options.json);
+  printList('Missing ACTORS alias columns', result.missingActorsAliasColumns, options.json);
+  printList('Reserved vault actor registries', result.reservedVaultRegistryPaths, options.json);
+  printList('Unregistered actor/concept candidates', result.unregisteredSemanticCandidates, options.json);
+  printList('Missing archive manifest columns', result.missingArchiveManifestColumns, options.json);
+  printList('Unindexed archive items', result.unindexedArchiveItems, options.json);
+  printList('Loose archive candidates', result.looseArchiveCandidates, options.json);
 
   if (result.summary.Status !== 'healthy') {
     process.exitCode = 1;
@@ -285,8 +365,11 @@ function statusCommand(options) {
     Status: audit.summary.Status,
     TargetPath: options.target,
     SosInstalled: fs.existsSync(path.join(options.target, '.claude/sos/sos.json')),
+    RunningCliVersion: audit.summary.RunningCliVersion,
     SosVersion: metadata?.sos_version || '',
     TemplateVersion: metadata?.template_version || '',
+    ProjectVersionRelation: audit.summary.ProjectVersionRelation,
+    VersionWarningCount: audit.summary.VersionWarningCount,
     NodeName: metadata?.node?.name || '',
     NodeKind: metadata?.node?.kind || '',
     TriageItemCount: countNodeFiles(path.join(options.target, 'vault/triage')),
@@ -296,7 +379,13 @@ function statusCommand(options) {
     MissingDirCount: audit.summary.MissingDirCount,
     MissingPmReferenceCount: audit.summary.MissingPmReferenceCount,
     MissingAdapterDelegationCount: audit.summary.MissingAdapterDelegationCount,
-    UnreachableSurfacePathCount: audit.summary.UnreachableSurfacePathCount
+    UnreachableSurfacePathCount: audit.summary.UnreachableSurfacePathCount,
+    MissingActorsAliasColumnCount: audit.summary.MissingActorsAliasColumnCount,
+    ReservedVaultRegistryCount: audit.summary.ReservedVaultRegistryCount,
+    UnregisteredSemanticCandidateCount: audit.summary.UnregisteredSemanticCandidateCount,
+    MissingArchiveManifestColumnCount: audit.summary.MissingArchiveManifestColumnCount,
+    UnindexedArchiveItemCount: audit.summary.UnindexedArchiveItemCount,
+    LooseArchiveCandidateCount: audit.summary.LooseArchiveCandidateCount
   };
 
   printResult(result, options.json);
@@ -339,6 +428,8 @@ function auditTarget(targetPath) {
   const target = path.resolve(targetPath);
   const missingFiles = requiredFiles.filter((relativePath) => !exists(target, relativePath));
   const missingDirs = requiredDirs.filter((relativePath) => !exists(target, relativePath));
+  const versionInfo = getVersionInfo(target);
+  const versionWarnings = getVersionWarnings(versionInfo);
 
   const pmContent = readText(path.join(target, '.claude/PM.md'));
   const missingPmReferences = pmRequiredReferences.filter((relativePath) => !contentReferences(pmContent, relativePath));
@@ -371,34 +462,447 @@ function auditTarget(targetPath) {
     .sort();
 
   const uniqueUnreachable = [...new Set(unreachableSurfacePaths)].sort();
+  const missingActorsAliasColumns = getMissingActorsAliasColumns(target);
+  const reservedVaultRegistryPaths = getReservedVaultRegistryPaths(target);
+  const unregisteredSemanticCandidates = getUnregisteredSemanticCandidates(target);
+  const missingArchiveManifestColumns = getMissingArchiveManifestColumns(target);
+  const unindexedArchiveItems = getUnindexedArchiveItems(target);
+  const looseArchiveCandidates = getLooseArchiveCandidates(target);
   const status = (
     missingFiles.length === 0 &&
     missingDirs.length === 0 &&
     missingMetadata.length === 0 &&
     missingPmReferences.length === 0 &&
     missingAdapterDelegation.length === 0 &&
-    uniqueUnreachable.length === 0
+    uniqueUnreachable.length === 0 &&
+    missingActorsAliasColumns.length === 0 &&
+    reservedVaultRegistryPaths.length === 0 &&
+    missingArchiveManifestColumns.length === 0 &&
+    unindexedArchiveItems.length === 0 &&
+    versionWarnings.length === 0
   ) ? 'healthy' : 'attention';
 
   return {
     summary: {
       Status: status,
       TargetPath: target,
+      RunningCliVersion: versionInfo.RunningCliVersion,
+      ProjectSosVersion: versionInfo.ProjectSosVersion,
+      ProjectTemplateVersion: versionInfo.ProjectTemplateVersion,
+      ProjectVersionRelation: versionInfo.ProjectVersionRelation,
+      VersionWarningCount: versionWarnings.length,
       MissingFileCount: missingFiles.length,
       MissingDirCount: missingDirs.length,
       MetadataFileCount: metadataFiles.length,
       MissingMetadataCount: missingMetadata.length,
       MissingPmReferenceCount: missingPmReferences.length,
       MissingAdapterDelegationCount: missingAdapterDelegation.length,
-      UnreachableSurfacePathCount: uniqueUnreachable.length
+      UnreachableSurfacePathCount: uniqueUnreachable.length,
+      MissingActorsAliasColumnCount: missingActorsAliasColumns.length,
+      ReservedVaultRegistryCount: reservedVaultRegistryPaths.length,
+      UnregisteredSemanticCandidateCount: unregisteredSemanticCandidates.length,
+      MissingArchiveManifestColumnCount: missingArchiveManifestColumns.length,
+      UnindexedArchiveItemCount: unindexedArchiveItems.length,
+      LooseArchiveCandidateCount: looseArchiveCandidates.length
     },
     missingFiles,
     missingDirs,
     missingMetadata,
     missingPmReferences,
     missingAdapterDelegation,
-    unreachableSurfacePaths: uniqueUnreachable
+    unreachableSurfacePaths: uniqueUnreachable,
+    versionWarnings,
+    missingActorsAliasColumns,
+    reservedVaultRegistryPaths,
+    unregisteredSemanticCandidates,
+    missingArchiveManifestColumns,
+    unindexedArchiveItems,
+    looseArchiveCandidates
   };
+}
+
+function getVersionInfo(target) {
+  const runningVersion = getPackageVersion();
+  const metadataPath = path.join(target, '.claude/sos/sos.json');
+  const metadata = readJson(metadataPath);
+  const installed = fs.existsSync(metadataPath);
+  const projectVersion = metadata?.sos_version || '';
+  const templateVersion = metadata?.template_version || '';
+  const comparison = projectVersion ? compareVersions(projectVersion, runningVersion) : null;
+
+  let relation = 'not-installed';
+  if (installed && !metadata) {
+    relation = 'metadata-unreadable';
+  } else if (projectVersion && comparison === null) {
+    relation = 'unknown';
+  } else if (comparison === 0) {
+    relation = 'same';
+  } else if (comparison > 0) {
+    relation = 'project-newer-than-cli';
+  } else if (comparison < 0) {
+    relation = 'project-older-than-cli';
+  } else if (installed) {
+    relation = 'project-version-missing';
+  }
+
+  return {
+    SosInstalled: installed,
+    RunningCliVersion: runningVersion,
+    ProjectSosVersion: projectVersion,
+    ProjectTemplateVersion: templateVersion,
+    ProjectVersionRelation: relation
+  };
+}
+
+function getVersionWarnings(versionInfo) {
+  if (versionInfo.ProjectVersionRelation === 'project-newer-than-cli') {
+    return [`project SOS ${versionInfo.ProjectSosVersion} is newer than running sos CLI ${versionInfo.RunningCliVersion}; write commands must not run`];
+  }
+
+  if (versionInfo.ProjectVersionRelation === 'metadata-unreadable') {
+    return ['project has .claude/sos/sos.json but it could not be read; write commands must not run'];
+  }
+
+  if (versionInfo.ProjectVersionRelation === 'unknown') {
+    return [`project SOS version ${versionInfo.ProjectSosVersion} could not be compared with running sos CLI ${versionInfo.RunningCliVersion}`];
+  }
+
+  if (versionInfo.ProjectVersionRelation === 'project-version-missing') {
+    return ['project has SOS metadata but no sos_version; run migration/status before write commands'];
+  }
+
+  return [];
+}
+
+function compareVersions(left, right) {
+  const leftParts = parseVersion(left);
+  const rightParts = parseVersion(right);
+  if (!leftParts || !rightParts) {
+    return null;
+  }
+
+  const length = Math.max(leftParts.length, rightParts.length);
+  for (let index = 0; index < length; index += 1) {
+    const leftPart = leftParts[index] || 0;
+    const rightPart = rightParts[index] || 0;
+    if (leftPart > rightPart) {
+      return 1;
+    }
+    if (leftPart < rightPart) {
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+function parseVersion(value) {
+  if (!value || !/^\d+(?:\.\d+){0,2}(?:[-+].*)?$/.test(value)) {
+    return null;
+  }
+
+  return value
+    .split(/[+-]/, 1)[0]
+    .split('.')
+    .map((part) => Number.parseInt(part, 10));
+}
+
+function getMissingActorsAliasColumns(target) {
+  const actorsPath = path.join(target, '.claude/ACTORS.md');
+  const content = readText(actorsPath);
+  if (!content.trim()) {
+    return [];
+  }
+
+  const findings = [];
+  const lines = content.split(/\r?\n/);
+  for (const line of lines) {
+    if (!line.trim().startsWith('|')) {
+      continue;
+    }
+
+    const cells = parseTableCells(line);
+    if (cells.length < 2) {
+      continue;
+    }
+
+    const first = cells[0].toLowerCase();
+    const hasActorHeader = first === 'name' || first === 'role';
+    const hasAliases = cells.some((cell) => cell.toLowerCase() === 'aliases');
+    const isSeparator = cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+    if (hasActorHeader && !hasAliases && !isSeparator) {
+      findings.push(`.claude/ACTORS.md table "${cells.join(' | ')}" lacks Aliases column`);
+    }
+  }
+
+  return findings.sort();
+}
+
+function getReservedVaultRegistryPaths(target) {
+  const vaultPath = path.join(target, 'vault');
+  if (!fs.existsSync(vaultPath)) {
+    return [];
+  }
+
+  return listFiles(vaultPath)
+    .filter((filePath) => filePath.toLowerCase().endsWith('.md'))
+    .map((filePath) => toPosix(path.relative(target, filePath)))
+    .filter((relativePath) => {
+      const name = path.basename(relativePath, path.extname(relativePath)).toLowerCase();
+      return reservedVaultRegistryNames.has(name);
+    })
+    .sort();
+}
+
+function getUnregisteredSemanticCandidates(target) {
+  const registeredTerms = getRegisteredActorTerms(target);
+  const files = getSemanticScanFiles(target);
+  const counts = new Map();
+
+  for (const filePath of files) {
+    const content = stripFrontmatter(readText(filePath));
+    const matches = content.matchAll(/\b(?:[A-Z][A-Za-z0-9&'.-]{2,}|[A-Z]{2,})(?:[ \t]+(?:[A-Z][A-Za-z0-9&'.-]{2,}|[A-Z]{2,})){0,3}\b/g);
+    for (const match of matches) {
+      const term = normalizeSemanticCandidate(match[0]);
+      if (!term) {
+        continue;
+      }
+
+      const key = term.toLowerCase();
+      if (semanticCandidateStoplist.has(key) || registeredTerms.has(key)) {
+        continue;
+      }
+
+      const current = counts.get(key) || { term, count: 0 };
+      current.count += 1;
+      counts.set(key, current);
+    }
+  }
+
+  return [...counts.values()]
+    .filter((item) => item.count >= 2)
+    .sort((a, b) => b.count - a.count || a.term.localeCompare(b.term))
+    .slice(0, 25)
+    .map((item) => `${item.term} (${item.count})`);
+}
+
+function getMissingArchiveManifestColumns(target) {
+  const manifestPath = path.join(target, 'vault/archive/_manifest.md');
+  if (!fs.existsSync(manifestPath)) {
+    return [];
+  }
+
+  const content = readText(manifestPath);
+  const header = getFirstTableHeader(content);
+  if (header.length === 0) {
+    return archiveManifestColumns.map((column) => `vault/archive/_manifest.md -> ${column}`);
+  }
+
+  const normalizedHeader = new Set(header.map((cell) => cell.toLowerCase()));
+  return archiveManifestColumns
+    .filter((column) => !normalizedHeader.has(column.toLowerCase()))
+    .map((column) => `vault/archive/_manifest.md -> ${column}`)
+    .sort();
+}
+
+function getUnindexedArchiveItems(target) {
+  const archivePath = path.join(target, 'vault/archive');
+  const manifestPath = path.join(target, 'vault/archive/_manifest.md');
+  if (!fs.existsSync(archivePath) || !fs.existsSync(manifestPath)) {
+    return [];
+  }
+
+  const manifestContent = readText(manifestPath);
+  const controlNames = new Set(['README.md', '_manifest.md']);
+
+  return fs.readdirSync(archivePath, { withFileTypes: true })
+    .filter((entry) => (entry.isFile() || entry.isDirectory()) && !controlNames.has(entry.name))
+    .map((entry) => {
+      const itemPath = path.join(archivePath, entry.name);
+      const relativePath = toPosix(path.relative(target, itemPath));
+      return entry.isDirectory() ? `${relativePath}/` : relativePath;
+    })
+    .filter((relativePath) => !isArchiveManifestReferenced(manifestContent, relativePath))
+    .sort();
+}
+
+function getLooseArchiveCandidates(target) {
+  if (!fs.existsSync(target)) {
+    return [];
+  }
+
+  const findings = [];
+
+  function walk(currentPath) {
+    const relativePath = toPosix(path.relative(target, currentPath));
+    if (relativePath && shouldSkipArchiveCandidatePath(relativePath)) {
+      return;
+    }
+
+    for (const entry of fs.readdirSync(currentPath, { withFileTypes: true })) {
+      const fullPath = path.join(currentPath, entry.name);
+      const entryRelativePath = toPosix(path.relative(target, fullPath));
+      if (shouldSkipArchiveCandidatePath(entryRelativePath)) {
+        continue;
+      }
+
+      if (entry.isDirectory()) {
+        if (isLooseArchiveCandidateName(entry.name)) {
+          findings.push(`${entryRelativePath}/`);
+          continue;
+        }
+        walk(fullPath);
+      } else if (entry.isFile() && isLooseArchiveCandidateName(entry.name)) {
+        findings.push(entryRelativePath);
+      }
+
+      if (findings.length >= 25) {
+        return;
+      }
+    }
+  }
+
+  walk(target);
+  return [...new Set(findings)].sort().slice(0, 25);
+}
+
+function getFirstTableHeader(content) {
+  for (const line of content.split(/\r?\n/)) {
+    if (!line.trim().startsWith('|')) {
+      continue;
+    }
+
+    const cells = parseTableCells(line);
+    const isSeparator = cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+    if (!isSeparator) {
+      return cells;
+    }
+  }
+
+  return [];
+}
+
+function isArchiveManifestReferenced(content, relativePath) {
+  const normalizedPath = relativePath.replace(/\/$/, '');
+  const name = path.basename(normalizedPath);
+  return (
+    contentReferences(content, normalizedPath) ||
+    contentReferences(content, `${normalizedPath}/`) ||
+    contentReferences(content, name)
+  );
+}
+
+function shouldSkipArchiveCandidatePath(relativePath) {
+  if (!relativePath) {
+    return false;
+  }
+
+  const parts = relativePath.split('/');
+  return archiveCandidateExcludedRoots.has(parts[0]);
+}
+
+function isLooseArchiveCandidateName(name) {
+  const lower = name.toLowerCase();
+  if (lower === 'readme.md' || lower === '_manifest.md') {
+    return false;
+  }
+
+  return archiveCandidateNamePattern.test(lower);
+}
+
+function getRegisteredActorTerms(target) {
+  const actorsPath = path.join(target, '.claude/ACTORS.md');
+  const content = readText(actorsPath);
+  const terms = new Set();
+
+  for (const line of content.split(/\r?\n/)) {
+    if (!line.trim().startsWith('|')) {
+      continue;
+    }
+
+    const cells = parseTableCells(line);
+    if (cells.length < 2) {
+      continue;
+    }
+
+    const first = cells[0].toLowerCase();
+    if (first === 'name' || first === 'role' || first.startsWith('-') || first === '') {
+      continue;
+    }
+
+    for (const cell of cells.slice(0, 2)) {
+      for (const term of splitAliasCell(cell)) {
+        terms.add(term.toLowerCase());
+      }
+    }
+  }
+
+  return terms;
+}
+
+function getSemanticScanFiles(target) {
+  const files = [];
+  for (const relativeDir of ['vault/wiki', '.claude']) {
+    const dirPath = path.join(target, relativeDir);
+    if (!fs.existsSync(dirPath)) {
+      continue;
+    }
+
+    files.push(...listFiles(dirPath).filter((filePath) => {
+      const relativePath = toPosix(path.relative(target, filePath));
+      return (
+        filePath.endsWith('.md') &&
+        !relativePath.startsWith('.claude/sos/') &&
+        !relativePath.startsWith('.claude/commands/') &&
+        relativePath !== '.claude/ACTORS.md'
+      );
+    }));
+  }
+
+  return files;
+}
+
+function parseTableCells(line) {
+  return line
+    .trim()
+    .replace(/^\|/, '')
+    .replace(/\|$/, '')
+    .split('|')
+    .map((cell) => cell.trim());
+}
+
+function splitAliasCell(cell) {
+  return cell
+    .split(/[,;]|\s+\|\s+/)
+    .map((term) => normalizeSemanticCandidate(term))
+    .filter(Boolean);
+}
+
+function normalizeSemanticCandidate(term) {
+  const normalized = term
+    .replace(/[`*_#[\]()]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[.,:;!?]+$/, '');
+
+  if (!normalized || normalized.includes('.')) {
+    return '';
+  }
+
+  const words = normalized.split(' ');
+  const isAcronym = /^[A-Z0-9&-]{3,}$/.test(normalized);
+  if (words.length < 2 && !isAcronym) {
+    return '';
+  }
+
+  return normalized;
+}
+
+function stripFrontmatter(content) {
+  return content
+    .replace(/^\uFEFF?---[\s\S]*?---/, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]*`/g, '');
 }
 
 function getMetadataFiles(target) {
@@ -474,7 +978,7 @@ function readJson(filePath) {
     return null;
   }
   try {
-    return JSON.parse(readText(filePath));
+    return JSON.parse(readText(filePath).replace(/^\uFEFF/, ''));
   } catch {
     return null;
   }
@@ -501,7 +1005,7 @@ function contentReferences(content, relativePath) {
 }
 
 function hasFrontmatter(filePath) {
-  const content = readText(filePath);
+  const content = readText(filePath).replace(/^\uFEFF/, '');
   return content.split(/\r?\n/, 1)[0] === '---';
 }
 

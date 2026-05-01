@@ -15,7 +15,9 @@ sos migrate
 
 ### `sos-init.ps1`
 
-Legacy preview/apply helper for copying `templates/core/` into a target folder. Prefer `sos install`.
+Legacy preview/apply helper for copying missing `templates/core/` files into a target folder. Prefer `sos install`.
+
+This helper never overwrites existing files. It blocks apply mode if an existing project SOS version is newer than the helper version or if existing SOS metadata is missing/unreadable.
 
 ### `sos-summary.ps1`
 
@@ -23,7 +25,7 @@ Read-only summary helper. Mirrors `sos status`.
 
 ### `sos-audit.ps1`
 
-Read-only structure and routing-surface audit helper. Mirrors `sos audit`.
+Read-only structure, routing-surface, archive integrity, and conservative actor/concept integrity audit helper. Mirrors `sos audit`.
 
 ### `sos-migrate-assess.ps1`
 

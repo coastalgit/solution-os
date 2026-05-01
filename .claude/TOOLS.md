@@ -23,7 +23,7 @@ For SOS-wide toolset preferences and adoption rules, read `.claude/sos/TOOLKITS.
 
 | Command | Purpose | Notes |
 |---|---|---|
-| `node .\bin\sos.js install --target <path>` | Apply SOS baseline to a repository. | Creates missing files and skips existing files unless `--force` is supplied. |
+| `node .\bin\sos.js install --target <path>` | Apply missing SOS baseline files to a repository. | Never overwrites existing files; blocks writes when project version is newer or unreadable. |
 | `node .\bin\sos.js audit --target <path>` | Read-only SOS structure audit. | Reports missing files/dirs, missing SOS frontmatter, and unreachable routing-surface paths. |
 | `node .\bin\sos.js status --target <path>` | Read-only SOS health summary. | Reports metadata, vault counts, and audit counts. |
 | `node .\bin\sos.js migrate --target <path>` | Read-only migration assessment. | Finds older project-memory and KB structures before migration work. |

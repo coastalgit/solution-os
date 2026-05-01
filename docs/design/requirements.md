@@ -45,6 +45,13 @@ Requirements extracted from `source-ledger.md`.
 | REQ-031 | Installed SOS nodes must include node-local read-only helper scripts for summary, audit, and migration assessment. | SRC-044 | active |
 | REQ-032 | SOS must provide a normal CLI package surface so users install the tool globally and run `sos install` inside target projects. | SRC-047 | active |
 | REQ-033 | Triage processing prompts must use self-describing human gate choices, not unexplained single-letter responses. | SRC-048 | active |
+| REQ-034 | SOS audit must include conservative semantic health reporting for actor and named-concept registration drift. | SRC-049 | active |
+| REQ-035 | SOS must keep `.claude/ACTORS.md` as the only canonical actor registry and prevent parallel actor registries in vault content. | SRC-050 | active |
+| REQ-036 | ACTORS entries and concept-binding notes must support aliases when naming variation is plausible. | SRC-049, SRC-050 | active |
+| REQ-037 | SOS install/update actions must never overwrite existing project files and must block writes when the project SOS version is newer or unreadable compared with the running tool. | SRC-051 | active |
+| REQ-038 | SOS must provide human-gated archive and unarchive workflows that preserve files byte-for-byte, write archive metadata, update the archive manifest, and audit archive drift/candidates. | SRC-052 | active |
+| REQ-039 | SOS must provide a guided assistant front door that maps plain-language user intent to existing SOS workflows without bypassing workflow gates. | SRC-053 | active |
+| REQ-040 | SOS help/about must reference a simple local visual aid that shows the SOS agentic operating layer without becoming a source of truth. | SRC-054 | active |
 
 ## Non-Requirements For v0.1
 
@@ -56,3 +63,4 @@ Requirements extracted from `source-ledger.md`.
 | NREQ-004 | Autonomous agent swarm | The foundation must be stable before orchestration. |
 | NREQ-005 | Separate `sos:upgrade` command | Update behavior can be included in init/summary/audit for now. |
 | NREQ-006 | Automatic migration without questions | Existing projects need opt-in/opt-out choices before moving or rewriting material. |
+| NREQ-007 | Separate archive history folder | Archive intent is expressed through manifest metadata under `vault/archive/`, not a second history directory. |

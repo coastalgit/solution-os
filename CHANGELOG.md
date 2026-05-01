@@ -6,6 +6,22 @@ status: active
 
 # Changelog
 
+## 0.1.14 - 2026-05-01
+
+Added actor/concept integrity protection, install safety, and archive lifecycle controls.
+
+- Made `.claude/ACTORS.md` the only canonical actor registry and forbade parallel people/team/roster/stakeholder registries in `vault/`.
+- Added active-engagement guidance so passing mentions stay in source/vault material instead of bloating `ACTORS.md`.
+- Added aliases to ACTORS tables and documented naming discipline in the SOS schema.
+- Added `type: concept-binding` and a generic concept-binding template.
+- Extended CLI and PowerShell audit checks to report missing actor alias columns, reserved vault actor registries, and repeated unregistered actor/concept candidates.
+- Hardened install/version safety so `sos install` never overwrites existing files and blocks writes when an existing project SOS version is newer than the running tool.
+- Added `/sos:archive` and `/sos:unarchive` workflows with Q&A/cancel gates, byte-preserving file handling, archive metadata, and manifest update rules.
+- Added `/sos:assistant` and `.claude/sos/ASSISTANT.md` as a guided front door for users who want SOS to route them conversationally.
+- Added `.claude/sos/SOS-VISUAL.html` as a simple local visual map referenced by `/sos:help` and `/sos:about`.
+- Extended CLI and PowerShell audit checks to report missing archive manifest columns, unindexed archive items, and loose archive candidates without moving files automatically.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.14.
+
 ## 0.1.13 - 2026-05-01
 
 Added the real `sos` CLI package model.

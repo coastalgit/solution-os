@@ -1,7 +1,7 @@
 ---
 name: sos
-description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS help, about, init, summary, audit, tools, ingest, migration, vault, context, or session workflows.
-argument-hint: "[help|about|init|summary|audit|tools|ingest|migrate|vault-process|vault-summary|context-export|context-import|session-close]"
+description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS assistant, help, about, init, summary, audit, tools, ingest, migration, vault, archive, context, or session workflows.
+argument-hint: "[assistant|help|about|init|summary|audit|tools|ingest|migrate|vault-process|vault-summary|archive|unarchive|context-export|context-import|session-close]"
 disable-model-invocation: true
 ---
 
@@ -32,13 +32,16 @@ Read these before acting:
 3. `.claude/STONE.md`
 4. `.claude/WORKFLOW.md`
 
+For `/sos assistant`, also read `.claude/sos/ASSISTANT.md`.
+
 Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 
 ## Subcommands
 
 | Invocation | Canonical Meaning |
 |---|---|
-| `/sos` | Show the available SOS subcommands and current safe next action. |
+| `/sos` | Show the available SOS subcommands and current safe next action. Offer `/sos assistant` for guided help. |
+| `/sos assistant` | `/sos:assistant` - guided front door that routes the user to the right SOS workflow. |
 | `/sos help` | `/sos:help` - quick command reference, including installed version. |
 | `/sos about` | `/sos:about` - explain SOS intent and structure. |
 | `/sos init` | `/sos:init` - install or refresh SOS. Proposal first. |
@@ -49,6 +52,8 @@ Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 | `/sos migrate` | `/sos:migrate` - assess older project memory/KB structures before migration. Read-only first. |
 | `/sos vault-process` | `/sos:vault-process` - process `vault/triage` items through human-gated decisions. |
 | `/sos vault-summary` | `/sos:vault-summary` - summarize vault state and pending triage. |
+| `/sos archive <path-or-description> [context]` | `/sos:archive` - preserve non-active material in `vault/archive/` with metadata and manifest update. |
+| `/sos unarchive <archive-path-or-description> [context]` | `/sos:unarchive` - copy archived material back to an active location and update archive metadata. |
 | `/sos context-export` | `/sos:context-export` - create a source-backed export package. |
 | `/sos context-import` | `/sos:context-import` - import source-backed context. Proposal first. |
 | `/sos session-close` | `/sos:session-close` - close a substantial session and update state. |
@@ -56,7 +61,9 @@ Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 ## Safety Rules
 
 - Default to read-only for `summary`, `tools`, `vault-summary`, and `migrate`.
-- For `init`, `audit`, `ingest`, `context-import`, and `vault-process`, propose changes before editing unless the user gave a clear direct-write instruction.
+- `assistant` is a conversational router. It can continue into another SOS protocol only after naming the routed workflow and following that workflow's safety rules.
+- For `init`, `audit`, `ingest`, `context-import`, `vault-process`, `archive`, and `unarchive`, propose changes before editing unless the user gave a clear direct-write instruction.
+- For `archive` and `unarchive`, use `(Y)ES`, `(N)O`, `(D)ISCUSS`, and `(C)ANCEL`; preserve binary, encrypted, compressed, hash-mapped, generated, and vendor files byte-for-byte.
 - Never process `vault/triage/README.md` or `vault/triage/_manifest.md` as triage items.
 - Do not initialize Backlog.md unless the user explicitly approves that tool adoption.
 - If `/sos:*` entries do not appear in the slash menu, explain that Claude Code may need to reload/restart after new project command files are added. Use `/sos <subcommand>` as the fallback.

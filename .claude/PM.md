@@ -64,6 +64,7 @@ Seed SolutionOS v0.1 from the source-backed discussion:
 - package metadata in `package.json`
 - install template in `templates/core/`
 - compatibility helpers in `scripts/`
+- actor/concept integrity rules in `ACTORS.md`, `STONE.md`, `WORKFLOW.md`, and `SCHEMA.md`
 - dogfooded active node files in `.claude/`
 - node KB in `vault/`
 

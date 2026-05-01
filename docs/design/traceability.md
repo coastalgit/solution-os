@@ -53,3 +53,9 @@ Traceability from source statements to requirements, decisions, and template fil
 | SRC-046 |  | DEC-024 | Superseded root `INSTALL.md` experiment; historical only |
 | SRC-047 | REQ-032 | DEC-025 | `package.json`, `bin/sos.js`, README |
 | SRC-048 | REQ-033 |  | `/sos:vault-process`, `vault/triage/README.md`, `templates/core/vault/triage/README.md` |
+| SRC-049 | REQ-034, REQ-036 | DEC-026 | `SCHEMA.md`, `ACTORS.md`, `concept-binding.md`, audit helpers |
+| SRC-050 | REQ-035, REQ-036 | DEC-026 | `STONE.md`, `WORKFLOW.md`, `ACTORS.md`, audit helpers |
+| SRC-051 | REQ-037 | DEC-027 | `bin/sos.js`, `scripts/sos-init.ps1`, `SCHEMA.md`, `WORKFLOW.md`, README |
+| SRC-052 | REQ-038 | DEC-028 | `/sos:archive`, `/sos:unarchive`, `vault/archive/_manifest.md`, `SCHEMA.md`, `WORKFLOW.md`, audit helpers |
+| SRC-053 | REQ-039 | DEC-029 | `/sos:assistant`, `.claude/sos/ASSISTANT.md`, `COMMANDS.md`, `SKILL.md`, `WORKFLOW.md` |
+| SRC-054 | REQ-040 | DEC-030 | `.claude/sos/SOS-VISUAL.html`, `/sos:help`, `/sos:about`, `SCHEMA.md`, README |

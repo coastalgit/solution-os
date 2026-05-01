@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 Run `/sos:about` for this node.
 
-Read `.claude/sos/sos.json` and `.claude/sos/SCHEMA.md`.
+Read `.claude/sos/sos.json`, `.claude/sos/SCHEMA.md`, and note that `.claude/sos/SOS-VISUAL.html` is available as a local visual aid.
 
 Give a short explanation only. Include the installed SOS version and template version.
 
@@ -26,4 +26,6 @@ Each level can carry:
 - optional adapters such as Obsidian, Backlog, Claude, Codex, Firecrawl, or local scripts
 ```
 
-End by pointing to `/sos:help` for commands.
+End by pointing to `/sos:help` for commands and `.claude/sos/SOS-VISUAL.html` for a simple visual map.
+
+If the user asks to launch the visual map and local file opening is available, open `.claude/sos/SOS-VISUAL.html`; otherwise print the relative path.

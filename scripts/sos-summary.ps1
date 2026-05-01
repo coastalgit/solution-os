@@ -85,6 +85,65 @@ function Get-PropertyValue {
     return $property.Value
 }
 
+function Compare-SosVersion {
+    param(
+        [string]$Left,
+        [string]$Right
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Left) -or [string]::IsNullOrWhiteSpace($Right)) {
+        return $null
+    }
+
+    $leftCore = ($Left -split '[+-]', 2)[0]
+    $rightCore = ($Right -split '[+-]', 2)[0]
+    $leftParts = @($leftCore -split '\.' | ForEach-Object { [int]$_ })
+    $rightParts = @($rightCore -split '\.' | ForEach-Object { [int]$_ })
+    $max = [Math]::Max($leftParts.Count, $rightParts.Count)
+
+    for ($index = 0; $index -lt $max; $index++) {
+        $leftPart = if ($index -lt $leftParts.Count) { $leftParts[$index] } else { 0 }
+        $rightPart = if ($index -lt $rightParts.Count) { $rightParts[$index] } else { 0 }
+
+        if ($leftPart -gt $rightPart) {
+            return 1
+        }
+
+        if ($leftPart -lt $rightPart) {
+            return -1
+        }
+    }
+
+    return 0
+}
+
+function Get-RunningHelperVersion {
+    $scriptRoot = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $PSCommandPath }
+    $candidates = @(
+        (Join-Path $scriptRoot '..\sos.json'),
+        (Join-Path $scriptRoot '..\manifest.json'),
+        (Join-Path $scriptRoot '..\..\..\manifest.json')
+    )
+
+    foreach ($candidate in $candidates) {
+        $fullPath = [System.IO.Path]::GetFullPath($candidate)
+        if (!(Test-Path -LiteralPath $fullPath)) {
+            continue
+        }
+
+        try {
+            $json = Get-Content -Raw -LiteralPath $fullPath | ConvertFrom-Json
+            if ($json.sos_version) {
+                return $json.sos_version
+            }
+        }
+        catch {
+        }
+    }
+
+    return '0.0.0'
+}
+
 $requiredFiles = @(
     'CLAUDE.md',
     'AGENTS.md',
@@ -94,6 +153,7 @@ $requiredFiles = @(
     '.claude\TOOLS.md',
     '.claude\WORKFLOW.md',
     '.claude\skills\sos\SKILL.md',
+    '.claude\commands\sos\assistant.md',
     '.claude\commands\sos\help.md',
     '.claude\commands\sos\about.md',
     '.claude\commands\sos\init.md',
@@ -104,14 +164,19 @@ $requiredFiles = @(
     '.claude\commands\sos\migrate.md',
     '.claude\commands\sos\vault-process.md',
     '.claude\commands\sos\vault-summary.md',
+    '.claude\commands\sos\archive.md',
+    '.claude\commands\sos\unarchive.md',
     '.claude\commands\sos\context-export.md',
     '.claude\commands\sos\context-import.md',
     '.claude\commands\sos\session-close.md',
     '.claude\sos\sos.json',
     '.claude\sos\VERSION.md',
     '.claude\sos\COMMANDS.md',
+    '.claude\sos\ASSISTANT.md',
+    '.claude\sos\SOS-VISUAL.html',
     '.claude\sos\SCHEMA.md',
     '.claude\sos\TOOLKITS.md',
+    '.claude\sos\template\concept-binding.md',
     '.claude\sos\scripts\README.md',
     '.claude\sos\scripts\sos-summary.ps1',
     '.claude\sos\scripts\sos-audit.ps1',
@@ -215,6 +280,9 @@ $publishUpward = ''
 $remoteRepositoryUrl = ''
 $remoteManifestUrl = ''
 $remoteDefaultBranch = ''
+$runningHelperVersion = Get-RunningHelperVersion
+$projectVersionRelation = if (Test-RelativePath '.claude\sos\sos.json') { 'project-version-missing' } else { 'not-installed' }
+$versionWarnings = New-Object System.Collections.Generic.List[string]
 
 if ($null -ne $metadata) {
     $nodeName = $metadata.node.name
@@ -227,6 +295,31 @@ if ($null -ne $metadata) {
     $remoteRepositoryUrl = Get-PropertyValue $metadata.remote 'repository_url'
     $remoteManifestUrl = Get-PropertyValue $metadata.remote 'manifest_url'
     $remoteDefaultBranch = Get-PropertyValue $metadata.remote 'default_branch'
+
+    if ($sosVersion) {
+        $comparison = Compare-SosVersion $sosVersion $runningHelperVersion
+        if ($null -eq $comparison) {
+            $projectVersionRelation = 'unknown'
+            $versionWarnings.Add("project SOS version $sosVersion could not be compared with running helper $runningHelperVersion")
+        }
+        elseif ($comparison -eq 0) {
+            $projectVersionRelation = 'same'
+        }
+        elseif ($comparison -gt 0) {
+            $projectVersionRelation = 'project-newer-than-cli'
+            $versionWarnings.Add("project SOS $sosVersion is newer than running helper $runningHelperVersion; write commands must not run")
+        }
+        else {
+            $projectVersionRelation = 'project-older-than-cli'
+        }
+    }
+    else {
+        $versionWarnings.Add('project has SOS metadata but no sos_version; write commands must not run')
+    }
+}
+elseif (![string]::IsNullOrWhiteSpace($metadataError)) {
+    $projectVersionRelation = 'metadata-unreadable'
+    $versionWarnings.Add('project has .claude/sos/sos.json but it could not be read; write commands must not run')
 }
 
 $status = if (
@@ -235,7 +328,8 @@ $status = if (
     $missingPmReferences.Count -eq 0 -and
     $missingAdapterDelegation.Count -eq 0 -and
     $uniqueUnreachableSurfacePaths.Count -eq 0 -and
-    [string]::IsNullOrWhiteSpace($metadataError)
+    [string]::IsNullOrWhiteSpace($metadataError) -and
+    $versionWarnings.Count -eq 0
 ) {
     'healthy'
 }
@@ -247,8 +341,11 @@ else {
     Status = $status
     TargetPath = $targetFullPath
     SosInstalled = Test-RelativePath '.claude\sos\sos.json'
+    RunningHelperVersion = $runningHelperVersion
     SosVersion = $sosVersion
     TemplateVersion = $templateVersion
+    ProjectVersionRelation = $projectVersionRelation
+    VersionWarningCount = $versionWarnings.Count
     NodeName = $nodeName
     NodeKind = $nodeKind
     ParentName = $parentName
@@ -266,6 +363,11 @@ else {
     MissingAdapterDelegationCount = $missingAdapterDelegation.Count
     UnreachableSurfacePathCount = $uniqueUnreachableSurfacePaths.Count
     MetadataError = $metadataError
+}
+
+if ($versionWarnings.Count -gt 0) {
+    "`nVersion warnings:"
+    $versionWarnings | Sort-Object
 }
 
 if ($missingFiles.Count -gt 0) {

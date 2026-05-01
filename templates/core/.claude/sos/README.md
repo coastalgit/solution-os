@@ -17,6 +17,8 @@ Do not read or follow files here during ordinary project work unless the user in
 - `sos.json` - machine-readable SOS install/node metadata.
 - `VERSION.md` - human-readable SOS/template version stamp.
 - `COMMANDS.md` - official SOS command vocabulary.
+- `ASSISTANT.md` - guided front-door reference for conversational SOS use.
+- `SOS-VISUAL.html` - local static visual map of the SOS agentic operating layer.
 - `SCHEMA.md` - human-readable schema for node files and metadata.
 - `TOOLKITS.md` - SOS-wide toolset preferences and adoption rules.
 - `scripts/` - node-local read-only helpers for summary, audit, and migration assessment.

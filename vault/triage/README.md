@@ -68,7 +68,7 @@ Default behaviour is proposal-first. The agent must not move, rewrite, archive, 
 | Route | Use When | Required Follow-Up |
 |---|---|---|
 | `wiki` | The item contains durable knowledge, decisions, methods, or reference material. | Create/update a concise `vault/wiki/` note with metadata and index reachability. |
-| `archive` | The item is source evidence, already processed, or worth preserving but not turning into knowledge. | Move/copy to `vault/archive/` and update `vault/archive/_manifest.md`. |
+| `archive` | The item is source evidence, a retained record, already processed, or worth preserving but not turning into active knowledge. | Follow `/sos:archive`: move/copy byte-for-byte, write archive metadata, and update `vault/archive/_manifest.md`. |
 | `outbox` | The item is or should become a deliverable/export/report. | Place output in `vault/outbox/` and update `vault/outbox/_manifest.md`. |
 | `task` | The item is actionable work. | Use the adopted task system only. If none is adopted, record in wiki/planning instead. |
 | `leave` | The item is unclear, premature, or needs a user decision. | Keep it in triage and record status in `_manifest.md` if useful. |

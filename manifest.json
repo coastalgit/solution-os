@@ -1,23 +1,23 @@
 {
-  "sos_version": "0.1.13",
-  "template_version": "0.1.13",
-  "builder_version": "0.1.13",
+  "sos_version": "0.1.14",
+  "template_version": "0.1.14",
+  "builder_version": "0.1.14",
   "released": "2026-05-01",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.13"
+    "core": "0.1.14"
   },
   "cli": {
     "package": "@coastalgit/solution-os",
     "binary": "sos",
-    "version": "0.1.13"
+    "version": "0.1.14"
   },
   "scripts": {
-    "sos-init.ps1": "0.1.7",
-    "sos-summary.ps1": "0.1.10",
-    "sos-audit.ps1": "0.1.10",
+    "sos-init.ps1": "0.1.14",
+    "sos-summary.ps1": "0.1.14",
+    "sos-audit.ps1": "0.1.14",
     "sos-migrate-assess.ps1": "0.1.9"
   },
   "profiles": {},
@@ -35,6 +35,7 @@
     "0.1.10 defines the SOS surface routing contract and audits PM/adapters for reachability.",
     "0.1.11 clarifies the self-hosted repository model and adds curated product history to the vault.",
     "0.1.12 clarified source-repository boundaries.",
-    "0.1.13 makes the sos CLI package the primary install/update interface and expands triage gate choices."
+    "0.1.13 makes the sos CLI package the primary install/update interface and expands triage gate choices.",
+    "0.1.14 adds actor registry protection, concept-binding, aliases, semantic audit warnings, no-overwrite version-safe install guards, archive/unarchive lifecycle controls, a guided /sos:assistant front door, and a local SOS visual map."
   ]
 }

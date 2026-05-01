@@ -3,7 +3,7 @@ type: sos-install
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.13
+sos_version: 0.1.14
 ---
 
 # SOS Install Reference
@@ -49,13 +49,21 @@ node-root/
     sos/
 ```
 
-Existing files are skipped by default. Use force only when the user has explicitly accepted replacement of existing SOS files.
+Existing files are always skipped. `sos install` must not overwrite project files.
+
+Before writing, `sos install` checks `.claude/sos/sos.json` when it exists:
+
+- if the project version matches the running CLI, it may add missing files only
+- if the project version is older than the running CLI, it may add missing files only
+- if the project version is newer than the running CLI, it must stop before writing
+- if project version metadata is missing or unreadable, it must stop before writing
 
 ## Safety Rules
 
 - Preserve existing project instructions.
 - Do not delete or move existing project files during install.
 - Do not replace existing `CLAUDE.md`, `AGENTS.md`, `.claude/`, or `vault/` files unless the user explicitly requests replacement.
+- Do not use install as a repair/overwrite mechanism. Repairs need a separate explicit approval path.
 - If older Workspacer, knowledge-base, command, skill, or session-memory material exists, run `sos migrate` first and review the assessment.
 - Route project-specific guidance into `.claude/PM.md` instead of burying it in installer notes.
 
