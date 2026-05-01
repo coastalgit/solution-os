@@ -82,7 +82,7 @@ manifest.json
 Current version:
 
 ```text
-0.1.9
+0.1.10
 ```
 
 ## First Principles

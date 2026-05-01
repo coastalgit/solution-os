@@ -6,9 +6,9 @@ status: active
 
 # SOS Version
 
-Current SOS version: `0.1.9`
+Current SOS version: `0.1.10`
 
-Current template version: `0.1.9`
+Current template version: `0.1.10`
 
 Released: `2026-05-01`
 

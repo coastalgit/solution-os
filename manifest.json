@@ -1,18 +1,18 @@
 {
-  "sos_version": "0.1.9",
-  "template_version": "0.1.9",
-  "builder_version": "0.1.9",
+  "sos_version": "0.1.10",
+  "template_version": "0.1.10",
+  "builder_version": "0.1.10",
   "released": "2026-05-01",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.9"
+    "core": "0.1.10"
   },
   "scripts": {
     "sos-init.ps1": "0.1.7",
-    "sos-summary.ps1": "0.1.9",
-    "sos-audit.ps1": "0.1.9",
+    "sos-summary.ps1": "0.1.10",
+    "sos-audit.ps1": "0.1.10",
     "sos-migrate-assess.ps1": "0.1.9"
   },
   "profiles": {},
@@ -26,6 +26,7 @@
     "0.1.6 corrects help back to the concrete SOS baseline, adds /sos:tools and /sos:ingest, and removes /sos:toolkits-summary.",
     "0.1.7 splits /sos:help quick reference from /sos:about explanatory intent and ensures help/about/summary surface SOS version.",
     "0.1.8 trims /sos:about to a shorter explanation.",
-    "0.1.9 ships read-only helper scripts inside installed nodes under .claude/sos/scripts."
+    "0.1.9 ships read-only helper scripts inside installed nodes under .claude/sos/scripts.",
+    "0.1.10 defines the SOS surface routing contract and audits PM/adapters for reachability."
   ]
 }

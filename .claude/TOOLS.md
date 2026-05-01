@@ -23,8 +23,8 @@ For SOS-wide toolset preferences and adoption rules, read `.claude/sos/TOOLKITS.
 | Command | Purpose | Notes |
 |---|---|---|
 | `.\scripts\sos-init.ps1 -TargetPath <path>` | Preview SOS template install. | Add `-Apply` to write files; existing files are skipped unless `-Force` is used. |
-| `.\scripts\sos-summary.ps1 -TargetPath <path>` | Read-only SOS health summary. | Reports metadata, vault counts, and missing required files/dirs. |
-| `.\scripts\sos-audit.ps1 -TargetPath <path>` | Read-only SOS structure audit. | Reports missing required files/dirs and missing SOS frontmatter. |
+| `.\scripts\sos-summary.ps1 -TargetPath <path>` | Read-only SOS health summary. | Reports metadata, vault counts, missing required files/dirs, and routing-surface counts. |
+| `.\scripts\sos-audit.ps1 -TargetPath <path>` | Read-only SOS structure audit. | Reports missing files/dirs, missing SOS frontmatter, and unreachable routing-surface paths. |
 | `.\scripts\sos-migrate-assess.ps1 -TargetPath <path>` | Read-only migration assessment. | Finds older project-memory and KB structures before a migration plan. |
 | `.\.claude\sos\scripts\sos-summary.ps1 -TargetPath .` | Installed-node summary helper. | Mirrors the source helper path inside an applied SOS node. |
 

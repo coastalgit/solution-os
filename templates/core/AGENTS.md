@@ -17,6 +17,8 @@ Read `.claude/PM.md` first for context routing. Treat `.claude/*.md` as active n
 
 Do not load `.claude/sos/**` unless the task is explicitly about `/sos:*`, installation, audit, summary, export, import, update, schemas, templates, or toolsets.
 
+For `/sos:*` work, use `.claude/sos/COMMANDS.md` as the command vocabulary and `.claude/PM.md` as the node map.
+
 ## Knowledge Lifecycle
 
 The node knowledge base lives in `vault/`:

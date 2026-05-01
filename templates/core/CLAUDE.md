@@ -33,6 +33,8 @@ Use:
 
 Do not read or follow `.claude/sos/**` during normal project work unless the user invokes an `/sos:*` task or explicitly asks to install, audit, summarize, export, import, update, or inspect SOS.
 
+For `/sos:*` work, use `.claude/sos/COMMANDS.md` as the command vocabulary and `.claude/PM.md` as the node map.
+
 ## Working Rules
 
 - Inspect before editing.

@@ -31,6 +31,30 @@ This is the human-readable schema for an SOS node.
 | `.claude/commands/sos/` | Native Claude Code `/sos:*` branch commands. |
 | `.claude/sos/` | SOS system material. |
 
+## Routing Contract
+
+Required files are not enough if a fresh agent cannot find them by following the documented route. SOS calls the discoverable set of required context, system, and vault paths the **SOS surface**.
+
+Adapters and routers must satisfy this contract:
+
+- `CLAUDE.md` MUST reference `.claude/PM.md`.
+- `AGENTS.md` MUST reference `.claude/PM.md`.
+- `AGENTS.md` MUST reference `.claude/sos/COMMANDS.md` so Codex-style agents can find the fallback command vocabulary.
+- `.claude/PM.md` is the canonical node map and MUST reference:
+  - `.claude/STONE.md`
+  - `.claude/ACTORS.md`
+  - `.claude/TOOLS.md`
+  - `.claude/WORKFLOW.md`
+  - `.claude/sos/`
+  - `.claude/skills/sos/`
+  - `.claude/commands/sos/`
+  - `vault/triage/`
+  - `vault/wiki/`
+  - `vault/archive/`
+  - `vault/outbox/`
+
+`/sos:audit` SHOULD report missing files, missing metadata, missing PM references, missing adapter delegation, and unreachable SOS surface paths. A node can have every file present and still need attention if the routing chain does not expose the SOS surface.
+
 ## Required SOS System Files
 
 | Path | Purpose |

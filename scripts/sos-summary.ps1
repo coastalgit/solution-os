@@ -17,6 +17,41 @@ function Test-RelativePath {
     Test-Path -LiteralPath (Join-Path $targetFullPath $RelativePath)
 }
 
+function Get-TextContent {
+    param([string]$Path)
+
+    if (!(Test-Path -LiteralPath $Path)) {
+        return ''
+    }
+
+    return Get-Content -LiteralPath $Path -Raw -ErrorAction Stop
+}
+
+function Test-ContentReference {
+    param(
+        [string]$Content,
+        [string]$RelativePath
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Content)) {
+        return $false
+    }
+
+    $variants = @(
+        $RelativePath,
+        $RelativePath.Replace('\', '/'),
+        $RelativePath.Replace('/', '\')
+    ) | Sort-Object -Unique
+
+    foreach ($variant in $variants) {
+        if ($Content.IndexOf($variant, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 function Count-NodeFiles {
     param([string]$RelativePath)
 
@@ -103,6 +138,60 @@ $requiredDirs = @(
 $missingFiles = @($requiredFiles | Where-Object { !(Test-RelativePath $_) })
 $missingDirs = @($requiredDirs | Where-Object { !(Test-RelativePath $_) })
 
+$pmRequiredReferences = @(
+    '.claude\STONE.md',
+    '.claude\ACTORS.md',
+    '.claude\TOOLS.md',
+    '.claude\WORKFLOW.md',
+    '.claude\sos',
+    '.claude\skills\sos',
+    '.claude\commands\sos',
+    'vault\triage',
+    'vault\wiki',
+    'vault\archive',
+    'vault\outbox'
+)
+
+$adapterRequiredReferences = @{
+    'CLAUDE.md' = @('.claude\PM.md')
+    'AGENTS.md' = @('.claude\PM.md', '.claude\sos\COMMANDS.md')
+}
+
+$pmContent = Get-TextContent (Join-Path $targetFullPath '.claude\PM.md')
+$missingPmReferences = @(
+    $pmRequiredReferences |
+        Where-Object { !(Test-ContentReference $pmContent $_) }
+)
+
+$missingAdapterDelegation = New-Object System.Collections.Generic.List[string]
+
+foreach ($adapterPath in $adapterRequiredReferences.Keys) {
+    $adapterContent = Get-TextContent (Join-Path $targetFullPath $adapterPath)
+
+    foreach ($requiredReference in $adapterRequiredReferences[$adapterPath]) {
+        if (!(Test-ContentReference $adapterContent $requiredReference)) {
+            $missingAdapterDelegation.Add("$adapterPath -> $requiredReference")
+        }
+    }
+}
+
+$unreachableSurfacePaths = New-Object System.Collections.Generic.List[string]
+
+foreach ($adapterPath in $adapterRequiredReferences.Keys) {
+    $adapterContent = Get-TextContent (Join-Path $targetFullPath $adapterPath)
+
+    if (!(Test-ContentReference $adapterContent '.claude\PM.md')) {
+        $unreachableSurfacePaths.Add("$adapterPath -> .claude\PM.md")
+        continue
+    }
+
+    foreach ($missingPmReference in $missingPmReferences) {
+        $unreachableSurfacePaths.Add("$adapterPath -> .claude\PM.md -> $missingPmReference")
+    }
+}
+
+$uniqueUnreachableSurfacePaths = @($unreachableSurfacePaths | Sort-Object -Unique)
+
 $sosJsonPath = Join-Path $targetFullPath '.claude\sos\sos.json'
 $metadata = $null
 $metadataError = ''
@@ -140,7 +229,14 @@ if ($null -ne $metadata) {
     $remoteDefaultBranch = Get-PropertyValue $metadata.remote 'default_branch'
 }
 
-$status = if ($missingFiles.Count -eq 0 -and $missingDirs.Count -eq 0 -and [string]::IsNullOrWhiteSpace($metadataError)) {
+$status = if (
+    $missingFiles.Count -eq 0 -and
+    $missingDirs.Count -eq 0 -and
+    $missingPmReferences.Count -eq 0 -and
+    $missingAdapterDelegation.Count -eq 0 -and
+    $uniqueUnreachableSurfacePaths.Count -eq 0 -and
+    [string]::IsNullOrWhiteSpace($metadataError)
+) {
     'healthy'
 }
 else {
@@ -166,6 +262,9 @@ else {
     OutboxItemCount = Count-NodeFiles 'vault\outbox'
     MissingFileCount = $missingFiles.Count
     MissingDirCount = $missingDirs.Count
+    MissingPmReferenceCount = $missingPmReferences.Count
+    MissingAdapterDelegationCount = $missingAdapterDelegation.Count
+    UnreachableSurfacePathCount = $uniqueUnreachableSurfacePaths.Count
     MetadataError = $metadataError
 }
 
@@ -177,4 +276,19 @@ if ($missingFiles.Count -gt 0) {
 if ($missingDirs.Count -gt 0) {
     "`nMissing directories:"
     $missingDirs | Sort-Object
+}
+
+if ($missingPmReferences.Count -gt 0) {
+    "`nMissing PM references:"
+    $missingPmReferences | Sort-Object
+}
+
+if ($missingAdapterDelegation.Count -gt 0) {
+    "`nMissing adapter delegation:"
+    $missingAdapterDelegation | Sort-Object
+}
+
+if ($uniqueUnreachableSurfacePaths.Count -gt 0) {
+    "`nUnreachable SOS surface paths:"
+    $uniqueUnreachableSurfacePaths | Sort-Object
 }

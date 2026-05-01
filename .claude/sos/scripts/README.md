@@ -19,3 +19,5 @@ They are installed with the SOS baseline so summary, audit, and migration assess
 ```
 
 These scripts report only. They must not move, rewrite, or delete project files.
+
+`sos-summary.ps1` and `sos-audit.ps1` include routing-surface checks: PM references, adapter delegation, and unreachable SOS surface paths.

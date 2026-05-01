@@ -3,7 +3,7 @@ type: sos-builder
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.9
+sos_version: 0.1.10
 ---
 
 # SOS-BUILDER

@@ -32,7 +32,7 @@ Read the SOS shape of a folder without changing files:
 .\scripts\sos-summary.ps1 -TargetPath <path-to-node>
 ```
 
-The script reports node metadata, vault counts, and missing required SOS files.
+The script reports node metadata, vault counts, missing required SOS files, and routing-surface reachability counts.
 
 ## `sos-audit.ps1`
 
@@ -42,7 +42,7 @@ Inspect SOS structure and mandatory metadata without changing files:
 .\scripts\sos-audit.ps1 -TargetPath <path-to-node>
 ```
 
-The script reports missing required files/directories and SOS-owned Markdown files missing YAML frontmatter.
+The script reports missing required files/directories, SOS-owned Markdown files missing YAML frontmatter, missing PM references, missing adapter delegation, and unreachable SOS surface paths.
 
 ## `sos-migrate-assess.ps1`
 

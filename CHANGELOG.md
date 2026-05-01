@@ -6,6 +6,16 @@ status: active
 
 # Changelog
 
+## 0.1.10 - 2026-05-01
+
+Defined and audited the SOS routing surface.
+
+- Added an explicit routing contract to `SCHEMA.md`.
+- Made `.claude/PM.md` the canonical SOS surface map in the core template.
+- Updated `CLAUDE.md` and `AGENTS.md` adapters to point to PM and the SOS command vocabulary.
+- Extended `sos-audit.ps1` and `sos-summary.ps1` to report missing PM references, missing adapter delegation, and unreachable SOS surface paths.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.10.
+
 ## 0.1.9 - 2026-05-01
 
 Shipped node-local SOS helper scripts.
