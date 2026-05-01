@@ -6,6 +6,15 @@ status: active
 
 # Changelog
 
+## 0.1.3 - 2026-05-01
+
+Triage README made operational.
+
+- Replaced the vague triage folder description with a concrete `/sos:vault-process` protocol.
+- Added control-file exclusions so `README.md` and `_manifest.md` are not treated as triage items.
+- Added route rules for wiki, archive, outbox, task, and leave decisions.
+- Added manifest/index follow-up expectations.
+
 ## 0.1.2 - 2026-05-01
 
 Migration-aware baseline for existing projects.

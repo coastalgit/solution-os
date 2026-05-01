@@ -29,3 +29,4 @@ status: active
 | DEC-017 | Start release stamping at `0.1.0` and move the current installable baseline to `0.1.1`. | SRC-035 | Allows legacy projects to record exactly which SOS baseline was applied. |
 | DEC-018 | Add `/sos:migrate` as a human-gated migration assessment path. | SRC-036 | Existing project setups need discovery and choices before applying SOS changes. |
 | DEC-019 | Add `_manifest.md` files to each vault lifecycle folder. | SRC-036 | Manifests make triage/wiki/archive/outbox state explicit and auditable. |
+| DEC-020 | Treat triage README as an operational protocol file. | SRC-037 | Agents opening the folder need to know exactly how to process items without hunting elsewhere. |
