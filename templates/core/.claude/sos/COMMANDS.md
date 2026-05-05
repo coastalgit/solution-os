@@ -46,6 +46,7 @@ If `/sos:*` entries do not appear immediately after install/update, restart or r
 | `/sos:context-export` | Create source-backed context export for another node/tool/agent. | Uses export rules. |
 | `/sos:context-import` | Import source-backed context into this node. | Propose mapping first. |
 | `/sos:session-close` | Close a substantial session by updating state, questions, and next action. | Updates with approval if needed. |
+| `/sos:spec` | Create a guided draft feature spec pack from a local idea or existing GitHub issue. | Guided write. Creates `specs/<id-slug>/spec.md`; no plan/tasks/contracts in v1. |
 
 ## Update Behavior
 

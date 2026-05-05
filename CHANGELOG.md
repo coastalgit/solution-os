@@ -6,6 +6,16 @@ status: active
 
 # Changelog
 
+## 0.1.19 - 2026-05-05
+
+Added guided `/sos:spec` for creating draft feature spec packs from either a local idea or an existing GitHub issue.
+
+- Added `/sos:spec` command files to the source node and install template.
+- Registered `/sos:spec` in the SOS command vocabulary and native `/sos` router.
+- Added the command to the CLI install/audit required file list.
+- Defined the v1 output as `specs/<id-slug>/spec.md` only; planning, tasks, and contracts remain later workflow outputs.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.19.
+
 ## 0.1.18 - 2026-05-05
 
 Stripped the agent-driven `/sos:init` and `/sos:audit` theatre that 0.1.16's discipline rule had inadvertently amplified. Workshop-demo-ready: concise output, no scrolling agent commentary.

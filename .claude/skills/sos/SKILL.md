@@ -1,7 +1,7 @@
 ---
 name: sos
-description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS assistant, help, about, init, summary, audit, tools, ingest, migration, vault, archive, context, or session workflows.
-argument-hint: "[assistant|help|about|init|summary|audit|tools|ingest|migrate|vault-process|vault-summary|archive|unarchive|context-export|context-import|session-close]"
+description: SolutionOS command router for this node. Use when the user invokes /sos to run SOS assistant, help, about, init, summary, audit, tools, ingest, migration, vault, archive, context, spec, or session workflows.
+argument-hint: "[assistant|help|about|init|summary|audit|tools|ingest|migrate|vault-process|vault-summary|archive|unarchive|context-export|context-import|session-close|spec]"
 disable-model-invocation: true
 ---
 
@@ -57,12 +57,13 @@ Do not load all of `.claude/sos/` unless the selected subcommand needs it.
 | `/sos context-export` | `/sos:context-export` - create a source-backed export package. |
 | `/sos context-import` | `/sos:context-import` - import source-backed context. Proposal first. |
 | `/sos session-close` | `/sos:session-close` - close a substantial session and update state. |
+| `/sos spec` | `/sos:spec` - create a guided draft feature spec pack from a local idea or existing GitHub issue. |
 
 ## Safety Rules
 
 - Default to read-only for `summary`, `tools`, `vault-summary`, and `migrate`.
 - `assistant` is a conversational router. It can continue into another SOS protocol only after naming the routed workflow and following that workflow's safety rules.
-- For `init`, `audit`, `ingest`, `context-import`, `vault-process`, `archive`, and `unarchive`, propose changes before editing unless the user gave a clear direct-write instruction.
+- For `init`, `audit`, `ingest`, `context-import`, `vault-process`, `archive`, `unarchive`, and `spec`, propose or ask the command's required questions before editing unless the user gave a clear direct-write instruction.
 - For `archive` and `unarchive`, use `(Y)ES`, `(N)O`, `(D)ISCUSS`, and `(C)ANCEL`; preserve binary, encrypted, compressed, hash-mapped, generated, and vendor files byte-for-byte.
 - Never process `vault/triage/README.md` or `vault/triage/_manifest.md` as triage items.
 - Do not initialize Backlog.md unless the user explicitly approves that tool adoption.

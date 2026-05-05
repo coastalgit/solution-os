@@ -35,6 +35,7 @@ const requiredFiles = [
   '.claude/commands/sos/context-export.md',
   '.claude/commands/sos/context-import.md',
   '.claude/commands/sos/session-close.md',
+  '.claude/commands/sos/spec.md',
   '.claude/commands/sos/presentation-generate.md',
   '.claude/sos/sos.json',
   '.claude/sos/VERSION.md',
