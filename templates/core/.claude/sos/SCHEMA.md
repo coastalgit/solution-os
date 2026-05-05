@@ -30,6 +30,9 @@ This is the human-readable schema for an SOS node.
 | `.claude/skills/sos/SKILL.md` | Native Claude Code `/sos` skill router. |
 | `.claude/commands/sos/` | Native Claude Code `/sos:*` branch commands. |
 | `.claude/sos/` | SOS system material. |
+| `resources/` | Private input lane (Git-ignored). Auto-created by install if missing; never touched if present. |
+| `resources/README.md` | Explains the private input lane to anyone landing in the directory. |
+| `.gitignore` | At project root. Created by install if missing, with `/resources/` entry. If present, `sos install` may append a labelled SOS section after approval; never replaces. |
 
 ## Routing Contract
 
@@ -68,6 +71,10 @@ Adapters and routers must satisfy this contract:
 | `.claude/sos/SCHEMA.md` | This schema. |
 | `.claude/sos/TOOLKITS.md` | SOS toolset preferences and adoption rules. |
 | `.claude/sos/template/concept-binding.md` | Template for binding repeated named concepts to a canonical note. |
+| `.claude/sos/produce/presentation/README.md` | Explains the presentation produce-config directory. |
+| `.claude/sos/produce/presentation/house-style.md` | Defaults the agent loads into the `/sos:presentation-generate` Q&A. |
+| `.claude/sos/produce/presentation/output-styles.md` | Reference menu of NotebookLM output types and their styling knobs. |
+| `.claude/sos/produce/presentation/manifest-template.md` | Per-job presentation manifest template. |
 | `.claude/sos/scripts/README.md` | Node-local helper script notes. |
 | `.claude/sos/scripts/sos-summary.ps1` | Read-only node summary helper. |
 | `.claude/sos/scripts/sos-audit.ps1` | Read-only structure and metadata audit helper. |
@@ -98,10 +105,55 @@ Write actions must follow this policy:
 
 - Project version newer than running tool: stop before writing.
 - Project version same as running tool: normal operation.
-- Project version older than running tool: missing-file install may proceed, but existing files are still skipped.
+- Project version older than running tool: missing-file install may proceed after approval, but existing files are still skipped.
 - Project version missing, unreadable, or not comparable: stop before writing.
 
-`sos install` is never an overwrite command. It creates missing files and skips existing files. Replacing, merging, repairing, or upgrading existing files requires a separate explicit approval path.
+`sos install` is never an overwrite command. It proposes missing files, creates them only after approval, and skips existing files. Replacing, merging, repairing, or upgrading existing files requires a separate explicit approval path.
+
+For older SOS nodes, name the situation as an upgrade opportunity. Do not describe it as a refresh that adopts or removes files. Safe upgrade work on existing memory files must be append-only, path-specific, and preserve existing information unless the user approves a separate repair or replacement action.
+
+### Install-time append-only operations
+
+`sos install` performs one narrowly-scoped append-only operation on existing files, gated by the same approval flow as missing-file creates:
+
+- **`.gitignore` append.** If the project root has an existing `.gitignore` and it does not contain a `/resources/`-style entry, `sos install` may append a labelled SOS section adding `/resources/`. Detection accepts `/resources/`, `resources/`, and `**/resources/` as equivalents. Never reorders, modifies, or deletes existing entries. If `.gitignore` is absent, install creates it as a missing file via the standard template flow.
+
+### Install-time root context-file detection
+
+After missing-file creation, `sos install` scans the project root for known context-bearing filenames:
+
+- `README.md`, `PRD.md`, `CONTEXT.md`, `BRIEF.md`, `REQUIREMENTS.md`, `SPEC.md`
+
+If any are present, install prints a one-line hint per finding suggesting the user run `/sos:ingest <file> as <intent>` to route the content into the node, or leave it untouched. Install never claims, moves, or modifies these files.
+
+## Private Input Lane
+
+`/resources/` at the project root is the **private input lane**. It is Git-ignored by the SOS-managed `.gitignore` entry.
+
+- Material in `/resources/` may be private, sensitive, copyrighted, or pre-release.
+- The agent may **read** material from `/resources/` during ingestion.
+- The agent **must not** copy raw bytes from `/resources/` into `vault/triage/`, `vault/wiki/`, `vault/archive/`, or `vault/outbox/`.
+- Only **user-approved summaries** derived from `/resources/` material may be written into `vault/wiki/`.
+- Before any wiki write that summarises private-source material, the agent must surface that the source is private so the user can verify the summary does not leak specifics that need to stay private.
+- The lane is auto-created by `sos install` if missing (with a `README.md` explaining the lane), and never touched by install if it already exists.
+
+## Output Production Pattern
+
+`.claude/sos/produce/<type>/` holds the configuration for output-type generation in this node.
+
+Each output type uses a consistent shape:
+
+```text
+.claude/sos/produce/<type>/
+├── README.md             # explains the produce-config directory
+├── house-style.md        # node-level defaults for audience, tone, brand, visual prefs
+├── output-styles.md      # reference menu of formats and styling knobs
+└── manifest-template.md  # per-job contract template
+```
+
+Generated artifacts for each type land in `vault/outbox/<type>/<slug>/`.
+
+The first registered output type is `presentation` (driven by the global `nlm-presentation` skill via `notebooklm-py`, surfaced through `/sos:presentation-generate`). Future output types — for example `marketing`, `financial`, `manual` — follow the same shape, each with a corresponding `<type>-<verb>` command file in `.claude/commands/sos/`.
 
 ## Assistant Contract
 
@@ -270,3 +322,38 @@ Trigger rule: when a named concept appears more than once and has no canonical n
 | `updated` | For durable wiki notes. |
 | `tags` | For Obsidian/search/indexing. |
 | `aliases` | For alternate names. |
+
+## Tools Registry Rule
+
+`.claude/TOOLS.md` is the only canonical adopted-tools registry in an SOS node.
+
+The agent must consult `TOOLS.md` before naming any tool, library, CLI, package, service, or skill in a proposal, plan, route, or recommendation. See `.claude/STONE.md` and `.claude/WORKFLOW.md` for the full discipline rule.
+
+Each adopted tool must have a heading entry under `## Adopted Tools` with these fields:
+
+- `status`: one of `vetted`, `unverified`, `parked`, `rejected`, `deprecated`
+- `kind`: one of `library`, `cli`, `service`, `mcp`, `skill`, `package`, `api`, `environment`
+- `capabilities`: capability statements covering what the tool does well
+- `limits`: what the tool cannot do, known failure modes, or coverage gaps
+- `install / auth`: how to install or authenticate, plus current state in this node
+- `source`: authoritative docs URL or repo
+- `last-verified`: ISO date the entry was last confirmed against the source
+- `parked-reason`: required when `status: parked`; explains the trigger that would justify re-evaluating
+- `rejected-reason`: required when `status: rejected`
+- `notes`: optional
+
+A tool may be named in a proposal only when its entry has `status: vetted` and a capability statement covering the proposed use. Otherwise the agent must verify in-session and propose an entry, or describe the need in capability terms and ask the user to nominate.
+
+Donor-source recommendations (skill files, package readmes, third-party docs, search results) are candidates only. They must follow the verify-and-register path before the agent uses them in a proposal.
+
+Parked entries (`status: parked`) are user-flagged or agent-surfaced for future investigation. They are kept in `## Parked / For Later Investigation` and must not be named in a proposal as adopted, primary, or preferred. Promotion to `vetted` requires the verify-and-register path.
+
+Rejected and deprecated entries are kept in `## Rejected / Deprecated` so future sessions do not re-propose them.
+
+`/sos:audit` SHOULD report:
+
+- missing or empty `## Adopted Tools` section in `.claude/TOOLS.md`
+- entries missing required fields (`status`, `kind`, `capabilities`, `limits`, `last-verified`, `source`)
+- `status: vetted` entries with no `last-verified` date or with `last-verified` older than 365 days
+- `status: parked` entries missing `parked-reason`
+- `status: rejected` entries missing `rejected-reason`

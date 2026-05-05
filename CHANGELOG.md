@@ -6,6 +6,51 @@ status: active
 
 # Changelog
 
+## 0.1.17 - 2026-05-05
+
+Added the first SOS-routed output command (`/sos:presentation-generate`), the `produce/<type>/` output-config pattern, the `/resources/` private input lane, and install-time conveniences (append-only `.gitignore` handling, root context-file detection).
+
+- Added `/sos:presentation-generate` command — a thin SOS wrapper around the global `nlm-presentation` skill (NotebookLM via `notebooklm-py`). Loads defaults from `.claude/sos/produce/presentation/`, routes outputs into `vault/outbox/presentations/<slug>/`.
+- Added the `.claude/sos/produce/<type>/` directory pattern. Each output type carries `house-style.md`, `output-styles.md`, `manifest-template.md`, and a `README.md`. The first registered type is `presentation`. Future types (marketing, financial, manual, etc.) follow the same shape.
+- Added the `/resources/` private input lane at the project root. Git-ignored. Material here may be private/sensitive/copyrighted. The agent may read it for ingestion but must never copy raw bytes into `vault/`. Only user-approved summaries derived from `/resources/` material may reach `vault/wiki/`.
+- Updated `sos install` to:
+  - auto-create `/resources/` if missing (with a README explaining the lane)
+  - ship a default `.gitignore` (with `/resources/`) when none exists at the project root
+  - **append-only** `/resources/` to an existing `.gitignore` if missing the pattern, gated by an explicit `(Y)/(N)` prompt or `--yes`/`--apply`. Existing entries are never reordered, modified, or deleted. Idempotent across re-runs (detection accepts `/resources/`, `resources/`, and `**/resources/`)
+  - scan the project root for known context files (`README.md`, `PRD.md`, `CONTEXT.md`, `BRIEF.md`, `REQUIREMENTS.md`, `SPEC.md`) and print a one-line hint per finding suggesting `/sos:ingest <file> as <intent>`. Never claims, moves, or modifies these files.
+- Updated `/sos:ingest` spec to define routing rules:
+  - `README.md` stays at root (public surface). Wiki may receive a curated note that references it; the file itself is not relocated.
+  - Other internal-context files (`PRD.md`, `BRIEF.md`, `SPEC.md`, etc.) move to `vault/archive/<YYYY-MM-DD>-<name>.md` as `source-evidence` with archive metadata sidecar; a curated wiki note is created summarising the content and pointing back at the archive entry. New versions are archived alongside; the wiki note tells the version story.
+  - `/resources/` paths trigger **private-source mode**: read but never copy raw bytes; produce summaries with explicit user verification before any wiki write; default to `(D)ISCUSS` for material that looks like financials, PII, customer data, or copyrighted material.
+- Registered the new files and directories in `bin/sos.js` (`requiredFiles`, `requiredDirs`) so `sos audit` reports drift if they go missing.
+- Added new STONE.md non-negotiable constraints: no raw-bytes leak from `/resources/` into vault; no auto-claim of root context files; no overwrite of existing `.gitignore` (append-only with approval).
+- Added new SCHEMA.md sections: `Private Input Lane`, `Output Production Pattern`, `Install-time append-only operations`, `Install-time root context-file detection`.
+- Registered `nlm-presentation` (skill) and `notebooklm-py` (cli) in this node's `.claude/TOOLS.md` as `vetted` per the 0.1.16 tool-naming discipline.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.17.
+
+## 0.1.16 - 2026-05-05
+
+Added the tool-naming discipline rule and promoted `.claude/TOOLS.md` into a structured adopted-tools registry.
+
+- Added a non-negotiable rule to `STONE.md`: agents must consult `.claude/TOOLS.md` before naming any tool, library, CLI, package, service, or skill in a proposal, plan, route, or recommendation, and must not satisfy the rule with a tentative or disclaimer-wrapped name.
+- Added a `Tool-Naming Lookup` section to `WORKFLOW.md` that fires at the moment of drafting any route or proposal, not after pushback, and added "naming any tool not in `.claude/TOOLS.md`" to the human-gates list.
+- Restructured `.claude/TOOLS.md` into an adopted-tools registry with required per-tool fields (`status`, `kind`, `capabilities`, `limits`, `install / auth`, `source`, `last-verified`, optional `parked-reason` or `rejected-reason`).
+- Added five tool states: `vetted`, `unverified`, `parked`, `rejected`, `deprecated`. `parked` covers user-flagged or agent-surfaced entries that are not adopted and must not be promoted to "primary" or "preferred" without verify-and-register.
+- Added a `Tools Registry Rule` to `SCHEMA.md` defining the entry schema and naming the audit checks `/sos:audit` should report (missing fields, stale `last-verified`, missing `parked-reason` or `rejected-reason`).
+- Updated `/sos:tools` command spec to own the registry lifecycle with `list`, `verify`, `add`, `park`, `promote`, `reject`, and `gaps` actions.
+- Updated `/sos:vault-process` and `/sos:ingest` command specs to require a `TOOLS.md` lookup before naming any tool in a route or proposal.
+- Clarified that donor-source recommendations (skill files, package readmes, third-party docs, search results) are starting candidates only and must follow the verify-and-register path before adoption.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.16.
+
+## 0.1.15 - 2026-05-01
+
+Made install approval explicit and tightened older-node upgrade wording.
+
+- Changed `sos install` to report the missing files it would create and require an interactive `(Y)ES` or `--yes`/`--apply` before writing.
+- Kept install strictly missing-file only: existing files are skipped, never replaced, deleted, or repaired by install.
+- Clarified `/sos:init`, `/sos:audit`, schema, and install docs so older SOS nodes are described as upgrade opportunities, with any existing-file changes proposed as append-only amendments.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.15.
+
 ## 0.1.14 - 2026-05-01
 
 Added actor/concept integrity protection, install safety, and archive lifecycle controls.

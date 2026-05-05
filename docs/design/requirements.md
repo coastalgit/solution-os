@@ -48,10 +48,11 @@ Requirements extracted from `source-ledger.md`.
 | REQ-034 | SOS audit must include conservative semantic health reporting for actor and named-concept registration drift. | SRC-049 | active |
 | REQ-035 | SOS must keep `.claude/ACTORS.md` as the only canonical actor registry and prevent parallel actor registries in vault content. | SRC-050 | active |
 | REQ-036 | ACTORS entries and concept-binding notes must support aliases when naming variation is plausible. | SRC-049, SRC-050 | active |
-| REQ-037 | SOS install/update actions must never overwrite existing project files and must block writes when the project SOS version is newer or unreadable compared with the running tool. | SRC-051 | active |
+| REQ-037 | SOS install/update actions must never overwrite existing project files, must show proposed writes before creating missing files, and must block writes when the project SOS version is newer or unreadable compared with the running tool. | SRC-051, SRC-055 | active |
 | REQ-038 | SOS must provide human-gated archive and unarchive workflows that preserve files byte-for-byte, write archive metadata, update the archive manifest, and audit archive drift/candidates. | SRC-052 | active |
 | REQ-039 | SOS must provide a guided assistant front door that maps plain-language user intent to existing SOS workflows without bypassing workflow gates. | SRC-053 | active |
 | REQ-040 | SOS help/about must reference a simple local visual aid that shows the SOS agentic operating layer without becoming a source of truth. | SRC-054 | active |
+| REQ-041 | SOS older-node upgrades must be described as append-only, no-loss opportunities unless a separate repair/replacement path is explicitly approved. | SRC-055 | active |
 
 ## Non-Requirements For v0.1
 

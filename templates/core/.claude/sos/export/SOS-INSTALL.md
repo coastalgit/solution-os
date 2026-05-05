@@ -3,7 +3,7 @@ type: sos-install
 scope: portable
 status: active
 sos_name: SolutionOS
-sos_version: 0.1.14
+sos_version: 0.1.15
 ---
 
 # SOS Install Reference
@@ -37,7 +37,7 @@ The source repository's root `.claude/` and `vault/` are the SolutionOS project'
 
 ## What `sos install` Does
 
-`sos install` applies the baseline from `templates/core/` into the current project.
+`sos install` proposes the baseline from `templates/core/` for the current project, then creates approved missing files only.
 
 It creates the standard SOS surface:
 
@@ -61,12 +61,16 @@ node-root/
 
 Existing files are always skipped. `sos install` must not overwrite project files.
 
+By default, `sos install` reports the missing files it would create and asks before writing. For reviewed automation, use `sos install --yes` or `sos install --apply`.
+
 Before writing, `sos install` checks `.claude/sos/sos.json` when it exists:
 
 - if the project version matches the running CLI, it may add missing files only
-- if the project version is older than the running CLI, it may add missing files only
+- if the project version is older than the running CLI, it may add missing files only after approval
 - if the project version is newer than the running CLI, it must stop before writing
 - if project version metadata is missing or unreadable, it must stop before writing
+
+An older project version is an upgrade opportunity, not an automatic refresh or repair. Existing SOS files must not be replaced or deleted by install. If an existing memory file needs newer content, propose an append-only amendment with exact paths and no information loss, or leave the upgrade unapplied.
 
 ## Safety Rules
 
@@ -84,8 +88,9 @@ For an existing project:
 1. Run `sos status`.
 2. Run `sos migrate` if old knowledge or memory folders exist.
 3. Run `sos install`.
-4. Run `sos audit`.
-5. Fill in `.claude/PM.md` with project-specific context.
+4. Review the proposed missing-file creates and approve only if they are wanted.
+5. Run `sos audit`.
+6. Fill in `.claude/PM.md` with project-specific context.
 
 ## Node Metadata
 

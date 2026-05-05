@@ -1,13 +1,3 @@
-.env
-.env.*
-*.log
-*.tmp
-temp/
-tmp/
-node_modules/
-.DS_Store
-Thumbs.db
-
 # SolutionOS — private input lane (Git-ignored)
 # Material here is for ingestion into wiki summaries only.
 # Source files in /resources/ never enter vault as raw bytes.

@@ -1,22 +1,22 @@
 {
-  "sos_version": "0.1.14",
-  "template_version": "0.1.14",
-  "builder_version": "0.1.14",
-  "released": "2026-05-01",
+  "sos_version": "0.1.17",
+  "template_version": "0.1.17",
+  "builder_version": "0.1.17",
+  "released": "2026-05-05",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.14"
+    "core": "0.1.17"
   },
   "cli": {
     "source": "github",
     "specifier": "github:coastalgit/solution-os#main",
     "binary": "sos",
-    "version": "0.1.14"
+    "version": "0.1.17"
   },
   "scripts": {
-    "sos-init.ps1": "0.1.14",
+    "sos-init.ps1": "0.1.15",
     "sos-summary.ps1": "0.1.14",
     "sos-audit.ps1": "0.1.14",
     "sos-migrate-assess.ps1": "0.1.9"
@@ -37,6 +37,9 @@
     "0.1.11 clarifies the self-hosted repository model and adds curated product history to the vault.",
     "0.1.12 clarified source-repository boundaries.",
     "0.1.13 makes the GitHub-backed sos CLI package the primary install/update interface and expands triage gate choices.",
-    "0.1.14 adds actor registry protection, concept-binding, aliases, semantic audit warnings, no-overwrite version-safe install guards, archive/unarchive lifecycle controls, a guided /sos:assistant front door, and a local SOS visual map."
+    "0.1.14 adds actor registry protection, concept-binding, aliases, semantic audit warnings, no-overwrite version-safe install guards, archive/unarchive lifecycle controls, a guided /sos:assistant front door, and a local SOS visual map.",
+    "0.1.15 makes sos install proposal-first, adds explicit --yes/--apply approval for missing-file creation, and clarifies older-node upgrades as append-only opportunities rather than refresh/repair passes.",
+    "0.1.16 adds the tool-naming discipline rule and promotes .claude/TOOLS.md to a structured adopted-tools registry with vetted/unverified/parked/rejected/deprecated states, capability statements, and last-verified dates, blocking agents from naming unregistered tools or promoting parked entries to primary/preferred.",
+    "0.1.17 adds the /sos:presentation-generate command (NLM-driven outputs via the global nlm-presentation skill), the .claude/sos/produce/<type>/ output-config pattern, the /resources/ private input lane (Git-ignored, auto-created on install), and install-time append-only handling for existing .gitignore plus root context-file detection hints (README/PRD/etc.)."
   ]
 }

@@ -3,7 +3,7 @@ type: vault-note
 scope: node
 status: active
 created: 2026-05-01
-updated: 2026-05-01
+updated: 2026-05-05
 tags:
   - history
   - dogfooding
@@ -63,6 +63,9 @@ This clarification was added after confusion during a 2026-05-01 field test: the
 | 0.1.12 | 2026-05-01 | Added root `INSTALL.md` as the obvious cloud-agent install entry point and clarified that it is not target-repo payload. |
 | 0.1.13 | 2026-05-01 | Removed root `INSTALL.md` from the current product surface and added the real `sos` CLI package model. |
 | 0.1.14 | 2026-05-01 | Added actor registry protection, concept-binding, aliases, conservative semantic audit warnings, no-overwrite install guards, archive/unarchive lifecycle controls, a guided `/sos:assistant` front door, and a local SOS visual map. |
+| 0.1.15 | 2026-05-01 | Made `sos install` proposal-first with explicit approval before missing-file creation and clarified older-node upgrades as append-only opportunities. |
+| 0.1.16 | 2026-05-05 | Added the tool-naming discipline rule and promoted `.claude/TOOLS.md` into a structured adopted-tools registry with vetted/unverified/parked/rejected/deprecated states, capability statements, and last-verified dates. |
+| 0.1.17 | 2026-05-05 | Added `/sos:presentation-generate` (NLM-driven outputs) and the `produce/<type>/` output-config pattern; added the `/resources/` private input lane (Git-ignored) with auto-create + append-only `.gitignore` handling on install; added root context-file detection hints (README/PRD/etc.) without claiming files. |
 
 ## Current Documentation Rule
 

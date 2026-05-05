@@ -31,6 +31,7 @@ Do not treat this file as architecture or workflow policy.
 
 | Name | Aliases | Role | Notes |
 |---|---|---|---|
+| Google NotebookLM | NotebookLM, NLM | External LLM-driven content generation service used by the `nlm-presentation` skill via `notebooklm-py`. | Drives `/sos:presentation-generate` outputs (slides, audio, video, infographics, reports, quizzes, mind maps). Unofficial CLI automation; subject to UI-change breakage. |
 
 ## Agent / Responsibility Roles
 

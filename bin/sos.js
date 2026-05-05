@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { createInterface } from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -34,6 +35,7 @@ const requiredFiles = [
   '.claude/commands/sos/context-export.md',
   '.claude/commands/sos/context-import.md',
   '.claude/commands/sos/session-close.md',
+  '.claude/commands/sos/presentation-generate.md',
   '.claude/sos/sos.json',
   '.claude/sos/VERSION.md',
   '.claude/sos/COMMANDS.md',
@@ -42,6 +44,10 @@ const requiredFiles = [
   '.claude/sos/SCHEMA.md',
   '.claude/sos/TOOLKITS.md',
   '.claude/sos/template/concept-binding.md',
+  '.claude/sos/produce/presentation/README.md',
+  '.claude/sos/produce/presentation/house-style.md',
+  '.claude/sos/produce/presentation/output-styles.md',
+  '.claude/sos/produce/presentation/manifest-template.md',
   '.claude/sos/scripts/README.md',
   '.claude/sos/scripts/sos-summary.ps1',
   '.claude/sos/scripts/sos-audit.ps1',
@@ -62,7 +68,26 @@ const requiredDirs = [
   '.claude/sos',
   '.claude/sos/scripts',
   '.claude/sos/export',
+  '.claude/sos/produce',
+  '.claude/sos/produce/presentation',
   '.claude/commands/sos'
+];
+
+const rootContextFileCandidates = [
+  'README.md',
+  'PRD.md',
+  'CONTEXT.md',
+  'BRIEF.md',
+  'REQUIREMENTS.md',
+  'SPEC.md'
+];
+
+const gitignoreSosBlock = `\n# SolutionOS — private input lane (Git-ignored)\n# Material here is for ingestion into wiki summaries only.\n# Source files in /resources/ never enter vault as raw bytes.\n/resources/\n`;
+
+const gitignoreResourcePatterns = [
+  /^\s*\/?resources\/?\s*$/m,
+  /^\s*\*\*\/resources\/?\s*$/m,
+  /^\s*\/?resources\/\*+\s*$/m
 ];
 
 const pmRequiredReferences = [
@@ -166,7 +191,7 @@ async function main() {
       console.log(getPackageVersion());
       return;
     case 'install':
-      installCommand(options);
+      await installCommand(options);
       return;
     case 'audit':
       auditCommand(options);
@@ -191,6 +216,7 @@ function parseOptions(argv) {
     nodeName: '',
     force: false,
     dryRun: false,
+    apply: false,
     json: false
   };
 
@@ -207,6 +233,8 @@ function parseOptions(argv) {
       options.force = true;
     } else if (arg === '--dry-run' || arg === '--preview') {
       options.dryRun = true;
+    } else if (arg === '--yes' || arg === '--apply') {
+      options.apply = true;
     } else if (arg === '--json') {
       options.json = true;
     } else {
@@ -216,6 +244,10 @@ function parseOptions(argv) {
 
   if (!validNodeKinds.has(options.nodeKind)) {
     throw new Error(`invalid --node-kind "${options.nodeKind}"`);
+  }
+
+  if (options.dryRun && options.apply) {
+    throw new Error('--dry-run/--preview cannot be combined with --yes/--apply');
   }
 
   options.target = path.resolve(options.target);
@@ -238,7 +270,7 @@ function printHelp() {
   console.log(`SolutionOS CLI
 
 Usage:
-  sos install [--target .] [--node-kind project] [--dry-run]
+  sos install [--target .] [--node-kind project] [--dry-run] [--yes]
   sos audit [--target .] [--json]
   sos status [--target .] [--json]
   sos migrate [--target .] [--json]
@@ -252,22 +284,18 @@ Recommended flow:
 The SOS tool is installed globally. The project receives its own local SOS node files.`);
 }
 
-function installCommand(options) {
+async function installCommand(options) {
   if (!fs.existsSync(templateRoot)) {
     throw new Error(`template root not found: ${templateRoot}`);
   }
 
   if (options.force) {
-    throw new Error('sos install never overwrites existing files. --force is disabled; use a future explicit repair/update flow for replacements.');
+    throw new Error('sos install never overwrites existing files. --force is disabled; use a separate approved upgrade or repair flow for existing-file changes.');
   }
 
   const versionInfo = getVersionInfo(options.target);
   if (['project-newer-than-cli', 'metadata-unreadable', 'unknown', 'project-version-missing'].includes(versionInfo.ProjectVersionRelation)) {
     throw new Error(`refusing to install: project version state is "${versionInfo.ProjectVersionRelation}" (project: ${versionInfo.ProjectSosVersion || 'unknown'}, running CLI: ${versionInfo.RunningCliVersion}). Run sos audit/status and update the CLI if needed. No files were changed.`);
-  }
-
-  if (!options.dryRun) {
-    fs.mkdirSync(options.target, { recursive: true });
   }
 
   const created = [];
@@ -284,30 +312,14 @@ function installCommand(options) {
       continue;
     }
 
-    if (options.dryRun) {
-      planned.push(relativePath);
-    } else {
-      fs.mkdirSync(path.dirname(destination), { recursive: true });
-      fs.copyFileSync(sourcePath, destination);
-      created.push(relativePath);
-    }
+    planned.push(relativePath);
   }
 
-  const sosJsonRelative = '.claude/sos/sos.json';
-  const sosJsonPath = path.join(options.target, sosJsonRelative);
-  let metadataUpdated = false;
+  const proposalMode = options.dryRun ? 'preview' : options.apply ? 'apply' : 'proposal';
+  const requiresApproval = !options.dryRun && !options.apply && planned.length > 0;
 
-  if (!options.dryRun && fs.existsSync(sosJsonPath) && created.includes(sosJsonRelative)) {
-    const metadata = JSON.parse(fs.readFileSync(sosJsonPath, 'utf8'));
-    metadata.node = metadata.node || {};
-    metadata.node.name = options.nodeName;
-    metadata.node.kind = options.nodeKind;
-    fs.writeFileSync(sosJsonPath, `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');
-    metadataUpdated = true;
-  }
-
-  const result = {
-    Mode: options.dryRun ? 'preview' : 'apply',
+  const proposal = {
+    Mode: proposalMode,
     TargetPath: options.target,
     TemplateRoot: templateRoot,
     ExistingSosInstalled: versionInfo.SosInstalled,
@@ -318,21 +330,214 @@ function installCommand(options) {
     NodeName: options.nodeName,
     NodeKind: options.nodeKind,
     OverwritePolicy: 'never-overwrite-existing-files',
+    ApprovalPolicy: 'prompt-or---yes-before-writing',
+    RequiresApproval: requiresApproval,
     PlannedCreateCount: planned.length,
+    CreatedCount: 0,
+    OverwrittenCount: 0,
+    SkippedExistingCount: skipped.length,
+    MetadataUpdated: false
+  };
+
+  if (options.dryRun || requiresApproval || planned.length === 0) {
+    printResult(proposal, options.json);
+    printList('Would create', planned, options.json);
+    printList('Skipped existing', skipped, options.json);
+  }
+
+  if (options.dryRun) {
+    const gitignoreCheck = checkGitignoreState(options.target);
+    const rootHints = scanRootContextFiles(options.target);
+    if (!options.json) {
+      if (gitignoreCheck.action === 'would-append') {
+        console.log(`\nWould append /resources/ entry to existing .gitignore (it is missing). Re-run without --dry-run and approve.`);
+      }
+      printRootContextHints(rootHints, true);
+      console.log('\nPreview only. Re-run without --dry-run and approve the prompt, or use --yes after reviewing the plan.');
+    }
+    return;
+  }
+
+  if (planned.length === 0) {
+    const postInstall = await runPostInstallHooks(options);
+    if (!options.json) {
+      console.log('\nNo missing SOS baseline files detected. No files were changed.');
+      printPostInstallSummary(postInstall);
+    }
+    return;
+  }
+
+  if (requiresApproval) {
+    const approved = await getInstallApproval(planned.length, options);
+    if (!approved) {
+      if (!options.json) {
+        console.log('\nNo files were changed. Re-run with --yes only after approving this missing-file install plan.');
+      }
+      return;
+    }
+  }
+
+  fs.mkdirSync(options.target, { recursive: true });
+
+  for (const relativePath of planned) {
+    const sourcePath = path.join(templateRoot, ...relativePath.split('/'));
+    const destination = path.join(options.target, ...relativePath.split('/'));
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.copyFileSync(sourcePath, destination);
+    created.push(relativePath);
+  }
+
+  const sosJsonRelative = '.claude/sos/sos.json';
+  const sosJsonPath = path.join(options.target, ...sosJsonRelative.split('/'));
+  let metadataUpdated = false;
+
+  if (fs.existsSync(sosJsonPath) && created.includes(sosJsonRelative)) {
+    const metadata = JSON.parse(fs.readFileSync(sosJsonPath, 'utf8'));
+    metadata.node = metadata.node || {};
+    metadata.node.name = options.nodeName;
+    metadata.node.kind = options.nodeKind;
+    fs.writeFileSync(sosJsonPath, `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');
+    metadataUpdated = true;
+  }
+
+  const postInstall = await runPostInstallHooks(options);
+
+  const result = {
+    ...proposal,
+    Mode: 'apply',
+    RequiresApproval: false,
     CreatedCount: created.length,
     OverwrittenCount: overwritten.length,
-    SkippedExistingCount: skipped.length,
-    MetadataUpdated: metadataUpdated
+    MetadataUpdated: metadataUpdated,
+    GitignoreAction: postInstall.gitignore.action,
+    GitignoreReason: postInstall.gitignore.reason,
+    RootContextFilesDetected: postInstall.rootContextFiles
   };
 
   printResult(result, options.json);
-  printList('Would create', planned, options.json);
   printList('Created', created, options.json);
   printList('Overwritten', overwritten, options.json);
   printList('Skipped existing', skipped, options.json);
+  if (!options.json) {
+    printPostInstallSummary(postInstall);
+  }
+}
 
-  if (options.dryRun && !options.json) {
-    console.log('\nPreview only. Re-run without --dry-run to write files.');
+async function runPostInstallHooks(options) {
+  const gitignore = await ensureResourcesInGitignore(options);
+  const rootContextFiles = scanRootContextFiles(options.target);
+  return { gitignore, rootContextFiles };
+}
+
+function checkGitignoreState(targetPath) {
+  const gitignorePath = path.join(targetPath, '.gitignore');
+  if (!fs.existsSync(gitignorePath)) {
+    return { action: 'absent', reason: 'no .gitignore at project root' };
+  }
+  const content = fs.readFileSync(gitignorePath, 'utf8');
+  for (const pattern of gitignoreResourcePatterns) {
+    if (pattern.test(content)) {
+      return { action: 'already-present', reason: '/resources/ already ignored' };
+    }
+  }
+  return { action: 'would-append', reason: '/resources/ entry missing from .gitignore' };
+}
+
+async function ensureResourcesInGitignore(options) {
+  const state = checkGitignoreState(options.target);
+
+  if (state.action !== 'would-append') {
+    return state;
+  }
+
+  const gitignorePath = path.join(options.target, '.gitignore');
+
+  if (!options.apply) {
+    const approved = await getGitignoreApproval(options);
+    if (!approved) {
+      return { action: 'skipped', reason: 'append not approved' };
+    }
+  }
+
+  let content = fs.readFileSync(gitignorePath, 'utf8');
+  if (!content.endsWith('\n')) {
+    content += '\n';
+  }
+  fs.writeFileSync(gitignorePath, content + gitignoreSosBlock, 'utf8');
+  return { action: 'appended', reason: '/resources/ block appended to existing .gitignore' };
+}
+
+async function getGitignoreApproval(options) {
+  if (options.json || !process.stdin.isTTY || !process.stdout.isTTY) {
+    return false;
+  }
+
+  const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  try {
+    const answer = await rl.question(`\nExisting .gitignore is missing the /resources/ entry needed for the SOS private input lane.\nAppend a labelled SOS section now (existing entries are preserved)? Choose (Y)ES or (N)O: `);
+    return /^y(?:es)?$/i.test(answer.trim());
+  } finally {
+    rl.close();
+  }
+}
+
+function scanRootContextFiles(targetPath) {
+  const found = [];
+  for (const name of rootContextFileCandidates) {
+    const candidatePath = path.join(targetPath, name);
+    if (fs.existsSync(candidatePath) && fs.statSync(candidatePath).isFile()) {
+      found.push(name);
+    }
+  }
+  return found;
+}
+
+function printPostInstallSummary(postInstall) {
+  const { gitignore, rootContextFiles } = postInstall;
+
+  if (gitignore.action === 'appended') {
+    console.log(`\n.gitignore: appended /resources/ block to existing file (existing entries preserved).`);
+  } else if (gitignore.action === 'skipped') {
+    console.log(`\n.gitignore: append skipped — re-run with --yes after reviewing if you want /resources/ added.`);
+  }
+
+  printRootContextHints(rootContextFiles, false);
+}
+
+function printRootContextHints(found, prefixedWithWould) {
+  if (!found || found.length === 0) {
+    return;
+  }
+  console.log(`\nNoticed root-level context files. SOS does not claim or move them.`);
+  for (const name of found) {
+    if (name === 'README.md') {
+      console.log(`  - ${name}: stays at root (public surface). Wiki may reference it via /sos:ingest.`);
+    } else {
+      const verb = prefixedWithWould ? 'You could run' : 'Run';
+      console.log(`  - ${name}: ${verb} \`/sos:ingest ${name} as <intent>\` to archive + curate-into-wiki.`);
+    }
+  }
+}
+
+async function getInstallApproval(plannedCreateCount, options) {
+  if (options.json || !process.stdin.isTTY || !process.stdout.isTTY) {
+    return false;
+  }
+
+  const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  try {
+    const answer = await rl.question(`\nCreate ${plannedCreateCount} missing SOS baseline file(s) now? Existing files will be skipped. Choose (Y)ES or (N)O: `);
+    return /^y(?:es)?$/i.test(answer.trim());
+  } finally {
+    rl.close();
   }
 }
 

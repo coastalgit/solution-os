@@ -33,7 +33,7 @@ If `/sos:*` entries do not appear immediately after install/update, restart or r
 | `/sos:assistant` | Guided SOS front door for users who want help choosing and using workflows. | Conversational router; does not bypass target workflow gates. |
 | `/sos:help` | Show a quick SOS command reference, installed version, and pointer to the visual map. | Read-only. |
 | `/sos:about` | Explain the intent and structure of SOS, including solution/project spine, vault, metadata, optional tools, and visual map pointer. | Read-only. |
-| `/sos:init` | Install missing SOS baseline files in the current node. | Never overwrite existing files. Block writes if the project SOS version is newer than the running tool. |
+| `/sos:init` | Propose and install missing SOS baseline files in the current node. | Proposal first. Never overwrite existing files. Block writes if the project SOS version is newer than the running tool. |
 | `/sos:summary` | Summarize SOS/node health and current state. | Read-mostly. Do not apply changes. |
 | `/sos:audit` | Inspect deeply for drift, missing files, missing metadata, stale adapters, actor/concept integrity, and repair opportunities. | May propose/apply approved changes. |
 | `/sos:tools` | Explain current tools, preferences, parked options, gaps, and possible additions. | Conversational; ask before adopting tools. |
@@ -52,3 +52,11 @@ If `/sos:*` entries do not appear immediately after install/update, restart or r
 No separate upgrade command is required for v0.1.
 
 `/sos:init`, `/sos:summary`, and `/sos:audit` may detect remote template/version drift and suggest updates.
+
+Version drift must be described precisely:
+
+- missing-file install: create absent SOS-owned files only after approval
+- append-only upgrade: add clearly scoped content to existing files without deletion or information loss
+- repair: a separate approved path for correcting broken state
+
+Do not bundle those into vague "refresh", "adopt/remove", or replacement language.

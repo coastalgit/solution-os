@@ -65,7 +65,7 @@ if ([string]::IsNullOrWhiteSpace($NodeName)) {
 }
 
 if ($Force) {
-    throw "sos-init never overwrites existing files. -Force is disabled; use a future explicit repair/update flow for replacements."
+    throw "sos-init never overwrites existing files. -Force is disabled; use a separate approved upgrade or repair flow for existing-file changes."
 }
 
 $runningVersion = '0.0.0'

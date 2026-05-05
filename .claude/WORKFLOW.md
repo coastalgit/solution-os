@@ -48,7 +48,7 @@ Before any install/update/repair action, compare the running SOS CLI/helper vers
 
 - If the project version is newer than the running tool, stop before writing and ask the user to update the tool.
 - If the project version is missing, unknown, or unreadable, stop before writing and run audit/status first.
-- `sos install` may create missing files only. It must not overwrite existing files.
+- `sos install` may create missing files only after approval. It must not overwrite existing files.
 - Replacement or repair needs a separate explicit approval path.
 
 ## Actor And Concept Capture
@@ -63,6 +63,23 @@ If the actor or concept is not registered, propose one of these before using it 
 
 Passing mentions, survey respondents, archived authors, transcript voices, and source-only references stay in vault/source material unless they become actively involved.
 
+## Tool-Naming Lookup
+
+Before drafting any proposal, plan, or route that involves a tool, library, CLI, package, service, or skill:
+
+- consult `.claude/TOOLS.md` first
+- if the tool is registered with a verified capability statement covering the use, name it
+- if the tool is missing, has `status: unverified`, has `status: parked`, has no capability statement covering the use, or is `status: rejected` or `status: deprecated`, do not name it as adopted in a proposal
+- in that case, either (a) verify in-session by reading docs/help/source and propose a `TOOLS.md` entry, or (b) propose in capability terms ("a tool that does X") and ask the user to nominate
+
+This rule fires at the moment of drafting, not after the user pushes back.
+
+A recommendation from a donor source (skill, package readme, third-party doc, search result) is a candidate, not adoption. Surface it to the user with its source, mark it unverified, and follow the verify-and-register path before using it in a proposal.
+
+A `status: parked` entry is user-flagged or agent-surfaced for future investigation only. It may be mentioned to the user as a candidate worth re-evaluating when its trigger condition appears, but it must not be named in a proposal as if it were adopted, primary, or preferred. Promotion from `parked` to `vetted` requires the verify-and-register path.
+
+If `.claude/TOOLS.md` is missing or empty, treat every tool as unverified and follow the same path.
+
 ## Human Gates
 
 Ask before:
@@ -70,6 +87,7 @@ Ask before:
 - structural changes
 - risky file edits
 - tool adoption
+- naming any tool not in `.claude/TOOLS.md`
 - deployment/publishing
 - external communication
 - deleting or moving files

@@ -38,7 +38,7 @@ The project-local SOS state records its own installed baseline in `.claude/sos/s
 ## CLI
 
 ```text
-sos install   Apply missing core SOS baseline files to the current repository.
+sos install   Propose and apply missing core SOS baseline files to the current repository.
 sos audit     Check required files, metadata, PM routing, surface reachability, actor/concept integrity, and archive integrity.
 sos status    Show installed version, node metadata, vault counts, and health.
 sos migrate   Detect older memory/KB structures that may need migration.
@@ -52,17 +52,20 @@ Useful options:
 --node-kind <kind>    solution, project, module, workshop, research, learning, other.
 --node-name <name>    Set node name when creating `.claude/sos/sos.json`.
 --dry-run             Preview `sos install` without writing files.
+--yes, --apply        Create the proposed missing files without an interactive prompt.
 --json                Emit machine-readable output for audit/status/migrate.
 ```
 
-`sos install` never overwrites existing files. It creates missing files and skips anything already present, including `CLAUDE.md`, `AGENTS.md`, `.claude/`, and `vault/` content.
+`sos install` never overwrites existing files. By default, it reports the files it would create and asks before writing. It creates only missing files after approval and skips anything already present, including `CLAUDE.md`, `AGENTS.md`, `.claude/`, and `vault/` content.
 
 When run over an existing SOS node, the CLI checks `.claude/sos/sos.json` before writing:
 
-- same project version as the running CLI: safe missing-file refresh
-- older project version than the running CLI: missing files may be added, existing files are still skipped
+- same project version as the running CLI: safe missing-file proposal
+- older project version than the running CLI: missing files may be added after approval, existing files are still skipped
 - newer project version than the running CLI: write commands are blocked
 - unreadable or missing project version metadata: write commands are blocked
+
+An older project version is an upgrade opportunity, not an automatic refresh or repair. Existing files are not replaced or deleted by `sos install`; any upgrade to existing memory files must be proposed as append-only amendments or handled through a separate approved repair path.
 
 When the CLI is launched through a one-shot GitHub command, the running CLI version is treated as the GitHub-sourced tool version for this safety check.
 
@@ -83,7 +86,7 @@ https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json
 Current version:
 
 ```text
-0.1.14
+0.1.15
 ```
 
 ## Product Repo and SOS Node
