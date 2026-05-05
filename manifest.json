@@ -1,19 +1,19 @@
 {
-  "sos_version": "0.1.17",
-  "template_version": "0.1.17",
-  "builder_version": "0.1.17",
+  "sos_version": "0.1.18",
+  "template_version": "0.1.18",
+  "builder_version": "0.1.18",
   "released": "2026-05-05",
   "repository_url": "https://github.com/coastalgit/solution-os.git",
   "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
   "default_branch": "main",
   "templates": {
-    "core": "0.1.17"
+    "core": "0.1.18"
   },
   "cli": {
     "source": "github",
     "specifier": "github:coastalgit/solution-os#main",
     "binary": "sos",
-    "version": "0.1.17"
+    "version": "0.1.18"
   },
   "scripts": {
     "sos-init.ps1": "0.1.15",
@@ -40,6 +40,7 @@
     "0.1.14 adds actor registry protection, concept-binding, aliases, semantic audit warnings, no-overwrite version-safe install guards, archive/unarchive lifecycle controls, a guided /sos:assistant front door, and a local SOS visual map.",
     "0.1.15 makes sos install proposal-first, adds explicit --yes/--apply approval for missing-file creation, and clarifies older-node upgrades as append-only opportunities rather than refresh/repair passes.",
     "0.1.16 adds the tool-naming discipline rule and promotes .claude/TOOLS.md to a structured adopted-tools registry with vetted/unverified/parked/rejected/deprecated states, capability statements, and last-verified dates, blocking agents from naming unregistered tools or promoting parked entries to primary/preferred.",
-    "0.1.17 adds the /sos:presentation-generate command (NLM-driven outputs via the global nlm-presentation skill), the .claude/sos/produce/<type>/ output-config pattern, the /resources/ private input lane (Git-ignored, auto-created on install), and install-time append-only handling for existing .gitignore plus root context-file detection hints (README/PRD/etc.)."
+    "0.1.17 adds the /sos:presentation-generate command (NLM-driven outputs via the global nlm-presentation skill), the .claude/sos/produce/<type>/ output-config pattern, the /resources/ private input lane (Git-ignored, auto-created on install), and install-time append-only handling for existing .gitignore plus root context-file detection hints (README/PRD/etc.).",
+    "0.1.18 strips the agent-driven /sos:init and /sos:audit theatre. Init becomes a four-step concise flow (create missing files, ensure /resources/ lane, scan root for context files with one-line-per-file ingest prompt, three-line summary). Audit becomes a strictly read-only five-line state report — no multi-tier repair proposals, no Tier-A/B enumerations, no choice menus. Resources/README.md trimmed from 30 lines to 6. Workshop-demo-friendly output, no scrolling agent commentary."
   ]
 }

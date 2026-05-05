@@ -66,6 +66,7 @@ This clarification was added after confusion during a 2026-05-01 field test: the
 | 0.1.15 | 2026-05-01 | Made `sos install` proposal-first with explicit approval before missing-file creation and clarified older-node upgrades as append-only opportunities. |
 | 0.1.16 | 2026-05-05 | Added the tool-naming discipline rule and promoted `.claude/TOOLS.md` into a structured adopted-tools registry with vetted/unverified/parked/rejected/deprecated states, capability statements, and last-verified dates. |
 | 0.1.17 | 2026-05-05 | Added `/sos:presentation-generate` (NLM-driven outputs) and the `produce/<type>/` output-config pattern; added the `/resources/` private input lane (Git-ignored) with auto-create + append-only `.gitignore` handling on install; added root context-file detection hints (README/PRD/etc.) without claiming files. |
+| 0.1.18 | 2026-05-05 | Stripped agent theatre from `/sos:init` and `/sos:audit`. Init becomes concise four-step flow with one-line-per-file ingest prompts. Audit becomes strict read-only five-line state. `resources/README.md` trimmed from 30 to 6 lines. Workshop-demo-ready output. |
 
 ## Current Documentation Rule
 

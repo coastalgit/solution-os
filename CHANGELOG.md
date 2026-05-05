@@ -6,6 +6,20 @@ status: active
 
 # Changelog
 
+## 0.1.18 - 2026-05-05
+
+Stripped the agent-driven `/sos:init` and `/sos:audit` theatre that 0.1.16's discipline rule had inadvertently amplified. Workshop-demo-ready: concise output, no scrolling agent commentary.
+
+- **`/sos:init` rewritten** as a four-step concise flow:
+  1. Create missing baseline files (one Y/N batch prompt).
+  2. Ensure the `/resources/` lane exists (auto-create directory + README, append `/resources/` to `.gitignore` or create it).
+  3. Scan project root for context files (`README.md`, `PRD.md`, `CONTEXT.md`, `BRIEF.md`, `REQUIREMENTS.md`, `SPEC.md`); for each one found, ask **one line per file**: *"Found PRD.md. Ingest as product requirements? (Y / N / type a custom intent)"*. On Y or custom intent, invoke `/sos:ingest` immediately.
+  4. End with a three-line summary.
+- **Constraints baked into the init spec:** never overwrite, never narrate skipped files, never enumerate drift in existing files, never invoke the tool-naming-discipline rule for SOS-baseline file creates, never emit "Tier A / Tier B / B1+B2" choice menus, never ask the user to paste canonical content.
+- **`/sos:audit` rewritten** as strictly read-only state. Five-line maximum output: versions, missing-file count, vault counts, actor/concept gap count, single next-action pointer. **No multi-tier repair proposals. No prompts. No enumerations.** If the user wants to fix anything, they run `/sos:init` (for missing files) or read `CHANGELOG.md` (for upgrade actions).
+- **`resources/README.md` trimmed** from 30 lines to 6. Conveys the same rules in a third of the space.
+- Version-stamped manifest, template metadata, and human-readable version files for 0.1.18.
+
 ## 0.1.17 - 2026-05-05
 
 Added the first SOS-routed output command (`/sos:presentation-generate`), the `produce/<type>/` output-config pattern, the `/resources/` private input lane, and install-time conveniences (append-only `.gitignore` handling, root context-file detection).

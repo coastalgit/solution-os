@@ -1,6 +1,6 @@
 {
-  "sos_version": "0.1.17",
-  "template_version": "0.1.17",
+  "sos_version": "0.1.18",
+  "template_version": "0.1.18",
   "node": {
     "name": "SolutionOS",
     "kind": "solution",
