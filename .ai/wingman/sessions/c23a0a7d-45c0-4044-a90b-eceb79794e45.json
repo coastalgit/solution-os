@@ -1,0 +1,29 @@
+{
+  "id": "c23a0a7d-45c0-4044-a90b-eceb79794e45",
+  "description": "ADRs",
+  "createdAt": "2026-05-05T10:27:56.292Z",
+  "closed": false,
+  "claudeSessionId": "b2d6b8d9-f7da-4a4a-a691-b9aa86d5b21b",
+  "hasLaunched": true,
+  "promptHistory": [
+    {
+      "id": "1778004029381",
+      "text": "what is the automated way of taking a issue from gith and creating a spec without manually tpin the issiue ref etc?",
+      "timestamp": "2026-05-05T18:00:29.382Z",
+      "tokens": 29
+    }
+  ],
+  "contextHistory": [
+    {
+      "id": "1777978453891",
+      "text": "# Session Context\n\n## Overview of intent for session\nthis session will be for the raising of ADRs etc against SOS as a whole to make it grow without becomgn complex",
+      "timestamp": "2026-05-05T10:54:13.891Z",
+      "tokens": 41
+    }
+  ],
+  "contextText": "# Session Context\n\n## Overview of intent for session\nthis session will be for the raising of ADRs etc against SOS as a whole to make it grow without becomgn complex",
+  "flags": {
+    "yolo": true,
+    "autoMode": false
+  }
+}

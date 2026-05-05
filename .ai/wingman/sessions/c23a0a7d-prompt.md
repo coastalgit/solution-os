@@ -1,0 +1,1 @@
+what is the automated way of taking a issue from gith and creating a spec without manually tpin the issiue ref etc?

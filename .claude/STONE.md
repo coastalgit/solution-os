@@ -33,6 +33,12 @@ If another file conflicts with `STONE.md`, pause and ask before proceeding.
 - `/resources/` at the project root is the private input lane. It is Git-ignored. Its contents may inform agent ingestion but must never be copied into `vault/` as raw bytes — only user-approved summaries derived from it may reach `vault/wiki/`.
 - `.claude/sos/produce/<type>/` is the canonical location for output-type configuration (house style, output styles, manifest templates). Generated artifacts for each type land in `vault/outbox/<type>/<slug>/`. Both directories grow as new output types are added (presentation, marketing, financial, etc.).
 
+## The Dutiful Chaining Trap
+
+When designing or revising any SOS command, every step it asks an agent to perform must have a defined output and a defined exit. Without that, agents chain consult-X → check-Y → propose-Z indefinitely and produce cascading lists of decisions for the user to wade through. Each command spec must answer plainly: *what does "done" look like for this step?* If a step has no stopping condition, it does not belong in the command.
+
+This is the failure mode that produced the 0.1.16–0.1.17 install/audit experience that had to be stripped in 0.1.18. Treat it as a permanent design constraint, not a one-off lesson.
+
 ## Non-Negotiable Constraints
 
 - Do not put portable builder/install files loose in `.claude/`.

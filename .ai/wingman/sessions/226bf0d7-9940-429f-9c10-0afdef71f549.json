@@ -1,0 +1,95 @@
+{
+  "id": "226bf0d7-9940-429f-9c10-0afdef71f549",
+  "description": "SOS enhance for Dev Guidelines",
+  "createdAt": "2026-05-05T10:22:59.556Z",
+  "closed": false,
+  "claudeSessionId": "fa5a5d7e-9fc4-45a3-8156-46bbc92aa67a",
+  "hasLaunched": true,
+  "promptHistory": [
+    {
+      "id": "1777976830325",
+      "text": "if you look at your previous you will see there was a sequence of bad changes which led to rolling back!\nfrom This package was designed to be installed easily and for the moment that is from Github using an NPX command, whereby we have been placing it directly over either (I) an empty directory, (2) a sparse directory which might have AP and ori read which might be in the route or in a docs directory etc (3) or on an existing project.\nwith the changes previous to the current status it was a nightmare as the page started scrolling with dozens of decisions to be made by the user from the minute they installed it!\nthe objective of the whole project is Make things manageable, and it appeared that the code changes you had had confused masters to such an extent you were getting your self in knots!\nhave a quick investigation as to what the sequence of events was, and if you can't access it you will see it all within the git repo anyway, and come back to me with what you believe the situation was is and should be!",
+      "timestamp": "2026-05-05T10:27:10.325Z",
+      "tokens": 256
+    },
+    {
+      "id": "1777978623541",
+      "text": "please keep your responses for this as concise as possible. you are producing essays every time Also I'm not sure if you can suppress the expanded bash commands in terminal?",
+      "timestamp": "2026-05-05T10:57:03.541Z",
+      "tokens": 44
+    },
+    {
+      "id": "1777979653532",
+      "text": "tldr on your last response",
+      "timestamp": "2026-05-05T11:14:13.532Z",
+      "tokens": 7
+    },
+    {
+      "id": "1777980401445",
+      "text": "I'm looking for the Opportunity to implement some solid resource, where unless the user specifies a very particular set of skills or tools or repos they want to use that we have the ability to suggest skills plug insurance etc.\na perfect example would be https://github.com/wshobson/agents.\nsurely there must be a way of producing an accessible reference 2 resources such as this, whereby following the preferred AI way of working it works its way through a \"slice\" of layered \"routes\" it can take making suggestions et cetera. this is kind of where we were going with the previous change that screwed up, But you can see what I'm getting at where if at any given time we have a top level list of \"where to start finding plugins\", \"\"where to start finding skills\" etc, whereby any preferences at any given moment in for a release of SOS will be presented up when the user asks for advice. this is the area of modern AI usage that has the ambiguity for me, whereby when you're asking a particular \"plugin\" (if indeed that is the term you would associate with a repo that can be dropped into a project or directory structure) for ways of crackoing a nut, it then goes off and starts makgin recommendations etc. I guess what I'm trying to say is I am well aware of the importance of the folder structure within any project using, as well as the claude.Md file, and skills. the only problem I have is how and when it makes decisions in order to suggest or implement things which is something I want to simplify both in terms of my understanding on this journey and actual application on a day to day basis as somebody trying to become a good AI engineer",
+      "timestamp": "2026-05-05T11:26:41.445Z",
+      "tokens": 413
+    },
+    {
+      "id": "1777980668169",
+      "text": "yes but still, with regard to how you went about it before was incorrect, in that it produced out that filled the page with dozens of decisions for the user to read through. ensure that in our gospel for this framework We are aware that we are trying to make things as simple as possible while also allowing for some flexibility in the setup initially of a solution and projects",
+      "timestamp": "2026-05-05T11:31:08.169Z",
+      "tokens": 95
+    },
+    {
+      "id": "1777980728386",
+      "text": "straight away I have my doubts you're on the right track or at least on the same track as me!\n\"Suggestions are pulled, never pushed.\" what does this even mean?",
+      "timestamp": "2026-05-05T11:32:08.386Z",
+      "tokens": 40
+    },
+    {
+      "id": "1777980797175",
+      "text": "\"SOS stays silent until the user explicitly asks\" you are still baffling me!\nI don't think the problem before was anything to do with the framework staying silent, it's just it didn't know what it was supposed to be doing and it was recreating and building upon one decision after another to produce massive lists!",
+      "timestamp": "2026-05-05T11:33:17.175Z",
+      "tokens": 79
+    },
+    {
+      "id": "1777980850095",
+      "text": "therefore we are adding to our gospel to be aware when we are doing development of the \"dutifull chaining\" trap!",
+      "timestamp": "2026-05-05T11:34:10.095Z",
+      "tokens": 28
+    },
+    {
+      "id": "1777980888016",
+      "text": "why are you asking me when you know yourself in order to follow that behaviour we're the best place for it would be!",
+      "timestamp": "2026-05-05T11:34:48.016Z",
+      "tokens": 29
+    },
+    {
+      "id": "1778004159067",
+      "text": "this is a question for superpowers with regard to Claude code working with github. I am misunderstanding a step within the bootstrapping process when taking an issue from GH into our local environment and getting spec created! How to do this without manual copying if issue ref etc?",
+      "timestamp": "2026-05-05T18:02:39.067Z",
+      "tokens": 71
+    },
+    {
+      "id": "1778005033612",
+      "text": "clear as mud! I honestly cannot believe in this day and age There's not an out of the box to pick up an issue from Github and start working on In terms of creating a spec!!",
+      "timestamp": "2026-05-05T18:17:13.613Z",
+      "tokens": 43
+    },
+    {
+      "id": "1778005123963",
+      "text": "do not make things up!!! there is no such thing as a marketplace called anthropics!",
+      "timestamp": "2026-05-05T18:18:43.963Z",
+      "tokens": 21
+    }
+  ],
+  "contextHistory": [
+    {
+      "id": "1777976646740",
+      "text": "# Session Context\n\n## Overview of intent for session\nThis session is to tidy up some previous bad implementations and get SOS working in a more fluent fashion from the moment it is installed.",
+      "timestamp": "2026-05-05T10:24:06.740Z",
+      "tokens": 48
+    }
+  ],
+  "contextText": "# Session Context\n\n## Overview of intent for session\nThis session is to tidy up some previous bad implementations and get SOS working in a more fluent fashion from the moment it is installed.",
+  "flags": {
+    "yolo": true,
+    "autoMode": false
+  }
+}
