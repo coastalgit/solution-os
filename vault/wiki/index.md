@@ -18,6 +18,7 @@ This is the curated knowledge entry point for this SOS node.
 
 ## Notes
 
+- Base SOS knowledge: `vault/wiki/agentic-sdlc-loop.md`
 - History and dogfooding model: `vault/wiki/history.md`
 - Design source: `docs/design/source-ledger.md`
 - Requirements: `docs/design/requirements.md`

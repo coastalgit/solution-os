@@ -18,5 +18,6 @@ This is the curated knowledge entry point for this SOS node.
 
 ## Notes
 
-Add curated wiki links here as this node develops.
+- Base SOS knowledge: `vault/wiki/agentic-sdlc-loop.md`
 
+Add more curated wiki links here as this node develops.

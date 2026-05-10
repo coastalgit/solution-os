@@ -37,3 +37,11 @@ The node knowledge base lives in `vault/`:
 - Follow `.claude/STONE.md` as highest-authority project context.
 - Follow `.claude/WORKFLOW.md` for lifecycle and human gates.
 - Do not use SOS system files as ordinary project context.
+
+<!-- SOS:BEGIN adapter-shim v0.2.0 -->
+This project uses SolutionOS.
+
+Read `.sos/context/PM.md` as the canonical SOS context for this file.
+
+This Codex shim is version-controlled and may be updated by SOS, but only inside this managed block. Existing content outside the block must be preserved.
+<!-- SOS:END adapter-shim -->

@@ -127,3 +127,11 @@ At the end of substantial work:
 - update wiki where durable knowledge changed
 - archive processed source material where relevant
 - list open questions and next action
+
+<!-- SOS:BEGIN adapter-shim v0.2.0 -->
+This project uses SolutionOS.
+
+Read `.sos/context/WORKFLOW.md` as the canonical SOS context for this file.
+
+This Claude-shaped compatibility shim is version-controlled and may be updated by SOS, but only inside this managed block. Existing content outside the block must be preserved.
+<!-- SOS:END adapter-shim -->

@@ -48,3 +48,11 @@ For `/sos:*` work, use `.claude/sos/COMMANDS.md` as the command vocabulary and `
 ## Privacy / Visibility Rule
 
 Avoid surfacing private personal labels or sensitive context in filenames, headings, casual chat, generated docs, or screen-share-visible outputs unless the user explicitly asks.
+
+<!-- SOS:BEGIN adapter-shim v0.2.0 -->
+This project uses SolutionOS.
+
+Read `.sos/context/PM.md` as the canonical SOS context for this file.
+
+This Claude Code shim is version-controlled and may be updated by SOS, but only inside this managed block. Existing content outside the block must be preserved.
+<!-- SOS:END adapter-shim -->

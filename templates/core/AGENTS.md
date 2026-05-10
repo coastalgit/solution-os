@@ -1,39 +1,24 @@
 ---
+sos-file: adapter-shim
+sos-version: 0.2.0
+sos-schema: 1
+sos-origin: packaged
+sos-managed: true
 type: adapter
 scope: node
 status: active
 tool: codex
+target: .sos/context/PM.md
 ---
 
 # AGENTS.md
 
-This file is the Codex adapter for an SOS node.
+<!-- SOS:BEGIN adapter-shim v0.2.0 -->
+This project uses SolutionOS.
 
-## SOS Routing
+Read `.sos/context/PM.md` first for context routing. Treat `.sos/context/*.md` as active node memory and policy.
 
-This node uses SolutionOS (`sos`) project memory.
+Do not load `.sos/system/**`, `.sos/frameworks/**`, or `.claude/sos/**` unless the task is explicitly about `/sos:*`, installation, audit, summary, export, import, update, schemas, templates, frameworks, skills, or toolsets.
 
-Read `.claude/PM.md` first for context routing. Treat `.claude/*.md` as active node memory and policy.
-
-Do not load `.claude/sos/**` unless the task is explicitly about `/sos:*`, installation, audit, summary, export, import, update, schemas, templates, or toolsets.
-
-For `/sos:*` work, use `.claude/sos/COMMANDS.md` as the command vocabulary and `.claude/PM.md` as the node map.
-
-## Knowledge Lifecycle
-
-The node knowledge base lives in `vault/`:
-
-- `vault/triage/` - raw material awaiting processing
-- `vault/wiki/` - curated knowledge
-- `vault/archive/` - processed source evidence
-- `vault/outbox/` - generated deliverables and exports
-
-## Working Rules
-
-- Inspect before editing.
-- Ask before structural changes.
-- Keep changes small and scoped.
-- Separate facts, hypotheses, guesses, and questions.
-- Follow `.claude/STONE.md` as highest-authority project context.
-- Follow `.claude/WORKFLOW.md` for lifecycle and human gates.
-- Do not use SOS system files as ordinary project context.
+For SOS command vocabulary, use `.claude/sos/COMMANDS.md` while the Claude compatibility surface remains installed.
+<!-- SOS:END adapter-shim -->

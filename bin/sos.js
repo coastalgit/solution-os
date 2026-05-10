@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import { createInterface } from 'node:readline/promises';
@@ -13,6 +14,16 @@ const validNodeKinds = new Set(['solution', 'project', 'module', 'workshop', 're
 const requiredFiles = [
   'CLAUDE.md',
   'AGENTS.md',
+  '.sos/sos.json',
+  '.sos/sos-change.log',
+  '.sos/README.md',
+  '.sos/context/PM.md',
+  '.sos/context/STONE.md',
+  '.sos/context/ACTORS.md',
+  '.sos/context/TOOLS.md',
+  '.sos/context/WORKFLOW.md',
+  '.sos/templates/adr.md',
+  '.sos/frameworks/agentic-sdlc/manifest.json',
   '.claude/PM.md',
   '.claude/STONE.md',
   '.claude/ACTORS.md',
@@ -57,13 +68,21 @@ const requiredFiles = [
   '.claude/sos/export/SOS-INSTALL.md',
   'vault/triage/_manifest.md',
   'vault/wiki/_manifest.md',
+  'vault/wiki/agentic-sdlc-loop.md',
+  'vault/wiki/decisions/_manifest.md',
   'vault/archive/_manifest.md',
   'vault/outbox/_manifest.md'
 ];
 
 const requiredDirs = [
+  '.sos',
+  '.sos/context',
+  '.sos/templates',
+  '.sos/frameworks',
+  '.sos/frameworks/agentic-sdlc',
   'vault/triage',
   'vault/wiki',
+  'vault/wiki/decisions',
   'vault/archive',
   'vault/outbox',
   '.claude/sos',
@@ -83,6 +102,27 @@ const rootContextFileCandidates = [
   'SPEC.md'
 ];
 
+const sosUserRequiredDirs = [
+  'wiki',
+  'skills',
+  'workflows',
+  'commands',
+  'templates',
+  'profiles'
+];
+
+const adapterShimTargets = {
+  'AGENTS.md': '.sos/context/PM.md',
+  'CLAUDE.md': '.sos/context/PM.md',
+  '.claude/PM.md': '.sos/context/PM.md',
+  '.claude/STONE.md': '.sos/context/STONE.md',
+  '.claude/ACTORS.md': '.sos/context/ACTORS.md',
+  '.claude/TOOLS.md': '.sos/context/TOOLS.md',
+  '.claude/WORKFLOW.md': '.sos/context/WORKFLOW.md'
+};
+
+const adapterShimBlockPattern = /<!-- SOS:BEGIN adapter-shim\b[\s\S]*?<!-- SOS:END adapter-shim -->/;
+
 const gitignoreSosBlock = `\n# SolutionOS — private input lane (Git-ignored)\n# Material here is for ingestion into wiki summaries only.\n# Source files in /resources/ never enter vault as raw bytes.\n/resources/\n`;
 
 const gitignoreResourcePatterns = [
@@ -92,13 +132,14 @@ const gitignoreResourcePatterns = [
 ];
 
 const pmRequiredReferences = [
-  '.claude/STONE.md',
-  '.claude/ACTORS.md',
-  '.claude/TOOLS.md',
-  '.claude/WORKFLOW.md',
+  '.sos/context/STONE.md',
+  '.sos/context/ACTORS.md',
+  '.sos/context/TOOLS.md',
+  '.sos/context/WORKFLOW.md',
+  'vault/wiki/decisions',
+  '.sos/system',
+  '.sos/frameworks',
   '.claude/sos',
-  '.claude/skills/sos',
-  '.claude/commands/sos',
   'vault/triage',
   'vault/wiki',
   'vault/archive',
@@ -106,8 +147,9 @@ const pmRequiredReferences = [
 ];
 
 const adapterRequiredReferences = {
-  'CLAUDE.md': ['.claude/PM.md'],
-  'AGENTS.md': ['.claude/PM.md', '.claude/sos/COMMANDS.md']
+  'CLAUDE.md': ['.sos/context/PM.md'],
+  'AGENTS.md': ['.sos/context/PM.md', '.claude/sos/COMMANDS.md'],
+  '.claude/PM.md': ['.sos/context/PM.md']
 };
 
 const reservedVaultRegistryNames = new Set([
@@ -201,6 +243,10 @@ async function main() {
     case 'summary':
       statusCommand(options);
       return;
+    case 'skills-list':
+    case 'skills':
+      skillsListCommand(options);
+      return;
     case 'migrate':
     case 'migrate-assess':
       migrateAssessCommand(options);
@@ -274,6 +320,7 @@ Usage:
   sos install [--target .] [--node-kind project] [--dry-run] [--yes]
   sos audit [--target .] [--json]
   sos status [--target .] [--json]
+  sos skills-list [--target .] [--json]
   sos migrate [--target .] [--json]
   sos version
 
@@ -282,10 +329,12 @@ Recommended flow:
   sos install
   sos audit
 
-The SOS tool is installed globally. The project receives its own local SOS node files.`);
+The SOS tool is installed from GitHub or globally. The installer ensures ~/.sos-user exists and applies the local .sos node files for the current project.`);
 }
 
 async function installCommand(options) {
+  options.approvedApply = options.apply;
+
   if (!fs.existsSync(templateRoot)) {
     throw new Error(`template root not found: ${templateRoot}`);
   }
@@ -324,6 +373,8 @@ async function installCommand(options) {
     TargetPath: options.target,
     TemplateRoot: templateRoot,
     ExistingSosInstalled: versionInfo.SosInstalled,
+    LegacyClaudeSosInstalled: versionInfo.LegacyClaudeSosInstalled,
+    SosUserHome: getSosUserHome(),
     ProjectSosVersion: versionInfo.ProjectSosVersion,
     RunningCliVersion: versionInfo.RunningCliVersion,
     ProjectVersionRelation: versionInfo.ProjectVersionRelation,
@@ -337,7 +388,9 @@ async function installCommand(options) {
     CreatedCount: 0,
     OverwrittenCount: 0,
     SkippedExistingCount: skipped.length,
-    MetadataUpdated: false
+    MetadataUpdated: false,
+    AdapterShimPolicy: 'append-or-update-sos-managed-block-only',
+    ChangeLog: '.sos/sos-change.log'
   };
 
   if (options.dryRun || requiresApproval || planned.length === 0) {
@@ -376,6 +429,7 @@ async function installCommand(options) {
       }
       return;
     }
+    options.approvedApply = true;
   }
 
   fs.mkdirSync(options.target, { recursive: true });
@@ -388,7 +442,7 @@ async function installCommand(options) {
     created.push(relativePath);
   }
 
-  const sosJsonRelative = '.claude/sos/sos.json';
+  const sosJsonRelative = '.sos/sos.json';
   const sosJsonPath = path.join(options.target, ...sosJsonRelative.split('/'));
   let metadataUpdated = false;
 
@@ -410,6 +464,10 @@ async function installCommand(options) {
     CreatedCount: created.length,
     OverwrittenCount: overwritten.length,
     MetadataUpdated: metadataUpdated,
+    SosUserHomeAction: postInstall.sosUser.action,
+    AdapterShimActionCount: postInstall.adapterShims.changed.length,
+    TaskAdapterNoticeCount: postInstall.taskAdapters.notices.length,
+    ChangeLogAction: postInstall.changeLog.action,
     GitignoreAction: postInstall.gitignore.action,
     GitignoreReason: postInstall.gitignore.reason,
     RootContextFilesDetected: postInstall.rootContextFiles
@@ -425,9 +483,19 @@ async function installCommand(options) {
 }
 
 async function runPostInstallHooks(options) {
+  const sosUser = ensureSosUserHome(options);
+  const adapterShims = ensureAdapterShims(options);
+  const taskAdapters = detectTaskAdapters(options.target);
   const gitignore = await ensureResourcesInGitignore(options);
   const rootContextFiles = scanRootContextFiles(options.target);
-  return { gitignore, rootContextFiles };
+  const changeLog = appendChangeLog(options, {
+    sosUser,
+    adapterShims,
+    taskAdapters,
+    gitignore,
+    rootContextFiles
+  });
+  return { sosUser, adapterShims, taskAdapters, gitignore, rootContextFiles, changeLog };
 }
 
 function checkGitignoreState(targetPath) {
@@ -442,6 +510,169 @@ function checkGitignoreState(targetPath) {
     }
   }
   return { action: 'would-append', reason: '/resources/ entry missing from .gitignore' };
+}
+
+function canApplyInstallHooks(options) {
+  return Boolean(options.apply || options.approvedApply);
+}
+
+function getSosUserHome() {
+  return process.env.SOS_USER_HOME || path.join(os.homedir(), '.sos-user');
+}
+
+function getSosHome() {
+  return process.env.SOS_HOME || path.join(os.homedir(), '.sos');
+}
+
+function ensureSosUserHome(options) {
+  const home = getSosUserHome();
+  const existed = fs.existsSync(home);
+  const canWrite = canApplyInstallHooks(options);
+
+  if (!canWrite) {
+    return {
+      action: existed ? 'already-present' : 'would-create',
+      path: home
+    };
+  }
+
+  fs.mkdirSync(home, { recursive: true });
+  for (const dir of sosUserRequiredDirs) {
+    fs.mkdirSync(path.join(home, dir), { recursive: true });
+  }
+
+  const readmePath = path.join(home, 'README.md');
+  if (!fs.existsSync(readmePath)) {
+    fs.writeFileSync(readmePath, `# SOS User Home\n\nThis private directory stores portable user-level SOS knowledge, skills, workflows, commands, templates, and profile preferences.\n\nThe SOS framework/runtime belongs in ~/.sos or the project .sos directory. Keep framework files out of this repo-backed user home.\n`, 'utf8');
+  }
+
+  const metadataPath = path.join(home, 'sos-user.json');
+  if (!fs.existsSync(metadataPath)) {
+    fs.writeFileSync(metadataPath, `${JSON.stringify({
+      type: 'sos-user-home',
+      schema_version: 1,
+      created_by: 'solution-os',
+      portable: true
+    }, null, 2)}\n`, 'utf8');
+  }
+
+  const gitignorePath = path.join(home, '.gitignore');
+  if (!fs.existsSync(gitignorePath)) {
+    fs.writeFileSync(gitignorePath, `local.json\n.sos-backups/\nreports/\n`, 'utf8');
+  }
+
+  return {
+    action: existed ? 'ensured' : 'created',
+    path: home
+  };
+}
+
+function ensureAdapterShims(options) {
+  const changed = [];
+  const planned = [];
+  const skipped = [];
+  const canWrite = canApplyInstallHooks(options);
+
+  for (const [relativePath, target] of Object.entries(adapterShimTargets)) {
+    const filePath = path.join(options.target, ...relativePath.split('/'));
+    if (!fs.existsSync(filePath)) {
+      skipped.push(`${relativePath}: missing`);
+      continue;
+    }
+
+    const content = readText(filePath);
+    const block = getAdapterShimBlock(relativePath, target);
+    const nextContent = upsertAdapterShimBlock(content, block);
+
+    if (nextContent === content) {
+      skipped.push(`${relativePath}: current`);
+      continue;
+    }
+
+    if (!canWrite) {
+      planned.push(relativePath);
+      continue;
+    }
+
+    fs.writeFileSync(filePath, nextContent, 'utf8');
+    changed.push(relativePath);
+  }
+
+  return { changed, planned, skipped };
+}
+
+function getAdapterShimBlock(relativePath, target) {
+  const label = relativePath === 'CLAUDE.md'
+    ? 'Claude Code'
+    : relativePath === 'AGENTS.md'
+      ? 'Codex'
+      : 'Claude-shaped compatibility';
+  const commandVocabulary = relativePath === 'AGENTS.md'
+    ? '\n\nFor SOS command vocabulary, use `.claude/sos/COMMANDS.md` while the Claude compatibility surface remains installed.'
+    : '';
+
+  return `<!-- SOS:BEGIN adapter-shim v${getPackageVersion()} -->\nThis project uses SolutionOS.\n\nRead \`${target}\` as the canonical SOS context for this file.${commandVocabulary}\n\nThis ${label} shim is version-controlled and may be updated by SOS, but only inside this managed block. Existing content outside the block must be preserved.\n<!-- SOS:END adapter-shim -->`;
+}
+
+function upsertAdapterShimBlock(content, block) {
+  const normalized = content.replace(/\s+$/, '');
+  if (adapterShimBlockPattern.test(content)) {
+    return content.replace(adapterShimBlockPattern, block);
+  }
+  return `${normalized}\n\n${block}\n`;
+}
+
+function detectTaskAdapters(targetPath) {
+  const detections = [];
+  const candidates = [
+    ['backlog', 'Backlog.md task directory'],
+    ['.backlog', 'Backlog.md task directory'],
+    ['Backlog.md', 'Backlog.md root file'],
+    ['.superpowers', 'Superpowers task/workflow directory'],
+    ['superpowers', 'Superpowers task/workflow directory'],
+    ['.claude/superpowers', 'Claude Superpowers directory']
+  ];
+
+  for (const [relativePath, label] of candidates) {
+    if (exists(targetPath, relativePath)) {
+      detections.push({ Path: relativePath, Adapter: label });
+    }
+  }
+
+  const notices = [];
+  if (detections.length > 0) {
+    notices.push(`existing task/workflow adapter detected (${detections.map((item) => item.Path).join(', ')}); SOS will warn before switching adapters`);
+  } else {
+    notices.push('Backlog.md is the preferred task candidate for coding projects; SOS did not initialize it');
+  }
+
+  return { detections, notices };
+}
+
+function appendChangeLog(options, details) {
+  if (!canApplyInstallHooks(options)) {
+    return { action: 'skipped', reason: 'install not approved' };
+  }
+
+  const changeLogPath = path.join(options.target, '.sos', 'sos-change.log');
+  if (!fs.existsSync(path.dirname(changeLogPath))) {
+    return { action: 'skipped', reason: '.sos directory missing' };
+  }
+
+  const lines = [
+    '',
+    `${new Date().toISOString().slice(0, 10)} SOS ${getPackageVersion()} install`,
+    `- Ensured SOS user home: ${details.sosUser.action}.`,
+    `- Adapter shims changed: ${details.adapterShims.changed.length}.`,
+    `- Gitignore action: ${details.gitignore.action}.`
+  ];
+
+  for (const notice of details.taskAdapters.notices) {
+    lines.push(`- Task adapter: ${notice}.`);
+  }
+
+  fs.appendFileSync(changeLogPath, `${lines.join('\n')}\n`, 'utf8');
+  return { action: 'appended', path: '.sos/sos-change.log' };
 }
 
 async function ensureResourcesInGitignore(options) {
@@ -498,12 +729,32 @@ function scanRootContextFiles(targetPath) {
 }
 
 function printPostInstallSummary(postInstall) {
-  const { gitignore, rootContextFiles } = postInstall;
+  const { sosUser, adapterShims, taskAdapters, changeLog, gitignore, rootContextFiles } = postInstall;
+
+  if (sosUser.action === 'created') {
+    console.log(`\n.sos-user: created ${sosUser.path}.`);
+  } else if (sosUser.action === 'would-create') {
+    console.log(`\n.sos-user: would create ${sosUser.path} after approval.`);
+  }
+
+  if (adapterShims.changed.length > 0) {
+    console.log(`Adapter shims: updated ${adapterShims.changed.length} managed block(s); existing content outside SOS blocks preserved.`);
+  } else if (adapterShims.planned.length > 0) {
+    console.log(`Adapter shims: would update ${adapterShims.planned.length} managed block(s) after approval.`);
+  }
+
+  for (const notice of taskAdapters.notices) {
+    console.log(`Task adapter: ${notice}.`);
+  }
 
   if (gitignore.action === 'appended') {
     console.log(`\n.gitignore: appended /resources/ block to existing file (existing entries preserved).`);
   } else if (gitignore.action === 'skipped') {
     console.log(`\n.gitignore: append skipped — re-run with --yes after reviewing if you want /resources/ added.`);
+  }
+
+  if (changeLog.action === 'appended') {
+    console.log(`Change log: updated .sos/sos-change.log.`);
   }
 
   printRootContextHints(rootContextFiles, false);
@@ -566,14 +817,21 @@ function auditCommand(options) {
 
 function statusCommand(options) {
   const audit = auditTarget(options.target);
-  const metadata = readJson(path.join(options.target, '.claude/sos/sos.json'));
+  const metadata = readProjectMetadata(options.target);
+  const taskAdapters = detectTaskAdapters(options.target);
   const result = {
     Status: audit.summary.Status,
     TargetPath: options.target,
-    SosInstalled: fs.existsSync(path.join(options.target, '.claude/sos/sos.json')),
+    SosInstalled: fs.existsSync(path.join(options.target, '.sos/sos.json')),
+    LegacyClaudeSosInstalled: fs.existsSync(path.join(options.target, '.claude/sos/sos.json')),
+    SosHome: getSosHome(),
+    SosHomeExists: fs.existsSync(getSosHome()),
+    SosUserHome: getSosUserHome(),
+    SosUserHomeExists: fs.existsSync(getSosUserHome()),
     RunningCliVersion: audit.summary.RunningCliVersion,
     SosVersion: metadata?.sos_version || '',
     TemplateVersion: metadata?.template_version || '',
+    SchemaVersion: metadata?.schema_version || '',
     ProjectVersionRelation: audit.summary.ProjectVersionRelation,
     VersionWarningCount: audit.summary.VersionWarningCount,
     NodeName: metadata?.node?.name || '',
@@ -593,11 +851,72 @@ function statusCommand(options) {
     UnindexedArchiveItemCount: audit.summary.UnindexedArchiveItemCount,
     LooseArchiveCandidateCount: audit.summary.LooseArchiveCandidateCount
   };
+  result.TaskAdapter = metadata?.task_adapter?.active || '';
+  result.TaskAdapterCandidate = metadata?.task_adapter?.preferred_candidate || 'backlog.md';
+  result.TaskAdapterDetectionCount = taskAdapters.detections.length;
 
   printResult(result, options.json);
   if (result.Status !== 'healthy') {
     process.exitCode = 1;
   }
+}
+
+function skillsListCommand(options) {
+  const localSkills = listSkillDirs(path.join(options.target, '.sos/skills'))
+    .map((name) => ({ Name: name, Scope: 'local', Installed: true }));
+  const claudeSkills = listSkillDirs(path.join(options.target, '.claude/skills'))
+    .map((name) => ({ Name: name, Scope: name === 'sos' ? 'packaged-claude-shim' : 'local-claude', Installed: true }));
+  const globalSkills = listSkillDirs(path.join(getSosUserHome(), 'skills'))
+    .map((name) => ({
+      Name: name,
+      Scope: 'global-user',
+      Installed: localSkills.some((item) => item.Name === name) || claudeSkills.some((item) => item.Name === name)
+    }));
+
+  const combined = [...localSkills, ...claudeSkills, ...globalSkills]
+    .sort((a, b) => a.Name.localeCompare(b.Name) || a.Scope.localeCompare(b.Scope));
+
+  const result = {
+    TargetPath: options.target,
+    SosHome: getSosHome(),
+    SosUserHome: getSosUserHome(),
+    LocalSkillCount: localSkills.length + claudeSkills.length,
+    GlobalAvailableCount: globalSkills.filter((item) => !item.Installed).length,
+    Skills: combined
+  };
+
+  if (options.json) {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  printResult({
+    TargetPath: result.TargetPath,
+    SosHome: getSosHome(),
+    SosUserHome: result.SosUserHome,
+    LocalSkillCount: result.LocalSkillCount,
+    GlobalAvailableCount: result.GlobalAvailableCount
+  }, false);
+
+  if (combined.length > 0) {
+    console.log('\nSkills:');
+    for (const skill of combined) {
+      const state = skill.Installed ? 'installed' : 'available-global';
+      console.log(`- ${skill.Name} (${skill.Scope}, ${state})`);
+    }
+  }
+}
+
+function listSkillDirs(rootPath) {
+  if (!fs.existsSync(rootPath)) {
+    return [];
+  }
+
+  return fs.readdirSync(rootPath, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .filter((entry) => fs.existsSync(path.join(rootPath, entry.name, 'SKILL.md')))
+    .map((entry) => entry.name)
+    .sort();
 }
 
 function migrateAssessCommand(options) {
@@ -637,7 +956,7 @@ function auditTarget(targetPath) {
   const versionInfo = getVersionInfo(target);
   const versionWarnings = getVersionWarnings(versionInfo);
 
-  const pmContent = readText(path.join(target, '.claude/PM.md'));
+  const pmContent = readText(getCanonicalPmPath(target));
   const missingPmReferences = pmRequiredReferences.filter((relativePath) => !contentReferences(pmContent, relativePath));
 
   const missingAdapterDelegation = [];
@@ -652,11 +971,11 @@ function auditTarget(targetPath) {
       }
     }
 
-    if (!contentReferences(content, '.claude/PM.md')) {
-      unreachableSurfacePaths.push(`${adapterPath} -> .claude/PM.md`);
+    if (!contentReferences(content, '.sos/context/PM.md')) {
+      unreachableSurfacePaths.push(`${adapterPath} -> .sos/context/PM.md`);
     } else {
       for (const missingReference of missingPmReferences) {
-        unreachableSurfacePaths.push(`${adapterPath} -> .claude/PM.md -> ${missingReference}`);
+        unreachableSurfacePaths.push(`${adapterPath} -> .sos/context/PM.md -> ${missingReference}`);
       }
     }
   }
@@ -695,6 +1014,7 @@ function auditTarget(targetPath) {
       RunningCliVersion: versionInfo.RunningCliVersion,
       ProjectSosVersion: versionInfo.ProjectSosVersion,
       ProjectTemplateVersion: versionInfo.ProjectTemplateVersion,
+      LegacyClaudeSosInstalled: versionInfo.LegacyClaudeSosInstalled,
       ProjectVersionRelation: versionInfo.ProjectVersionRelation,
       VersionWarningCount: versionWarnings.length,
       MissingFileCount: missingFiles.length,
@@ -729,9 +1049,11 @@ function auditTarget(targetPath) {
 
 function getVersionInfo(target) {
   const runningVersion = getPackageVersion();
-  const metadataPath = path.join(target, '.claude/sos/sos.json');
+  const metadataPath = getProjectMetadataPath(target);
   const metadata = readJson(metadataPath);
-  const installed = fs.existsSync(metadataPath);
+  const installed = Boolean(metadataPath && fs.existsSync(metadataPath));
+  const legacyPath = path.join(target, '.claude/sos/sos.json');
+  const legacyInstalled = fs.existsSync(legacyPath);
   const projectVersion = metadata?.sos_version || '';
   const templateVersion = metadata?.template_version || '';
   const comparison = projectVersion ? compareVersions(projectVersion, runningVersion) : null;
@@ -753,11 +1075,38 @@ function getVersionInfo(target) {
 
   return {
     SosInstalled: installed,
+    LegacyClaudeSosInstalled: legacyInstalled,
     RunningCliVersion: runningVersion,
     ProjectSosVersion: projectVersion,
     ProjectTemplateVersion: templateVersion,
     ProjectVersionRelation: relation
   };
+}
+
+function getProjectMetadataPath(target) {
+  const currentPath = path.join(target, '.sos/sos.json');
+  if (fs.existsSync(currentPath)) {
+    return currentPath;
+  }
+
+  const legacyPath = path.join(target, '.claude/sos/sos.json');
+  if (fs.existsSync(legacyPath)) {
+    return legacyPath;
+  }
+
+  return currentPath;
+}
+
+function readProjectMetadata(target) {
+  return readJson(getProjectMetadataPath(target));
+}
+
+function getCanonicalPmPath(target) {
+  const currentPath = path.join(target, '.sos/context/PM.md');
+  if (fs.existsSync(currentPath)) {
+    return currentPath;
+  }
+  return path.join(target, '.claude/PM.md');
 }
 
 function getVersionWarnings(versionInfo) {
@@ -814,7 +1163,7 @@ function parseVersion(value) {
 }
 
 function getMissingActorsAliasColumns(target) {
-  const actorsPath = path.join(target, '.claude/ACTORS.md');
+  const actorsPath = getCanonicalContextPath(target, 'ACTORS.md');
   const content = readText(actorsPath);
   if (!content.trim()) {
     return [];
@@ -1017,7 +1366,7 @@ function isLooseArchiveCandidateName(name) {
 }
 
 function getRegisteredActorTerms(target) {
-  const actorsPath = path.join(target, '.claude/ACTORS.md');
+  const actorsPath = getCanonicalContextPath(target, 'ACTORS.md');
   const content = readText(actorsPath);
   const terms = new Set();
 
@@ -1046,9 +1395,17 @@ function getRegisteredActorTerms(target) {
   return terms;
 }
 
+function getCanonicalContextPath(target, fileName) {
+  const currentPath = path.join(target, '.sos/context', fileName);
+  if (fs.existsSync(currentPath)) {
+    return currentPath;
+  }
+  return path.join(target, '.claude', fileName);
+}
+
 function getSemanticScanFiles(target) {
   const files = [];
-  for (const relativeDir of ['vault/wiki', '.claude']) {
+  for (const relativeDir of ['vault/wiki', '.sos/context', '.claude']) {
     const dirPath = path.join(target, relativeDir);
     if (!fs.existsSync(dirPath)) {
       continue;
@@ -1058,6 +1415,8 @@ function getSemanticScanFiles(target) {
       const relativePath = toPosix(path.relative(target, filePath));
       return (
         filePath.endsWith('.md') &&
+        !relativePath.startsWith('.sos/system/') &&
+        !relativePath.startsWith('.sos/frameworks/') &&
         !relativePath.startsWith('.claude/sos/') &&
         !relativePath.startsWith('.claude/commands/') &&
         relativePath !== '.claude/ACTORS.md'
@@ -1116,6 +1475,13 @@ function getMetadataFiles(target) {
   const direct = [
     'AGENTS.md',
     'CLAUDE.md',
+    '.sos/README.md',
+    '.sos/context/PM.md',
+    '.sos/context/STONE.md',
+    '.sos/context/ACTORS.md',
+    '.sos/context/TOOLS.md',
+    '.sos/context/WORKFLOW.md',
+    '.sos/templates/adr.md',
     '.claude/PM.md',
     '.claude/STONE.md',
     '.claude/ACTORS.md',
@@ -1125,6 +1491,7 @@ function getMetadataFiles(target) {
     'vault/triage/README.md',
     'vault/triage/_manifest.md',
     'vault/wiki/_manifest.md',
+    'vault/wiki/decisions/_manifest.md',
     'vault/archive/README.md',
     'vault/archive/_manifest.md',
     'vault/outbox/README.md',
@@ -1138,7 +1505,7 @@ function getMetadataFiles(target) {
     }
   }
 
-  for (const relativeDir of ['docs/design', 'vault/wiki', 'templates/core', '.claude/sos', '.claude/commands/sos']) {
+  for (const relativeDir of ['docs/design', 'vault/wiki', 'templates/core', '.sos', '.claude/sos', '.claude/commands/sos']) {
     const dirPath = path.join(target, relativeDir);
     if (fs.existsSync(dirPath)) {
       files.push(...listFiles(dirPath).filter((filePath) => filePath.endsWith('.md')));

@@ -37,3 +37,11 @@ Do not treat this file as architecture or workflow policy.
 
 | Role | Aliases | Responsibility | Notes |
 |---|---|---|---|
+
+<!-- SOS:BEGIN adapter-shim v0.2.0 -->
+This project uses SolutionOS.
+
+Read `.sos/context/ACTORS.md` as the canonical SOS context for this file.
+
+This Claude-shaped compatibility shim is version-controlled and may be updated by SOS, but only inside this managed block. Existing content outside the block must be preserved.
+<!-- SOS:END adapter-shim -->

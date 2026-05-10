@@ -1,58 +1,22 @@
 ---
-type: router
+sos-file: adapter-shim
+sos-version: 0.2.0
+sos-schema: 1
+sos-origin: packaged
+sos-managed: true
+type: adapter-shim
 scope: node
 status: active
-authority: high
+tool: claude-code
+target: .sos/context/PM.md
 ---
 
 # PM
 
-PM means Project Map / Project Manager / filing cabinet router for this SOS node.
+<!-- SOS:BEGIN adapter-shim v0.2.0 -->
+This project uses SolutionOS.
 
-This file routes agents to the right context. It is not a dumping ground and should stay concise.
+Read `.sos/context/PM.md` as the canonical project router.
 
-## SOS Surface
-
-These paths are the canonical routing surface for incoming agents and audits. Keep this surface listed even when the node-specific map grows.
-
-### Active Context
-
-- `.claude/STONE.md` - carved-in-stone facts, constraints, decisions, and non-negotiables.
-- `.claude/ACTORS.md` - people, systems, services, teams, and named roles.
-- `.claude/TOOLS.md` - local tools, commands, environment, and operational facts.
-- `.claude/WORKFLOW.md` - default lifecycle, context loading, human gates, and capture rules.
-
-### Knowledge Base
-
-- `vault/triage/` - raw KB material awaiting processing.
-- `vault/wiki/` - curated knowledge.
-- `vault/archive/` - processed source evidence.
-- `vault/outbox/` - generated deliverables and exports.
-
-### SOS System Material
-
-Do not read `.claude/sos/**` during normal project work.
-
-Read `.claude/sos/**` only for `/sos:*` operations such as init, summary, audit, export, import, schema inspection, template update, or toolset policy review.
-
-- `.claude/sos/` - installed SOS system material, schema, command vocabulary, tool policy, scripts, and export/install files.
-- `.claude/skills/sos/` - native Claude Code `/sos` skill router.
-- `.claude/commands/sos/` - native Claude Code `/sos:*` branch commands.
-
-## Node Map
-
-Add the node hierarchy and important folders here.
-
-```text
-node-root/
-  .claude/
-  vault/
-```
-
-## Current Focus
-
-Record the current focus or link to the relevant wiki note.
-
-## Open Questions
-
-Record or link current open questions.
+This shim exists for Claude-shaped discovery and compatibility. Do not duplicate durable project context here.
+<!-- SOS:END adapter-shim -->

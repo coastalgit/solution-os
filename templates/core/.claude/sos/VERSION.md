@@ -6,11 +6,13 @@ status: active
 
 # SOS Version
 
-Current SOS version: `0.1.19`
+Current SOS version: `0.2.0`
 
-Current template version: `0.1.19`
+Current template version: `0.2.0`
 
-Released: `2026-05-05`
+Released: `2026-05-07`
+
+Canonical project metadata: `.sos/sos.json`
 
 Canonical manifest:
 

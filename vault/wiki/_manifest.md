@@ -16,3 +16,8 @@ The primary navigation file is `index.md`.
 - Raw source dumps do not belong here.
 - Stray or malformed wiki notes should be reported before normalizing, moving, or deleting them.
 
+## Base Notes
+
+| Path | Kind | Status | Notes |
+|---|---|---|---|
+| `vault/wiki/agentic-sdlc-loop.md` | base-knowledge | active | Default SOS operating loop for AI-assisted work. |

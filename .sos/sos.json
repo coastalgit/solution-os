@@ -1,0 +1,59 @@
+{
+  "sos_version": "0.2.0",
+  "template_version": "0.2.0",
+  "schema_version": 2,
+  "node": {
+    "name": "solution-os",
+    "kind": "project",
+    "visibility": "private"
+  },
+  "user_home": {
+    "path": "~/.sos-user",
+    "required": true
+  },
+  "parent": {
+    "has_parent": false,
+    "name": "",
+    "path": "",
+    "read_upward": false,
+    "publish_upward": "none"
+  },
+  "vault": {
+    "enabled": true,
+    "triage_path": "vault/triage",
+    "wiki_path": "vault/wiki",
+    "decisions_path": "vault/wiki/decisions",
+    "archive_path": "vault/archive",
+    "outbox_path": "vault/outbox"
+  },
+  "record_types": {
+    "adr": {
+      "name": "Architecture Decision Record",
+      "path": "vault/wiki/decisions",
+      "template": ".sos/templates/adr.md",
+      "purpose": "record why an important technical, workflow, tool, or architecture decision was made"
+    }
+  },
+  "context": {
+    "canonical_path": ".sos/context/PM.md",
+    "legacy_claude_shims": true
+  },
+  "task_adapter": {
+    "active": "",
+    "preferred_candidate": "backlog.md",
+    "auto_initialize": false
+  },
+  "frameworks": {
+    "agentic-sdlc": {
+      "enabled": false,
+      "offer_policy": "prompt-once-for-coding-projects",
+      "version": "0.1.0",
+      "schema_version": 1
+    }
+  },
+  "remote": {
+    "repository_url": "https://github.com/coastalgit/solution-os.git",
+    "manifest_url": "https://raw.githubusercontent.com/coastalgit/solution-os/main/manifest.json",
+    "default_branch": "main"
+  }
+}

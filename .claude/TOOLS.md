@@ -137,3 +137,11 @@ Record tools that have been evaluated and not adopted, or tools that were once a
 ## Known Tool Issues
 
 Record local tool issues here.
+
+<!-- SOS:BEGIN adapter-shim v0.2.0 -->
+This project uses SolutionOS.
+
+Read `.sos/context/TOOLS.md` as the canonical SOS context for this file.
+
+This Claude-shaped compatibility shim is version-controlled and may be updated by SOS, but only inside this managed block. Existing content outside the block must be preserved.
+<!-- SOS:END adapter-shim -->

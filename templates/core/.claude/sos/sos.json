@@ -1,6 +1,8 @@
 {
-  "sos_version": "0.1.19",
-  "template_version": "0.1.19",
+  "sos_version": "0.2.0",
+  "template_version": "0.2.0",
+  "compatibility_role": "claude-surface",
+  "canonical_metadata": ".sos/sos.json",
   "node": {
     "name": "",
     "kind": "solution",
